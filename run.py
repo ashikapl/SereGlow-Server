@@ -1,5 +1,4 @@
-from app import create_app, supabase
-from flask import request, jsonify
+from app import create_app
 import os
 
 app = create_app()

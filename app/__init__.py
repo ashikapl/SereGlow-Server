@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from supabase import create_client, Client
 from config import Config
+from app.routes.admin import admin_bp
 
 def create_app():
     app = Flask(__name__)
@@ -10,7 +11,6 @@ def create_app():
     # Enable CORS
     CORS(app, supports_credentials=True)
 
-    return app
+    app.register_blueprint(admin_bp, url_prefix="/admin")
 
-# Initialize Supabase client globally
-supabase: Client = create_client(Config.SUPABASE_URL, Config.SUPABASE_KEY)
+    return app
