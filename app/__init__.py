@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_cors import CORS
-from supabase import create_client, Client
 from config import Config
 from app.routes.admin import admin_bp
 from app.routes.user import user_bp
