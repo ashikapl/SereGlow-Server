@@ -1,16 +1,10 @@
 from flask import jsonify
 from app.extensions.supabase_client import supabase
+from app.stores.admin import create_signup_store, get_all_admins_store
 
 def create_signup_service(data):
     try:
-        result = supabase.table("Admin").insert({
-            "firstname": data.get("firstname"),
-            "lastname": data.get("lastname"),
-            "email": data.get("email"),
-            "password": data.get("password"),
-            "address": data.get("address"),
-            "phone": data.get("phone")
-        }).execute()
+        result = create_signup_store(data)
 
         if result:
             return result
@@ -26,7 +20,7 @@ def create_signup_service(data):
 
 def get_all_admins_Service():
     try:
-        result = supabase.table("Admin").select("*").execute()
+        result = get_all_admins_store()
 
         if result:
             return result
