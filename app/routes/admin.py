@@ -3,6 +3,7 @@ from app.services.admin import create_signup_service, get_all_admins_Service
 
 admin_bp = Blueprint("admin_bp", __name__)
 
+
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
     data = request.get_json()
@@ -15,6 +16,7 @@ def admin_signUp():
         return result
 
     return jsonify(result.data), 201
+
 
 # 📥 READ all admins
 @admin_bp.route('/', methods=['GET'])
