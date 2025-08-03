@@ -10,7 +10,7 @@ def admin_signUp():
 
     result = create_signup_service(data)
 
-    print("routers result: ", result)
+    print("routes result: ", result)
 
     if isinstance(result, tuple):
         return result
@@ -24,6 +24,6 @@ def get_all_admin():
     result = get_all_admins_Service()
 
     if not result.data:
-        return jsonify({"error": "Insert failed"}), 400
+        return jsonify({"Massage": "Empty"}), 400
 
     return jsonify(result.data), 201

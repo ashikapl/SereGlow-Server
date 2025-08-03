@@ -3,6 +3,7 @@ from flask_cors import CORS
 from supabase import create_client, Client
 from config import Config
 from app.routes.admin import admin_bp
+from app.routes.user import user_bp
 
 def create_app():
     app = Flask(__name__)
@@ -12,5 +13,6 @@ def create_app():
     CORS(app, supports_credentials=True)
 
     app.register_blueprint(admin_bp, url_prefix="/admin")
+    app.register_blueprint(user_bp, url_prefix="/user")
 
     return app
