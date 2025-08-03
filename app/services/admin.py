@@ -1,5 +1,4 @@
 from flask import jsonify
-from app.extensions.supabase_client import supabase
 from app.stores.admin import create_signup_store, get_all_admins_store
 
 def create_signup_service(data):

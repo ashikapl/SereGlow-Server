@@ -1,4 +1,4 @@
-from app.extensions.supabase_client import supabase
+from app.utils.supabase_client import supabase
 
 def create_signup_store(data):
     try:
