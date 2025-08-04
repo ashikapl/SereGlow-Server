@@ -1,5 +1,5 @@
 from flask import jsonify
-from app.stores.admin import create_signup_store, get_all_admins_store
+from app.stores.admin import create_signup_store, get_all_admins_store, create_service_store, get_all_service_store
 
 def create_signup_service(data):
     try:
@@ -20,6 +20,32 @@ def create_signup_service(data):
 def get_all_admins_Service():
     try:
         result = get_all_admins_store()
+
+        if result:
+            return result
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+def create_service(data):
+    try:
+        result = create_service_store(data)
+
+        if result:
+            return result
+        
+    except Exception as e:
+        error_message = str(e)
+
+        # Detect UNIQUE constraint violation (email already exists)
+        if 'duplicate key value violates unique constraint' in error_message and 'admin_email_key' in error_message:
+            return {"error": "Email already exists"}, 409  # HTTP 409 Conflict
+
+        return {"error": error_message}, 500
+    
+def get_all_services():
+    try:
+        result = get_all_service_store()
 
         if result:
             return result
