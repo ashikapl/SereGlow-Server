@@ -6,6 +6,7 @@ service_bp = Blueprint("service_bp", __name__)
 
 
 @service_bp.route('/service', methods=['POST'])
+@token_required
 def service():
     data = request.get_json()
 
@@ -18,8 +19,9 @@ def service():
 
 
 @service_bp.route('/service', methods=['GET'])
+@token_required
 def get_services():
-    result = read_services()
+    result = read_serv_services()
 
     if not result.data:
         return jsonify({"Massage": "Empty"}), 204
