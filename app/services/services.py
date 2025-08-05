@@ -1,5 +1,5 @@
 from flask import jsonify
-from app.stores.admin import create_service_store, read_service_store
+from app.stores.services import create_service_store, read_service_store
 
 
 def create_service(data):
