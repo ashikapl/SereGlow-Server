@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from app.services.services import create_service, get_all_services
+from app.services.services import create_service, read_services
 
 service_bp = Blueprint("service_bp", __name__)
 
@@ -18,9 +18,9 @@ def service():
 
 @service_bp.route('/service', methods=['GET'])
 def get_services():
-    result = get_all_services()
+    result = read_services()
 
     if not result.data:
-        return jsonify({"Massage": "Empty"}), 400
+        return jsonify({"Massage": "Empty"}), 204
 
-    return jsonify(result.data), 201
+    return jsonify(result.data), 200
