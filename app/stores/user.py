@@ -1,10 +1,12 @@
 from app.utils.supabase_client import supabase
+from app.utils.helpers import generate_username
 
 
-def admin_signup_store(data):
-    result = supabase.table("Admin").insert({
+def user_signup_store(data):
+    result = supabase.table("User").insert({
         "firstname": data.get("firstname"),
         "lastname": data.get("lastname"),
+        "username": generate_username(data.get("firstname"), data.get("lastname")),
         "email": data.get("email"),
         "password": data.get("password"),
         "address": data.get("address"),
