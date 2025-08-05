@@ -2,6 +2,7 @@ from flask import jsonify
 from app.stores.user import user_signup_store
 from app.utils.user_validator import user_validator, generate_token
 
+
 def user_signup_service(data):
     try:
         result = user_signup_store(data)
@@ -17,6 +18,7 @@ def user_signup_service(data):
         return {"error": error_message}, 500
 
     return {"error": error_message}, 500
+
 
 def user_login_service(data):
     try:

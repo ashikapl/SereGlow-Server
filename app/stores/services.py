@@ -1,5 +1,6 @@
 from app.utils.supabase_client import supabase
 
+
 def create_service_store(data):
     result = supabase.table("Service").insert({
         "name": data.get("name"),
@@ -11,6 +12,7 @@ def create_service_store(data):
 
     if result:
         return result
+
 
 def read_service_store():
     result = supabase.table("Service").select("*").execute()

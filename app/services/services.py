@@ -19,7 +19,7 @@ def create_serv_services(data):
         return {"error": error_message}, 500
 
 
-def read_services():
+def read_serv_services():
     try:
         result = read_service_store()
 

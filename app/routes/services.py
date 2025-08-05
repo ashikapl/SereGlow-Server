@@ -5,8 +5,8 @@ from app.utils.token_auth import token_required
 service_bp = Blueprint("service_bp", __name__)
 
 
-@service_bp.route('/service', methods=['POST'])
-@token_required
+@service_bp.route('/', methods=['POST'])
+# @token_required
 def service():
     data = request.get_json()
 
@@ -18,7 +18,7 @@ def service():
     return jsonify(result.data), 201
 
 
-@service_bp.route('/service', methods=['GET'])
+@service_bp.route('/', methods=['GET'])
 @token_required
 def get_services():
     result = read_serv_services()

@@ -1,7 +1,5 @@
 import jwt
 import datetime
-from flask import jsonify
-from flask import current_app
 from app.utils.supabase_client import supabase
 import os
 
@@ -9,6 +7,7 @@ from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
+
 
 def generate_token(user_id):
     payload = {
@@ -19,6 +18,7 @@ def generate_token(user_id):
         "SUPABASE_APIKEY"), algorithm='HS256')
     return token
 
+
 def decode_token(token):
     try:
         payload = jwt.decode(token, os.getenv(
@@ -28,6 +28,7 @@ def decode_token(token):
         return None
     except jwt.InvalidTokenError:
         return None
+
 
 def user_validator(email, password, table_name):
     result = supabase.table(table_name).select(
