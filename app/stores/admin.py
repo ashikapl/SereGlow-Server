@@ -1,6 +1,5 @@
 from app.utils.supabase_client import supabase
 
-
 def admin_signup_store(data):
     result = supabase.table("Admin").insert({
         "firstname": data.get("firstname"),

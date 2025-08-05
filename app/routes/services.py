@@ -3,8 +3,7 @@ from app.services.services import create_service, read_services
 
 service_bp = Blueprint("service_bp", __name__)
 
-
-@service_bp.route('/service', methods=['POST'])
+@service_bp.route('/', methods=['POST'])
 def service():
     data = request.get_json()
 
@@ -15,8 +14,7 @@ def service():
 
     return jsonify(result.data), 201
 
-
-@service_bp.route('/service', methods=['GET'])
+@service_bp.route('/', methods=['GET'])
 def get_services():
     result = read_services()
 

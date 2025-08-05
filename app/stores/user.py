@@ -1,7 +1,6 @@
 from app.utils.supabase_client import supabase
 from app.utils.helpers import generate_username
 
-
 def user_signup_store(data):
     result = supabase.table("User").insert({
         "firstname": data.get("firstname"),

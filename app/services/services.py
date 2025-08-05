@@ -1,7 +1,6 @@
 from flask import jsonify
 from app.stores.services import create_service_store, read_service_store
 
-
 def create_service(data):
     try:
         result = create_service_store(data)
@@ -17,7 +16,6 @@ def create_service(data):
             return {"error": "Service Add Already"}, 409
 
         return {"error": error_message}, 500
-
 
 def read_services():
     try:
