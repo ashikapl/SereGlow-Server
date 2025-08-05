@@ -1,0 +1,33 @@
+from flask import jsonify
+from app.stores.user import user_signup_store
+from app.utils.user_validator import user_validator, generate_token
+
+def user_signup_service(data):
+    try:
+        result = user_signup_store(data)
+
+        if result:
+            return jsonify(result)
+    except Exception as e:  
+        error_message = str(e)
+    
+        # Detect UNIQUE constraint violation (email already exists)
+        if 'duplicate key value violates unique constraint' in error_message and 'admin_email_key' in error_message:
+            return {"error": "Email already exists"}, 409  # HTTP 409 Conflict
+        return {"error": error_message}, 500
+    
+    return {"error": error_message}, 500
+
+def user_login_service(data):
+    try:
+        user = user_validator(data["email"], data["password"])
+        if not user:
+            return {"error":"Invalid user or password!"}
+        
+        user_id = user["user_id"]
+        token = generate_token(user_id)
+
+        return {"token":token, "message":"Login Successfull"}
+    except Exception as e:
+        print("Login Error", str(e))
+        return {"error":str(e)} 
