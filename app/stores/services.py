@@ -17,3 +17,18 @@ def read_service_store():
 
     if result:
         return result
+
+
+def update_service_store(data, service_id):
+    result = supabase.table("Service").update(
+        data).eq("id", service_id).execute()
+
+    if result:
+        return result
+
+
+def delete_service_store(service_id):
+    result = supabase.table("Service").delete().eq("id", service_id).execute()
+
+    if result:
+        return result
