@@ -1,10 +1,11 @@
 from flask import jsonify
-from app.stores.admin import create_signup_store, get_all_admins_store
+from app.stores.admin import admin_signup_store
+from app.utils.user_validator import user_validator, generate_token
 
 
 def create_signup_service(data):
     try:
-        result = create_signup_store(data)
+        result = admin_signup_store(data)
 
         if result:
             return result
@@ -19,12 +20,16 @@ def create_signup_service(data):
         return {"error": error_message}, 500
 
 
-def get_all_admins_Service():
+def admin_login_service(data):
     try:
-        result = get_all_admins_store()
+        user = user_validator(data["email"], data["password"], "Admin")
+        if not user:
+            return jsonify({"error": "Invalid user or password!"}), 401
 
-        if result:
-            return result
+        user_id = user["user_id"]
+        token = generate_token(user_id)
 
+        return jsonify({"token": token, "message": "Login Successfull"}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("Login Error", str(e))
+        return {"error": str(e)}

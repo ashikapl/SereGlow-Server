@@ -3,7 +3,6 @@ from flask_cors import CORS
 from config import Config
 from app.routes.admin import admin_bp
 from app.routes.user import user_bp
-from app.routes.auth import login_bp
 from app.routes.services import service_bp
 
 
@@ -16,7 +15,6 @@ def create_app():
 
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(user_bp, url_prefix="/user")
-    app.register_blueprint(login_bp, url_prefix="/")
     app.register_blueprint(service_bp, url_prefix="/")
 
     return app

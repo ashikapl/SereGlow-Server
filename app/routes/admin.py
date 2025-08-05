@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from app.services.admin import create_signup_service, get_all_admins_Service
+from app.services.admin import admin_signup_service, admin_login_service
 
 admin_bp = Blueprint("admin_bp", __name__)
 
@@ -8,9 +8,9 @@ admin_bp = Blueprint("admin_bp", __name__)
 def admin_signUp():
     data = request.get_json()
 
-    result = create_signup_service(data)
+    result = admin_signup_service(data)
 
-    print("routes result: ", result)
+    print("routers result: ", result)
 
     if isinstance(result, tuple):
         return result
@@ -18,12 +18,12 @@ def admin_signUp():
     return jsonify(result.data), 201
 
 
-# 📥 READ all admins
-@admin_bp.route('/', methods=['GET'])
-def get_all_admin():
-    result = get_all_admins_Service()
+@admin_bp.rotues("/login", methods=["POST"])
+def admin_login():
+    data = request.get_json()
 
-    if not result.data:
-        return jsonify({"Massage": "Empty"}), 400
+    result = admin_login_service(data)
 
-    return jsonify(result.data), 201
+    if "error" in result:
+        return jsonify({"message": "Login Failed!"}), 404
+    return jsonify({"message": "Login Successfull!"})
