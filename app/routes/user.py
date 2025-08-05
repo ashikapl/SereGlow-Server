@@ -17,7 +17,7 @@ def user_signUp():
     return jsonify(result.data), 201
 
 
-@user_bp.rotues("/login", methods=["POST"])
+@user_bp.route("/login", methods=["POST"])
 def user_login():
     data = request.get_json()
 

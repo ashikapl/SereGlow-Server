@@ -3,7 +3,7 @@ from app.stores.admin import admin_signup_store
 from app.utils.user_validator import user_validator, generate_token
 
 
-def create_signup_service(data):
+def admin_signup_service(data):
     try:
         result = admin_signup_store(data)
 

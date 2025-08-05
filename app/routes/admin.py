@@ -18,7 +18,7 @@ def admin_signUp():
     return jsonify(result.data), 201
 
 
-@admin_bp.rotues("/login", methods=["POST"])
+@admin_bp.route("/login", methods=["POST"])
 def admin_login():
     data = request.get_json()
 
