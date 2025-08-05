@@ -40,7 +40,8 @@ def service():
 
     return jsonify(result.data), 201
 
-@admin_bp.route('/service', methods=['Get'])
+
+@admin_bp.route('/service', methods=['GET'])
 def get_services():
     result = get_all_services()
 

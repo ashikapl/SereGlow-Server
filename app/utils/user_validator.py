@@ -1,0 +1,46 @@
+import jwt
+import datetime
+from flask import jsonify
+from flask import current_app
+from app.utils.supabase_client import supabase
+import os
+
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+
+def generate_token(user_id):
+    payload = {
+        'user_id': user_id,
+        'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
+    }
+    token = jwt.encode(payload, os.getenv(
+        "SUPABASE_APIKEY"), algorithm='HS256')
+    return token
+
+
+def decode_token(token):
+    try:
+        payload = jwt.decode(token, os.getenv(
+            "SUPABASE_APIKEY"), algorithms=['HS256'])
+        return payload
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
+
+def user_validator(email, password, table_name):
+    result = supabase.table(table_name).select(
+        "*").eq("email", email).execute()
+
+    user = result.data
+
+    # print("user: ", user[0])
+
+    if user[0]['password'] == password:
+        return user[0]
+
+    return False
