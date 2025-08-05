@@ -1,10 +1,10 @@
 from flask import jsonify
-from app.stores.admin import create_signup_store, get_all_admins_store
+from app.stores.admin import create_service_store, read_service_store
 
 
-def create_signup_service(data):
+def create_service(data):
     try:
-        result = create_signup_store(data)
+        result = create_service_store(data)
 
         if result:
             return result
@@ -19,9 +19,9 @@ def create_signup_service(data):
         return {"error": error_message}, 500
 
 
-def get_all_admins_Service():
+def read_services():
     try:
-        result = get_all_admins_store()
+        result = read_service_store()
 
         if result:
             return result
