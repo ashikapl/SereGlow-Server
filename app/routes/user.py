@@ -25,4 +25,5 @@ def user_login():
 
     if "error" in result:
         return jsonify({"message": "Login Failed!"}), 404
+
     return jsonify({"message": "Login Successfull!"})
