@@ -13,8 +13,8 @@ def create_service(data):
         error_message = str(e)
 
         # Detect UNIQUE constraint violation (email already exists)
-        if 'duplicate key value violates unique constraint' in error_message and 'admin_email_key' in error_message:
-            return {"error": "Email already exists"}, 409  # HTTP 409 Conflict
+        if 'duplicate key value violates unique constraint' in error_message and 'Service_name_key' in error_message:
+            return {"error": "Service Add Already"}, 409
 
         return {"error": error_message}, 500
 
