@@ -16,7 +16,8 @@ def add_appointment_service(data, service_id):
             return {"error": "Appointment Already Added!"}, 409
 
         return {"error": error_message}, 500
-    
+
+
 def get_appointment_service(service_id):
     try:
         result = get_appointment_store(service_id)
@@ -25,8 +26,10 @@ def get_appointment_service(service_id):
             return result
 
     except Exception as e:
-        return {"error":str(e)}
-    
+        error_message = str(e)
+        return {"error": error_message}, 500
+
+
 def update_appointment_service(data, service_id, id):
     try:
         result = update_appointment_store(data, service_id, id)
@@ -37,7 +40,8 @@ def update_appointment_service(data, service_id, id):
     except Exception as e:
         error_message = str(e)
         return {"error": error_message}, 500
-    
+
+
 def delete_appointment_service(service_id, id):
     try:
         result = delete_appointment_store(service_id, id)
