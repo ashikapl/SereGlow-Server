@@ -7,16 +7,15 @@ def user_signup_service(data):
         result = user_signup_store(data)
 
         if result:
-            return jsonify(result)
+            return result
     except Exception as e:
         error_message = str(e)
 
         # Detect UNIQUE constraint violation (email already exists)
-        if 'duplicate key value violates unique constraint' in error_message and 'user_email_key' in error_message:
+        if 'duplicate key value violates unique constraint' in error_message and 'users_email_key' in error_message:
             return {"error": "Email already exists"}, 409  # HTTP 409 Conflict
+        
         return {"error": error_message}, 500
-
-    return {"error": error_message}, 500
 
 def user_login_service(data):
     try:
