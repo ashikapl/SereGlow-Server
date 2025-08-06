@@ -25,12 +25,16 @@ def update_service_store(data, service_id):
     result = supabase.table("Service").update(
         data).eq("id", service_id).execute()
 
-    if result:
+    if result.data:
         return result
+    else:
+        return {"error": f"Service with id {service_id} not found"}, 404
 
 
 def delete_service_store(service_id):
     result = supabase.table("Service").delete().eq("id", service_id).execute()
 
-    if result:
+    if result.data and len(result.data) > 0:
         return result
+    else:
+        return {"error": f"Service with id {service_id} not found"}, 404

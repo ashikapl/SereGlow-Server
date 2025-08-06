@@ -19,7 +19,7 @@ def service():
 
 
 @service_bp.route('/', methods=['GET'])
-@token_required
+# @token_required
 def get_services():
     result = read_serv_services()
 
@@ -30,24 +30,23 @@ def get_services():
 
 
 @service_bp.route('/service/<int:service_id>', methods=['PUT'])
-@token_required
+# @token_required
 def update_service(service_id):
     data = request.get_json()
-
     result = update_serv_services(data, service_id)
 
-    if "error" in result:
-        return jsonify({"message": "Update Failed!"}), 404
+    if isinstance(result, tuple):
+        return jsonify(result[0]), result[1]
 
-    return jsonify({"message": "Update Successfull!"})
+    return jsonify({"message": "Update successful!"}), 200
 
 
 @service_bp.route('/service/<int:service_id>', methods=['DELETE'])
-@token_required
+# @token_required
 def delete_service(service_id):
     result = delete_serv_services(service_id)
 
-    if "error" in result:
-        return jsonify({"message": "Delete Failed!"}), 404
+    if isinstance(result, tuple):
+        return jsonify(result[0]), result[1]
 
     return jsonify({"message": "Delete Successfull!"})
