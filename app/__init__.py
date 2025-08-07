@@ -3,7 +3,7 @@ from flask_cors import CORS
 from config import Config
 from app.routes.admin import admin_bp
 from app.routes.user import user_bp
-from app.routes.services import service_bp
+from app.routes.service import service_bp
 from app.routes.appointment import appointment_bp
 
 

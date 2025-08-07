@@ -3,7 +3,6 @@ from app.services.appointment import add_appointment_service, get_appointment_se
 
 appointment_bp = Blueprint("appointment_bp", __name__)
 
-
 @appointment_bp.route("/<int:service_id>", methods=["POST"])
 def add_appointment(service_id):
     data = request.get_json()
@@ -15,7 +14,6 @@ def add_appointment(service_id):
 
     return jsonify(result.data), 201
 
-
 @appointment_bp.route("/<int:service_id>", methods=["GET"])
 def get_appointment(service_id):
     result = get_appointment_service(service_id)
@@ -24,7 +22,6 @@ def get_appointment(service_id):
         return jsonify({"message": "No Appointment"}), 204
 
     return jsonify(result.data), 200
-
 
 @appointment_bp.route("/<int:service_id>/<int:id>", methods=["PUT"])
 def update_appointment(service_id, id):
@@ -36,7 +33,6 @@ def update_appointment(service_id, id):
         return jsonify(result[0]), result[1]
 
     return jsonify({"message": "Update successful!"}), 200
-
 
 @appointment_bp.route("/<int:service_id>/<int:id>", methods=["DELETE"])
 def delete_appointment(service_id, id):
