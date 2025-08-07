@@ -5,6 +5,7 @@ from app.routes.admin import admin_bp
 from app.routes.services import service_bp
 from app.routes.appointment import appointment_bp
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
