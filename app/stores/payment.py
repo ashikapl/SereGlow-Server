@@ -32,7 +32,7 @@ def get_payment_store(appointment_id):
 
 def update_payment_store(data, appointment_id, payment_id):
     result = supabase.table("Payment").update(
-        data).eq("appointment_id", appointment_id).eq("payment_id", payment_id).execute()
+        data).eq("appointment_id", appointment_id).eq("id", payment_id).execute()
 
     if result.data and len(result.data) > 0:
         return result
@@ -42,7 +42,7 @@ def update_payment_store(data, appointment_id, payment_id):
 
 def delete_payment_store(appointment_id, payment_id):
     result = supabase.table("Payment").delete().eq(
-        "appointment_id", appointment_id).eq("payment_id", payment_id).execute()
+        "appointment_id", appointment_id).eq("id", payment_id).execute()
 
     if result:
         return result
