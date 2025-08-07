@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from app.services.services import create_serv_services, read_serv_services, update_serv_services, delete_serv_services
+from app.services.service import create_service_services, read_service_services, update_service_services, delete_service_services
 from app.utils.token_auth import token_required
 
 service_bp = Blueprint("service_bp", __name__)
@@ -10,7 +10,7 @@ service_bp = Blueprint("service_bp", __name__)
 def service():
     data = request.get_json()
 
-    result = create_serv_services(data)
+    result = create_service_services(data)
 
     if isinstance(result, tuple):
         return result
@@ -21,7 +21,7 @@ def service():
 @service_bp.route('/', methods=['GET'])
 # @token_required
 def get_services():
-    result = read_serv_services()
+    result = read_service_services()
 
     if not result.data:
         return jsonify({"Massage": "Empty"}), 204
@@ -29,11 +29,11 @@ def get_services():
     return jsonify(result.data), 200
 
 
-@service_bp.route('/service/<int:service_id>', methods=['PUT'])
+@service_bp.route('/<int:service_id>', methods=['PUT'])
 # @token_required
 def update_service(service_id):
     data = request.get_json()
-    result = update_serv_services(data, service_id)
+    result = update_service_services(data, service_id)
 
     if isinstance(result, tuple):
         return jsonify(result[0]), result[1]
@@ -41,10 +41,10 @@ def update_service(service_id):
     return jsonify({"message": "Update successful!"}), 200
 
 
-@service_bp.route('/service/<int:service_id>', methods=['DELETE'])
+@service_bp.route('/<int:service_id>', methods=['DELETE'])
 # @token_required
 def delete_service(service_id):
-    result = delete_serv_services(service_id)
+    result = delete_service_services(service_id)
 
     if isinstance(result, tuple):
         return jsonify(result[0]), result[1]
