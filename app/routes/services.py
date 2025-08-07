@@ -25,7 +25,7 @@ def get_service():
 @service_bp.route('/service', methods=['GET'])
 @token_required
 def get_services():
-    result = read_serv_services()
+    result = add_service_services()
 
     if "error" in result:
         return jsonify({"message": "No Service"}), 204
@@ -38,7 +38,7 @@ def get_services():
 def update_service(service_id):
     data = request.get_json()
 
-    result = update_serv_services(data, service_id)
+    result = update_service_services(data, service_id)
 
     if isinstance(result, tuple):
         return jsonify(result[0]), result[1]
@@ -49,7 +49,7 @@ def update_service(service_id):
 @service_bp.route('/service/<int:service_id>', methods=['DELETE'])
 @token_required
 def delete_service(service_id):
-    result = delete_serv_services(service_id)
+    result = delete_service_services(service_id)
 
     if isinstance(result, tuple):
         return jsonify(result[0]), result[1]

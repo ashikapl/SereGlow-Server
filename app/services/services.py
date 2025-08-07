@@ -1,9 +1,10 @@
 from flask import jsonify
-from app.stores.services import add_service_store, get_service_store, update_service_store, delete_service_store
+from app.stores.services import create_service_store, read_service_store, update_service_store, delete_service_store
 
-def add_service_services(data):
+
+def create_serv_services(data):
     try:
-        result = add_service_store(data)
+        result = create_service_store(data)
 
         if result:
             return result
@@ -17,24 +18,19 @@ def add_service_services(data):
 
         return {"error": error_message}, 500
 
-<<<<<<< HEAD
-def get_service_services():
-=======
 
 def read_serv_services():
->>>>>>> 4ab05fdd7db5d3325d666c9df532cc0700d60adb
     try:
-        result = get_service_store()
+        result = read_service_store()
 
         if result:
             return result
-        
-        # print("result", result)
 
     except Exception as e:
-        return {"error": str(e)}
+        return jsonify({"error": str(e)}), 500
 
-def update_service_services(data, service_id):
+
+def update_serv_services(data, service_id):
     try:
         result = update_service_store(data, service_id)
 
@@ -42,9 +38,10 @@ def update_service_services(data, service_id):
             return result
 
     except Exception as e:
-        return {"error": str(e)}
+        return jsonify({"error": str(e)}), 500
 
-def delete_service_services(service_id):
+
+def delete_serv_services(service_id):
     try:
         result = delete_service_store(service_id)
 

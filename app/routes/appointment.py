@@ -43,12 +43,6 @@ def delete_appointment(service_id, id):
     result = delete_appointment_service(service_id, id)
 
     if isinstance(result, tuple):
-<<<<<<< HEAD
         return jsonify(result[0]), result[1]
 
-    return jsonify({"message": "Delete Successfull!"})
-=======
-        return result
-
     return jsonify({"message": "Delete successful!"}), 200
->>>>>>> 4ab05fdd7db5d3325d666c9df532cc0700d60adb
