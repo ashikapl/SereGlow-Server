@@ -4,11 +4,11 @@ from app.services.payment import add_payment_service, get_payment_service, updat
 payment_bp = Blueprint("payment_bp", __name__)
 
 
-@payment_bp.route("/<int:service_id>/<int:appointment_id>", methods=["POST"])
+@payment_bp.route("/<int:appointment_id>", methods=["POST"])
 def add_payment(service_id, appointment_id):
     data = request.get_json()
 
-    result = add_payment_service(data, service_id, appointment_id)
+    result = add_payment_service(data, appointment_id)
 
     if isinstance(result, tuple):
         return result
@@ -16,9 +16,9 @@ def add_payment(service_id, appointment_id):
     return jsonify(result.data), 201
 
 
-@payment_bp.route("/<int:service_id>/<int:appointment_id>", methods=["GET"])
-def get_payment(service_id):
-    result = get_payment_service(service_id)
+@payment_bp.route("/<int:appointment_id>", methods=["GET"])
+def get_payment(appointment_id):
+    result = get_payment_service(appointment_id)
 
     if isinstance(result, tuple):
         return result

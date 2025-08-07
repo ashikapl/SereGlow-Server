@@ -1,8 +1,8 @@
 from app.utils.supabase_client import supabase
 
 
-def add_payment_store(data, service_id, appointment_id):
-    if service_id == data.get("service_id") and appointment_id == data.get("appointment_id"):
+def add_payment_store(data,  appointment_id):
+    if appointment_id == data.get("appointment_id"):
         result = supabase.table("Payment").insert({
             "user_id": data.get("user_id"),
             "service_id": data.get("service_id"),
@@ -20,14 +20,14 @@ def add_payment_store(data, service_id, appointment_id):
         return {"error": "Failed to create appointment, service_id and data.get('service_id') not match ."}, 400
 
 
-def get_payment_store(service_id, appointment_id):
+def get_payment_store(appointment_id):
     result = supabase.table("Payment").select(
-        "*").eq("service_id", service_id).eq("appointment_id", appointment_id).execute()
+        "*").eq("appointment_id", appointment_id).execute()
 
     if result.data and len(result.data) > 0:
         return result
     else:
-        return {"error": f"No payment found for service_id {service_id}."}, 404
+        return {"error": f"No payment found for appointment_id {appointment_id}."}, 404
 
 
 def update_payment_store(data, appointment_id, payment_id):
