@@ -24,7 +24,10 @@ def get_appointment_store(service_id):
         "*").eq("service_id", service_id).execute()
 
     if result.data and len(result.data) > 0:
+<<<<<<< HEAD
         # print("result", result)
+=======
+>>>>>>> 4ab05fdd7db5d3325d666c9df532cc0700d60adb
         return result
     else:
         return {"error": f"No appointments found for service_id {service_id}."}, 404
@@ -47,4 +50,8 @@ def delete_appointment_store(service_id, appointment_id):
     if result.data and len(result.data) > 0:
         return result
     else:
+<<<<<<< HEAD
         return {"error": f"Appointment with id {appointment_id} and service_id {service_id} not found or not delete."}, 404
+=======
+        return {"error": f"Appointment with id {appointment_id} and service_id {service_id} not found or not delete."}, 404
+>>>>>>> 4ab05fdd7db5d3325d666c9df532cc0700d60adb

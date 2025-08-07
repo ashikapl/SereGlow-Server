@@ -1,6 +1,7 @@
 from flask import jsonify
 from app.stores.appointment import add_appointment_store, get_appointment_store, update_appointment_store, delete_appointment_store
 
+
 def add_appointment_service(data, service_id):
     try:
         result = add_appointment_store(data, service_id)

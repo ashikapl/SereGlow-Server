@@ -17,7 +17,12 @@ def add_service_services(data):
 
         return {"error": error_message}, 500
 
+<<<<<<< HEAD
 def get_service_services():
+=======
+
+def read_serv_services():
+>>>>>>> 4ab05fdd7db5d3325d666c9df532cc0700d60adb
     try:
         result = get_service_store()
 

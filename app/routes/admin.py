@@ -3,6 +3,7 @@ from app.services.admin import admin_signup_service, admin_login_service
 
 admin_bp = Blueprint("admin_bp", __name__)
 
+
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
     data = request.get_json()
@@ -15,6 +16,7 @@ def admin_signUp():
         return result
 
     return jsonify(result.data), 201
+
 
 @admin_bp.route("/login", methods=["POST"])
 def admin_login():

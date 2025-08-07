@@ -10,11 +10,11 @@ class Admin:
 
     def to_dict(self):
         return {
-            "id":self.id,
-            "firstname":self.firstname,
-            "lastname":self.lastname,
-            "email":self.email,
-            "password":self.password,
-            "address":self.address,
-            "phone":self.phone
+            "id": self.id,
+            "firstname": self.firstname,
+            "lastname": self.lastname,
+            "email": self.email,
+            "password": self.password,
+            "address": self.address,
+            "phone": self.phone
         }
