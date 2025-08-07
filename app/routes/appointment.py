@@ -35,7 +35,7 @@ def update_appointment(service_id, id):
     if isinstance(result, tuple):
         return result
 
-    return jsonify(result.data), 201
+    return jsonify({"message": "Update successful!"}), 200
 
 
 @appointment_bp.route("/<int:service_id>/<int:id>", methods=["DELETE"])
@@ -45,4 +45,4 @@ def delete_appointment(service_id, id):
     if isinstance(result, tuple):
         return result
 
-    return jsonify(result.data), 201
+    return jsonify({"message": "Delete successful!"}), 200
