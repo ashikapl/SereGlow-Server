@@ -7,7 +7,6 @@ from app.routes.service import service_bp
 from app.routes.payment import payment_bp
 from app.routes.appointment import appointment_bp
 
-
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)

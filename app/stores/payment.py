@@ -36,7 +36,6 @@ def update_payment_store(data, appointment_id, payment_id):
     else:
         return {"error": f"Payment with id {appointment_id} and payment_id {payment_id} not found or not updated."}, 404
 
-
 def delete_payment_store(appointment_id, payment_id):
     result = supabase.table("Payment").delete().eq(
         "appointment_id", appointment_id).eq("id", payment_id).execute()
@@ -44,4 +43,4 @@ def delete_payment_store(appointment_id, payment_id):
     if result.data and len(result.data) > 0:
         return result
     else:
-        return {"error": f"Payment with id {appointment_id} and payment_id {payment_id} not found or not updated."}, 404
+        return {"error": f"Payment with id {appointment_id} and service_id {service_id} not found or not updated."}, 404

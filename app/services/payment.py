@@ -48,4 +48,5 @@ def delete_payment_service(appointment_id, id):
 
     except Exception as e:
         error_message = str(e)
+
         return {"error": error_message}, 500
