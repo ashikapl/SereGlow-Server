@@ -4,6 +4,7 @@ from config import Config
 from app.routes.admin import admin_bp
 from app.routes.user import user_bp
 from app.routes.service import service_bp
+from app.routes.payment import payment_bp
 from app.routes.appointment import appointment_bp
 
 
@@ -18,5 +19,6 @@ def create_app():
     app.register_blueprint(user_bp, url_prefix="/user")
     app.register_blueprint(service_bp, url_prefix="/service")
     app.register_blueprint(appointment_bp, url_prefix="/appointment")
+    app.register_blueprint(payment_bp, url_prefix="/payment")
 
     return app
