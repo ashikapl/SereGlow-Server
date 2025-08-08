@@ -13,7 +13,7 @@ def user_signUp():
     print("routers result: ", result)
 
     if isinstance(result, tuple):
-        return jsonify(result), 404
+        return result
     return jsonify(result.data), 201
 
 

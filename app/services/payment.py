@@ -1,10 +1,9 @@
 from flask import jsonify
 from app.stores.payment import add_payment_store, get_payment_store, update_payment_store, delete_payment_store
 
-
-def add_payment_service(data, service_id):
+def add_payment_service(data, appointment_id):
     try:
-        result = add_payment_store(data, service_id)
+        result = add_payment_store(data, appointment_id)
 
         if result:
             return result
@@ -18,10 +17,9 @@ def add_payment_service(data, service_id):
 
         return {"error": error_message}, 500
 
-
-def get_payment_service(service_id):
+def get_payment_service(appointment_id):
     try:
-        result = get_payment_store(service_id)
+        result = get_payment_store(appointment_id)
 
         if result:
             return result
@@ -30,10 +28,9 @@ def get_payment_service(service_id):
         error_message = str(e)
         return {"error": error_message}, 500
 
-
-def update_payment_service(data, service_id, id):
+def update_payment_service(data, appointment_id, id):
     try:
-        result = update_payment_store(data, service_id, id)
+        result = update_payment_store(data, appointment_id, id)
 
         if result:
             return result
@@ -42,14 +39,14 @@ def update_payment_service(data, service_id, id):
         error_message = str(e)
         return {"error": error_message}, 500
 
-
-def delete_payment_service(service_id, id):
+def delete_payment_service(appointment_id, id):
     try:
-        result = delete_payment_store(service_id, id)
+        result = delete_payment_store(appointment_id, id)
 
         if result:
             return result
 
     except Exception as e:
         error_message = str(e)
+
         return {"error": error_message}, 500
