@@ -15,8 +15,6 @@ def add_service_store(data):
 def get_service_store():
     result = supabase.table("Service").select("*").execute()
 
-    # print("result", result)
-
     if result:
         return result
 
@@ -25,15 +23,14 @@ def update_service_store(data, service_id):
         data).eq("id", service_id).execute()
 
     if result.data:
-        return result.data
+        return result
     else:
         return {"error": f"Service with id {service_id} not found"}, 404
-
 
 def delete_service_store(service_id):
     result = supabase.table("Service").delete().eq("id", service_id).execute()
 
     if result.data and len(result.data) > 0:
-        return result.data
+        return result
     else:
         return {"error": f"Service with id {service_id} not found"}, 404
