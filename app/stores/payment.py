@@ -17,7 +17,7 @@ def add_payment_store(data,  appointment_id):
         if result:
             return result
     else:
-        return {"error": "Failed to create appointment, service_id and data.get('service_id') not match ."}, 400
+        return {"error": "Failed to create payment, service_id and data.get('service_id') not match ."}, 400
 
 
 def get_payment_store(appointment_id):
@@ -44,5 +44,7 @@ def delete_payment_store(appointment_id, payment_id):
     result = supabase.table("Payment").delete().eq(
         "appointment_id", appointment_id).eq("id", payment_id).execute()
 
-    if result:
+    if result.data and len(result.data) > 0:
         return result
+    else:
+        return {"error": f"Payment with id {appointment_id} and payment_id {payment_id} not found or not delete."}, 404
