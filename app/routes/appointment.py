@@ -18,8 +18,8 @@ def add_appointment(service_id):
 def get_appointment(service_id):
     result = get_appointment_service(service_id)
 
-    if "error" in result:
-        return jsonify({"message": "No Appointment"}), 204
+    if isinstance(result, tuple):
+        return result
 
     return jsonify(result.data), 200
 

@@ -1,7 +1,6 @@
 from flask import jsonify
 from app.stores.appointment import add_appointment_store, get_appointment_store, update_appointment_store, delete_appointment_store
 
-
 def add_appointment_service(data, service_id):
     try:
         result = add_appointment_store(data, service_id)
@@ -18,7 +17,6 @@ def add_appointment_service(data, service_id):
 
         return {"error": error_message}, 500
 
-
 def get_appointment_service(service_id):
     try:
         result = get_appointment_store(service_id)
@@ -28,8 +26,7 @@ def get_appointment_service(service_id):
 
     except Exception as e:
         error_message = str(e)
-        return {"error": error_message}, 500
-
+        return jsonify({"error": error_message}), 500
 
 def update_appointment_service(data, service_id, id):
     try:
@@ -41,7 +38,6 @@ def update_appointment_service(data, service_id, id):
     except Exception as e:
         error_message = str(e)
         return {"error": error_message}, 500
-
 
 def delete_appointment_service(service_id, id):
     try:

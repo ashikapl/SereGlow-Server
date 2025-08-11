@@ -8,7 +8,6 @@ load_dotenv()
 
 SECRET_KEY = os.getenv("SUPABASE_APIKEY")
 
-
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):

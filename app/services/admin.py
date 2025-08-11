@@ -2,7 +2,6 @@ from flask import jsonify
 from app.stores.admin import admin_signup_store
 from app.utils.user_validator import user_validator, generate_token
 
-
 def admin_signup_service(data):
     try:
         result = admin_signup_store(data)
@@ -18,7 +17,6 @@ def admin_signup_service(data):
             return {"error": "Email already exists"}, 409  # HTTP 409 Conflict
 
         return {"error": error_message}, 500
-
 
 def admin_login_service(data):
     try:

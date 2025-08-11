@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-
 def generate_token(user_id):
     payload = {
         'user_id': user_id,
@@ -17,7 +16,6 @@ def generate_token(user_id):
     token = jwt.encode(payload, os.getenv(
         "SUPABASE_APIKEY"), algorithm='HS256')
     return token
-
 
 def decode_token(token):
     try:
@@ -28,7 +26,6 @@ def decode_token(token):
         return None
     except jwt.InvalidTokenError:
         return None
-
 
 def user_validator(email, password, table_name):
     result = supabase.table(table_name).select(

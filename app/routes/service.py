@@ -6,7 +6,7 @@ service_bp = Blueprint("service_bp", __name__)
 
 @service_bp.route('/', methods=['POST'])
 # @token_required
-def service():
+def add_service():
     data = request.get_json()
 
     result = add_service_services(data)
@@ -42,7 +42,9 @@ def update_service(service_id):
 def delete_service(service_id):
     result = delete_service_services(service_id)
 
+    # print("Rs", result)
+
     if isinstance(result, tuple):
         return jsonify(result[0]), result[1]
 
-    return jsonify({"message": "Delete Successfull!"})
+    return jsonify({"message": "Delete Successfull!"}), 200

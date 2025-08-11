@@ -23,7 +23,6 @@ def get_payment(appointment_id):
 
     return jsonify(result.data), 201
 
-
 @payment_bp.route("/<int:appointment_id>/<int:id>", methods=["PUT"])
 def update_payment(appointment_id, id):
     data = request.get_json()
