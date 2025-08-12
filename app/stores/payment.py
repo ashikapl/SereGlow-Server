@@ -47,4 +47,4 @@ def delete_payment_store(appointment_id, payment_id):
     if result.data and len(result.data) > 0:
         return result
     else:
-        return {"error": f"Payment with id {appointment_id} and service_id {service_id} not found or not updated."}, 404
+        return {"error": f"Payment with id {appointment_id} and payment_id {payment_id} not found or not delete."}, 404
