@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from app.services.service import create_service_services, read_service_services, update_service_services, delete_service_services
+from app.services.service import add_service_services, get_service_services, update_service_services, delete_service_services
 from app.utils.token_auth import token_required
 
 service_bp = Blueprint("service_bp", __name__)
@@ -7,10 +7,10 @@ service_bp = Blueprint("service_bp", __name__)
 
 @service_bp.route('/', methods=['POST'])
 # @token_required
-def service():
+def add_service():
     data = request.get_json()
 
-    result = create_service_services(data)
+    result = add_service_services(data)
 
     if isinstance(result, tuple):
         return result
@@ -21,7 +21,7 @@ def service():
 @service_bp.route('/', methods=['GET'])
 # @token_required
 def get_services():
-    result = read_service_services()
+    result = get_service_services()
 
     if not result.data:
         return jsonify({"Massage": "Empty"}), 204
@@ -46,7 +46,9 @@ def update_service(service_id):
 def delete_service(service_id):
     result = delete_service_services(service_id)
 
+    # print("Rs", result)
+
     if isinstance(result, tuple):
         return jsonify(result[0]), result[1]
 
-    return jsonify({"message": "Delete Successfull!"})
+    return jsonify({"message": "Delete Successfull!"}), 200

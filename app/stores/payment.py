@@ -1,7 +1,7 @@
 from app.utils.supabase_client import supabase
 
 
-def add_payment_store(data,  appointment_id):
+def add_payment_store(data, appointment_id):
     if appointment_id == data.get("appointment_id"):
         result = supabase.table("Payment").insert({
             "user_id": data.get("user_id"),
@@ -17,7 +17,7 @@ def add_payment_store(data,  appointment_id):
         if result:
             return result
     else:
-        return {"error": "Failed to create payment, service_id and data.get('service_id') not match ."}, 400
+        return {"error": "Failed to create appointment, service_id and data.get('service_id') not match ."}, 400
 
 
 def get_payment_store(appointment_id):
@@ -47,4 +47,4 @@ def delete_payment_store(appointment_id, payment_id):
     if result.data and len(result.data) > 0:
         return result
     else:
-        return {"error": f"Payment with id {appointment_id} and payment_id {payment_id} not found or not delete."}, 404
+        return {"error": f"Payment with id {appointment_id} and service_id {service_id} not found or not updated."}, 404

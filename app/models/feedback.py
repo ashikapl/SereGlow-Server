@@ -8,10 +8,9 @@ class Feedback:
 
     def to_dict(self):
         return {
-            "id":self.id,
-            "user_id":self.user_id,
-            "service_id":self.service_id,
-            "rating":self.rating,
-            "comment":self.comment
+            "id": self.id,
+            "user_id": self.user_id,
+            "service_id": self.service_id,
+            "rating": self.rating,
+            "comment": self.comment
         }
-        

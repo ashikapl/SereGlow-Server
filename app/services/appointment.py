@@ -28,7 +28,7 @@ def get_appointment_service(service_id):
 
     except Exception as e:
         error_message = str(e)
-        return {"error": error_message}, 500
+        return jsonify({"error": error_message}), 500
 
 
 def update_appointment_service(data, service_id, id):

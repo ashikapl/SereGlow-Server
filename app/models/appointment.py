@@ -10,13 +10,11 @@ class Appointment:
 
     def to_dict(self):
         return {
-            "id":self.id,
-            "user_id":self.user_id,
-            "service_id":self.service_id,
-            "appointment_date":str(self.appointment_date),
-            "appointment_time":str(self.appointment_time),
-            "status":self.status,
-            "created_at":str(self.created_at)
+            "id": self.id,
+            "user_id": self.user_id,
+            "service_id": self.service_id,
+            "appointment_date": str(self.appointment_date),
+            "appointment_time": str(self.appointment_time),
+            "status": self.status,
+            "created_at": str(self.created_at)
         }
-
-        

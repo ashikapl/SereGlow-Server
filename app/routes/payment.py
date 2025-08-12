@@ -5,7 +5,7 @@ payment_bp = Blueprint("payment_bp", __name__)
 
 
 @payment_bp.route("/<int:appointment_id>", methods=["POST"])
-def add_payment(service_id, appointment_id):
+def add_payment(appointment_id):
     data = request.get_json()
 
     result = add_payment_service(data, appointment_id)
@@ -26,11 +26,11 @@ def get_payment(appointment_id):
     return jsonify(result.data), 201
 
 
-@payment_bp.route("/<int:appointment_id>/<int:payment_id>", methods=["PUT"])
-def update_payment(appointment_id, payment_id):
+@payment_bp.route("/<int:appointment_id>/<int:id>", methods=["PUT"])
+def update_payment(appointment_id, id):
     data = request.get_json()
 
-    result = update_payment_service(data, appointment_id, payment_id)
+    result = update_payment_service(data, appointment_id, id)
 
     if isinstance(result, tuple):
         return result
@@ -38,9 +38,9 @@ def update_payment(appointment_id, payment_id):
     return jsonify({"message": "Update successful!"}), 200
 
 
-@payment_bp.route("/<int:appointment_id>/<int:payment_id>", methods=["DELETE"])
-def delete_payment(appointment_id, payment_id):
-    result = delete_payment_service(appointment_id, payment_id)
+@payment_bp.route("/<int:appointment_id>/<int:id>", methods=["DELETE"])
+def delete_payment(appointment_id, id):
+    result = delete_payment_service(appointment_id, id)
 
     if isinstance(result, tuple):
         return result

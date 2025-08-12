@@ -13,11 +13,6 @@ class Config:
     # Supabase credentials
     SUPABASE_URL = os.getenv("SUPABASE_URL")
     SUPABASE_KEY = os.getenv("SUPABASE_APIKEY")
-    # SUPABASE_DB_URI = os.getenv("SUPABASE_DB_URI")
-
-    # SQLAlchemy
-    # SQLALCHEMY_DATABASE_URI = SUPABASE_DB_URI
-    # SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Supabase auth headers (optional)
     SUPABASE_HEADERS = {
