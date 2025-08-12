@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/Users/ashikapl/Desktop/SereGlow/SereGlow-Server/static/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="page">
+        <div class="card">
+            <h2 class="title">Login</h2>
+            <form id="loginForm" class="form">
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" placeholder="Enter your email" required>
+                    <small id="emailError" class="error"></small>
+                </div>
+
+                <div class="field password-field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <i class="fa-solid fa-eye" id="togglePassword"></i>
+                    <small id="passwordError" class="error"></small>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById("togglePassword");
+        const password = document.getElementById("password");
+        togglePassword.addEventListener("click", () => {
+            const type = password.type === "password" ? "text" : "password";
+            password.type = type;
+            togglePassword.classList.toggle("fa-eye-slash");
+        });
+
+        // Form validation
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            let emailVal = document.getElementById("email").value.trim();
+            let passwordVal = password.value.trim();
+            let emailError = document.getElementById("emailError");
+            let passwordError = document.getElementById("passwordError");
+
+            emailError.textContent = "";
+            passwordError.textContent = "";
+
+            // Email validation
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+            if (!emailPattern.test(emailVal)) {
+                emailError.textContent = "Enter a valid Gmail address";
+                return;
+            }
+
+            // Strong password check
+            const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!strongPasswordPattern.test(passwordVal)) {
+                passwordError.textContent = "Password must be at least 8 chars, include uppercase, lowercase, number, and special character";
+                return;
+            }
+
+            alert("Login successful!");
+        });
+    </script>
+</body>
+</html>

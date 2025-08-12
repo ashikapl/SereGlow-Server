@@ -1,0 +1,120 @@
+:root {
+  --bg: #f3f6fb;
+  --card: #ffffff;
+  --accent: #4f46e5;
+  --muted: #6b7280;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg, var(--bg), #eef2ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.page {
+  width: 100%;
+  max-width: 520px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+  padding: 28px;
+}
+
+.title {
+  margin: 0 0 18px;
+  font-size: 20px;
+  color: #0f172a;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  position: relative; /* for eye icon positioning */
+}
+
+.field label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.field input {
+  padding: 10px 40px 10px 12px; /* space for eye icon */
+  border: 1px solid #e6e9ee;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.field input:focus, 
+.field textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(79,70,229,0.06);
+}
+
+.password-field input {
+  padding: 10px; /* Space for eye icon */
+}
+
+/* Eye icon styling */
+.password-field i {
+  position: absolute;
+  right: 12px;
+  top: 65%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 15px;
+}
+.password-field i:hover {
+  color: var(--accent);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.btn {
+  background: var(--accent);
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.95;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .page {
+    padding: 8px;
+  }
+}
