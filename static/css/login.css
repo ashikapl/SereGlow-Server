@@ -1,8 +1,8 @@
 :root {
   --bg: #f3f6fb;
-  --card: #ffffff;
+  --card: #fbfbfb;
   --accent: #4f46e5;
-  --muted: #6b7280;
+  --muted: #000000;
 }
 
 * {
@@ -30,6 +30,7 @@ body {
 
 .card {
   background: var(--card);
+  border: 2px solid #fda5d1; /* Pink border */
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
   padding: 28px;
@@ -69,19 +70,21 @@ body {
 }
 
 .password-field input {
-  padding: 10px; /* Space for eye icon */
+  /* Keep right padding for eye icon */
+  padding-right: 40px; /* same as .field input */
 }
 
 /* Eye icon styling */
 .password-field i {
   position: absolute;
   right: 12px;
-  top: 65%;
+  top: 65%; /* center vertically */
   transform: translateY(-50%);
   cursor: pointer;
   color: var(--muted);
   font-size: 15px;
 }
+
 .password-field i:hover {
   color: var(--accent);
 }
@@ -113,7 +116,17 @@ body {
 }
 
 /* Responsive */
+/* @media (max-width: 520px) {
+  .page {
+    padding: 8px;
+  }
+} */
+
+/* Small screens */
 @media (max-width: 520px) {
+  .form .row {
+    flex-direction: column;
+  }
   .page {
     padding: 8px;
   }

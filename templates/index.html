@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SeréGlow – Beauty Salon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f7f8fb;          /* page background */
+      --card:#ffffff;         /* card background */
+      --ink:#0f172a;          /* text */
+      --muted:#475569;        /* muted text */
+      --primary:#e11d48;      /* rose */
+      --primary-600:#be123c;  /* darker rose */
+      --ring:#fda4af;         /* focus ring */
+      --ok:#16a34a;           /* success */
+      --warn:#ea580c;         /* warning */
+      --danger:#dc2626;       /* danger */
+      --border:#e5e7eb;       /* border */
+      --shadow: 0 8px 30px rgba(2,6,23,.08);
+      --radius: 16px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      line-height:1.5; color:var(--ink); background:var(--bg);
+    }
+    a{color:inherit; text-decoration:none}
+    img{max-width:100%; display:block}
+
+    /* Layout */
+    .container{ width:min(1120px, 92vw); margin-inline:auto; }
+    .grid{ display:grid; gap:16px }
+
+    /* Topbar */
+    .topbar{ position:sticky; top:0; z-index:20; background:rgba(255,255,255,.8); backdrop-filter:saturate(180%) blur(10px); border-bottom:1px solid var(--border); }
+    .nav{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; }
+    .brand{ display:flex; gap:10px; align-items:center; font-weight:700; }
+    .brand .logo{ width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg, var(--primary), #fb7185); display:grid; place-items:center; color:white; box-shadow: var(--shadow); }
+    .brand span{ letter-spacing:.3px }
+    .nav a{ padding:10px 12px; border-radius:10px; }
+    .nav a:hover{ background:#fdf2f8 }
+    .actions{ display:flex; gap:10px; align-items:center }
+    .btn{ padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:var(--card); cursor:pointer; font-weight:600; }
+    .btn.primary{ background:var(--primary); color:#fff; border-color:transparent }
+    .btn.primary:hover{ background:var(--primary-600) }
+    .btn.ghost{ background:transparent }
+    .btn.danger{ background:var(--danger); color:#fff; border-color:transparent }
+    .btn.ok{ background:var(--ok); color:#fff; border-color:transparent }
+    .badge{ padding:6px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted) }
+
+    /* Hero */
+    .hero{ padding:48px 0 24px; }
+    .hero .wrap{ display:grid; grid-template-columns: 1.1fr .9fr; gap:24px; align-items:center }
+    .hero h1{ font-size: clamp(28px, 4vw, 48px); line-height:1.1; margin:0 0 8px }
+    .hero p{ color:var(--muted); margin:0 0 18px }
+    .pill{ display:inline-flex; gap:8px; align-items:center; padding:8px 12px; border:1px solid var(--border); border-radius:999px; background:#fff }
+
+    .card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); }
+    .card.pad{ padding:18px }
+
+    /* Sections */
+    section{ padding:28px 0 }
+    h2{ font-size: clamp(20px, 2.8vw, 28px); margin:0 0 14px }
+    .sub{ color:var(--muted); margin-bottom:16px }
+
+    /* Services */
+    .service-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px }
+    .service{ display:flex; flex-direction:column; overflow:hidden }
+    .service .cover{ aspect-ratio: 16/10; object-fit:cover }
+    .service .body{ padding:14px; display:flex; flex-direction:column; gap:8px }
+    .price{ font-weight:700 }
+    .chip{ font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted) }
+
+    /* Forms */
+    .field{ display:grid; gap:6px; margin-bottom:12px }
+    .label{ font-weight:600 }
+    .input, .select, .textarea{
+      padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:#fff;
+      outline:none; font:inherit;
+    }
+    .input:focus, .select:focus, .textarea:focus{ box-shadow:0 0 0 4px var(--ring); border-color: var(--primary) }
+    .textarea{ min-height:100px; resize:vertical }
+
+    /* Tables */
+    table{ width:100%; border-collapse:separate; border-spacing:0; font-size:14px }
+    th, td{ padding:10px 12px; border-bottom:1px solid var(--border) }
+    th{ text-align:left; color:var(--muted); font-weight:600; }
+    tr:hover td{ background:#fff1f2 }
+
+    /* Tabs */
+    .tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px }
+    .tab{ padding:8px 12px; border:1px solid var(--border); border-radius:12px; cursor:pointer; background:#fff; }
+    .tab.active{ background:var(--primary); color:#fff; border-color:transparent }
+
+    /* Footer */
+    footer{ padding:28px 0; color:var(--muted) }
+
+    /* Modal */
+    .modal{ position:fixed; inset:0; display:none; place-items:center; background:rgba(2,6,23,.48); z-index:50 }
+    .modal.open{ display:grid }
+    .modal .panel{ width:min(560px, 92vw); background:var(--card); border-radius:20px; border:1px solid var(--border); box-shadow:var(--shadow); }
+
+    /* Responsive */
+    @media (max-width: 920px){
+      .hero .wrap{ grid-template-columns: 1fr }
+      .service-grid{ grid-template-columns: repeat(2, 1fr) }
+    }
+    @media (max-width: 620px){
+      .nav a{ display:none }
+      .service-grid{ grid-template-columns: 1fr }
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo">💮</div>
+        <span>SeréGlow Salon</span>
+      </div>
+      <nav class="links">
+        <a href="#services">Services</a>
+        <a href="#booking">Appointment</a>
+        <a href="#feedback">Feedback</a>
+        <a href="#payments">Payment</a>
+        <a href="#admin">Admin</a>
+      </nav>
+      <div class="actions">
+        <span id="whoami" class="badge" style="display:none"></span>
+        <button class="btn ghost" id="btnUserAuth">User</button>
+        <button class="btn ghost" id="btnAdminAuth">Admin</button>
+        <button class="btn" id="btnLogout" style="display:none">Logout</button>
+        <button class="btn primary" onclick="scrollToHash('booking')">Book Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container wrap">
+      <div>
+        <div class="pill">Open Daily · 9:00–19:00 · Walk‑ins Welcome</div>
+        <h1>Glow up, the easy way.</h1>
+        <p>Premium hair, skin, and beauty services with transparent pricing. Book online, pay online or cash at the desk.</p>
+        <div class="actions" style="margin-top:10px">
+          <button class="btn primary" onclick="scrollToHash('services')">Explore Services</button>
+          <button class="btn" onclick="scrollToHash('booking')">Make Appointment</button>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1600&auto=format&fit=crop" alt="Salon" style="border-radius:16px"/>
+      </div>
+    </div>
+  </header>
+
+  <!-- Services -->
+  <section id="services">
+    <div class="container">
+      <h2>Services</h2>
+      <p class="sub">Discover our most‑booked services. <b>Admins</b> can add, update, or remove services below (after logging in).</p>
+      <div class="tabs" id="serviceTabs">
+        <button class="tab active" data-cat="all">All</button>
+        <button class="tab" data-cat="Hair">Hair</button>
+        <button class="tab" data-cat="Skin">Skin</button>
+        <button class="tab" data-cat="Nails">Nails</button>
+        <button class="tab" data-cat="Makeup">Makeup</button>
+      </div>
+      <div class="service-grid" id="serviceGrid"></div>
+    </div>
+  </section>
+
+  <!-- Booking -->
+  <section id="booking">
+    <div class="container">
+      <div class="grid" style="grid-template-columns:1fr 1fr">
+        <div>
+          <h2>Book an Appointment</h2>
+          <p class="sub">Login as a <b>User</b> to book. Choose a service and your preferred date/time.</p>
+          <form id="bookForm" class="card pad">
+            <div class="field">
+              <label class="label" for="bf_service">Service</label>
+              <select class="select" id="bf_service" required></select>
+            </div>
+            <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px">
+              <div class="field">
+                <label class="label" for="bf_date">Date</label>
+                <input class="input" type="date" id="bf_date" required />
+              </div>
+              <div class="field">
+                <label class="label" for="bf_time">Time</label>
+                <input class="input" type="time" id="bf_time" required />
+              </div>
+            </div>
+            <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px">
+              <div class="field">
+                <label class="label" for="bf_name">Full Name</label>
+                <input class="input" id="bf_name" placeholder="Your name" required />
+              </div>
+              <div class="field">
+                <label class="label" for="bf_phone">Phone</label>
+                <input class="input" id="bf_phone" placeholder="98765 43210" pattern="[0-9]{10}" required />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label" for="bf_email">Email</label>
+              <input class="input" type="email" id="bf_email" placeholder="you@mail.com" required />
+            </div>
+            <div class="field">
+              <label class="label">Payment Method</label>
+              <div style="display:flex; gap:10px; flex-wrap:wrap">
+                <label><input type="radio" name="paymethod" value="online" checked /> Online</label>
+                <label><input type="radio" name="paymethod" value="cash" /> Cash at Salon</label>
+              </div>
+            </div>
+            <button class="btn primary" type="submit">Confirm & Continue</button>
+          </form>
+        </div>
+        <aside>
+          <h2>Your Appointments</h2>
+          <p class="sub">Upcoming & recent bookings.</p>
+          <div class="card pad">
+            <table id="apptTable">
+              <thead><tr><th>When</th><th>Service</th><th>Client</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feedback -->
+  <section id="feedback">
+    <div class="container">
+      <div class="grid" style="grid-template-columns:1fr 1fr">
+        <div>
+          <h2>Feedback</h2>
+          <p class="sub">Login as a <b>User</b> to submit feedback.</p>
+          <form id="fbForm" class="card pad">
+            <div class="field">
+              <label class="label" for="fb_name">Name</label>
+              <input class="input" id="fb_name" placeholder="Your name" required />
+            </div>
+            <div class="field">
+              <label class="label" for="fb_service">Service</label>
+              <select class="select" id="fb_service" required></select>
+            </div>
+            <div class="field">
+              <label class="label" for="fb_rating">Rating</label>
+              <select class="select" id="fb_rating" required>
+                <option value="5">★★★★★ – Loved it</option>
+                <option value="4">★★★★☆ – Great</option>
+                <option value="3">★★★☆☆ – Good</option>
+                <option value="2">★★☆☆☆ – Okay</option>
+                <option value="1">★☆☆☆☆ – Poor</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="label" for="fb_text">Comments</label>
+              <textarea class="textarea" id="fb_text" placeholder="Write your feedback..."></textarea>
+            </div>
+            <button class="btn primary" type="submit">Submit Feedback</button>
+          </form>
+        </div>
+        <aside>
+          <h2>What clients say</h2>
+          <p class="sub">Recent feedback from clients.</p>
+          <div class="card pad">
+            <table id="fbTable">
+              <thead><tr><th>Service</th><th>Name</th><th>Rating</th><th>Comment</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payments -->
+  <section id="payments">
+    <div class="container">
+      <h2>Payments</h2>
+      <p class="sub">Pay online now or choose cash at salon. (Demo checkout)</p>
+      <div class="card pad">
+        <table id="payTable">
+          <thead><tr><th>Appt ID</th><th>Client</th><th>Service</th><th>Amount</th><th>Method</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin -->
+  <section id="admin">
+    <div class="container">
+      <h2>Admin Dashboard</h2>
+      <p class="sub">Admins can manage all services. This is a front‑end demo—do not use real passwords.</p>
+
+      <div id="adminPanel" style="display:none">
+        <div class="grid" style="grid-template-columns: 1fr 1.2fr">
+          <form id="svcForm" class="card pad">
+            <h3 style="margin:0 0 12px">Add / Update Service</h3>
+            <input type="hidden" id="svc_id"/>
+            <div class="field">
+              <label class="label" for="svc_name">Name</label>
+              <input class="input" id="svc_name" required />
+            </div>
+            <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px">
+              <div class="field">
+                <label class="label" for="svc_price">Price (₹)</label>
+                <input class="input" id="svc_price" type="number" min="0" step="50" required />
+              </div>
+              <div class="field">
+                <label class="label" for="svc_duration">Duration (min)</label>
+                <input class="input" id="svc_duration" type="number" min="10" step="5" required />
+              </div>
+            </div>
+            <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px">
+              <div class="field">
+                <label class="label" for="svc_category">Category</label>
+                <select class="select" id="svc_category">
+                  <option>Hair</option>
+                  <option>Skin</option>
+                  <option>Nails</option>
+                  <option>Makeup</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="label" for="svc_image">Image URL (optional)</label>
+                <input class="input" id="svc_image" placeholder="https://..." />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label" for="svc_desc">Description</label>
+              <textarea class="textarea" id="svc_desc" placeholder="Short description..."></textarea>
+            </div>
+            <div class="actions">
+              <button class="btn primary" type="submit">Save Service</button>
+              <button class="btn" type="button" id="btnClearSvc">Clear</button>
+              <button class="btn danger" type="button" id="btnWipeAll">Delete All (Demo)</button>
+            </div>
+          </form>
+
+          <div class="card pad">
+            <div class="actions" style="justify-content:space-between; margin-bottom:8px">
+              <strong>All Services</strong>
+            </div>
+            <table id="adminSvcTable">
+              <thead><tr><th>Name</th><th>Cat</th><th>₹</th><th>Min</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="adminNotice" class="card pad">
+        <b>Admin access required.</b>
+        <p class="sub">Use the <em>Admin Login/Signup</em> button in the top right to sign in as an admin.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toast -->
+  <div id="toast" class="modal">
+    <div class="panel card pad" style="text-align:center">
+      <div id="toastText" style="font-weight:600; margin-bottom:8px">Saved</div>
+      <button class="btn" onclick="closeToast()">Close</button>
+    </div>
+  </div>
+
+  <!-- User Auth Modal -->
+  <div id="userAuth" class="modal">
+    <div class="panel card pad">
+      <div class="tabs" id="userAuthTabs">
+        <button class="tab active" data-mode="login">User Login</button>
+        <button class="tab" data-mode="signup">User Signup</button>
+      </div>
+      <form id="userLoginForm" class="grid" style="grid-template-columns:1fr">
+        <div class="field"><label class="label">Email</label><input class="input" id="ul_email" type="email" required></div>
+        <div class="field"><label class="label">Password</label><input class="input" id="ul_pass" type="password" required></div>
+        <button class="btn primary" type="submit">Login</button>
+      </form>
+      <form id="userSignupForm" class="grid" style="grid-template-columns:1fr; display:none">
+        <div class="field"><label class="label">Full Name</label><input class="input" id="us_name" required></div>
+        <div class="field"><label class="label">Email</label><input class="input" id="us_email" type="email" required></div>
+        <div class="field"><label class="label">Phone</label><input class="input" id="us_phone" pattern="[0-9]{10}" required></div>
+        <div class="field"><label class="label">Password</label><input class="input" id="us_pass" type="password" minlength="6" required></div>
+        <button class="btn primary" type="submit">Create Account</button>
+      </form>
+      <div class="actions" style="justify-content:flex-end; margin-top:8px"><button class="btn" onclick="closeUserAuth()">Close</button></div>
+    </div>
+  </div>
+
+  <!-- Admin Auth Modal -->
+  <div id="adminAuth" class="modal">
+    <div class="panel card pad">
+      <div class="tabs" id="adminAuthTabs">
+        <button class="tab active" data-mode="login">Admin Login</button>
+        <button class="tab" data-mode="signup">Admin Signup</button>
+      </div>
+      <form id="adminLoginForm" class="grid" style="grid-template-columns:1fr">
+        <div class="field"><label class="label">Email</label><input class="input" id="al_email" type="email" required></div>
+        <div class="field"><label class="label">Password</label><input class="input" id="al_pass" type="password" required></div>
+        <button class="btn primary" type="submit">Login</button>
+      </form>
+      <form id="adminSignupForm" class="grid" style="grid-template-columns:1fr; display:none">
+        <div class="field"><label class="label">Name</label><input class="input" id="as_name" required></div>
+        <div class="field"><label class="label">Email</label><input class="input" id="as_email" type="email" required></div>
+        <div class="field"><label class="label">Password</label><input class="input" id="as_pass" type="password" minlength="6" required></div>
+        <button class="btn primary" type="submit">Create Admin</button>
+      </form>
+      <small class="sub">Demo only: credentials are stored locally in your browser.</small>
+      <div class="actions" style="justify-content:flex-end; margin-top:8px"><button class="btn" onclick="closeAdminAuth()">Close</button></div>
+    </div>
+  </div>
+
+  <script>
+    /* ----------------------------- Utilities ----------------------------- */
+    const $ = (q, el=document) => el.querySelector(q);
+    const $$ = (q, el=document) => Array.from(el.querySelectorAll(q));
+    const uid = () => Math.random().toString(36).slice(2,10);
+    const INR = n => `₹${Number(n).toLocaleString('en-IN')}`;
+    const todayISO = () => new Date().toISOString().slice(0,10);
+    function scrollToHash(id){ location.hash = id; document.getElementById(id)?.scrollIntoView({behavior:'smooth'}) }
+
+    function showToast(txt){ $('#toastText').textContent = txt; $('#toast').classList.add('open'); }
+    function closeToast(){ $('#toast').classList.remove('open'); }
+
+    /* ------------------------------ Storage ------------------------------ */
+    const DB = {
+      get services(){ return JSON.parse(localStorage.getItem('services')||'[]') },
+      set services(v){ localStorage.setItem('services', JSON.stringify(v)); },
+      get appts(){ return JSON.parse(localStorage.getItem('appts')||'[]') },
+      set appts(v){ localStorage.setItem('appts', JSON.stringify(v)); },
+      get feedback(){ return JSON.parse(localStorage.getItem('feedback')||'[]') },
+      set feedback(v){ localStorage.setItem('feedback', JSON.stringify(v)); },
+      get payments(){ return JSON.parse(localStorage.getItem('payments')||'[]') },
+      set payments(v){ localStorage.setItem('payments', JSON.stringify(v)); },
+      get users(){ return JSON.parse(localStorage.getItem('users')||'[]') },
+      set users(v){ localStorage.setItem('users', JSON.stringify(v)); },
+      get admins(){ return JSON.parse(localStorage.getItem('admins')||'[]') },
+      set admins(v){ localStorage.setItem('admins', JSON.stringify(v)); },
+      get session(){ return JSON.parse(localStorage.getItem('session')||'null') },
+      set session(v){ if(v) localStorage.setItem('session', JSON.stringify(v)); else localStorage.removeItem('session'); },
+      seed(){
+        if(!this.services.length){
+          this.services = [
+            {id:uid(), name:'Classic Haircut', price:499, duration:30, category:'Hair', desc:'Tailored cut with wash & blow‑dry.', image:'https://images.unsplash.com/photo-1517832606299-7ae9b720a186?q=80&w=1400&auto=format&fit=crop'},
+            {id:uid(), name:'Detan Facial', price:899, duration:45, category:'Skin', desc:'Deep cleansing & tan removal.', image:'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1400&auto=format&fit=crop'},
+            {id:uid(), name:'Gel Manicure', price:799, duration:50, category:'Nails', desc:'Long‑lasting shine with gel polish.', image:'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=1400&auto=format&fit=crop'},
+            {id:uid(), name:'Bridal Makeup Trial', price:2499, duration:90, category:'Makeup', desc:'Consultation + full look trial.', image:'https://images.unsplash.com/photo-1508182311256-e3f7d50c0f08?q=80&w=1400&auto=format&fit=crop'}
+          ];
+        }
+        if(!this.admins.length){ this.admins = [{ id:uid(), name:'Demo Admin', email:'admin@demo.com', pass:'admin123' }]; }
+        if(!this.users.length){ this.users = [{ id:uid(), name:'Demo User', email:'user@demo.com', phone:'9999999999', pass:'user1234' }]; }
+      }
+    };
+
+    function isAdmin(){ return DB.session?.role==='admin'; }
+    function isUser(){ return DB.session?.role==='user'; }
+
+    /* ----------------------------- Services UI --------------------------- */
+    function renderServices(filter='all'){
+      const grid = $('#serviceGrid');
+      const list = DB.services.filter(s => filter==='all' ? true : s.category===filter);
+      grid.innerHTML = list.map(s => `
+        <article class="service card">
+          <img class="cover" src="${s.image||'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1400&auto=format&fit=crop'}" alt="${s.name}">
+          <div class="body">
+            <div style="display:flex; gap:8px; justify-content:space-between; align-items:center">
+              <h3 style="margin:0">${s.name}</h3>
+              <span class="chip">${s.category}</span>
+            </div>
+            <div class="sub">${s.desc||''}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px">
+              <div class="price">${INR(s.price)} · ${s.duration} min</div>
+              <button class="btn" onclick='selectService("${s.id}")'>Book</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      // update selects
+      const svcSelects = ['#bf_service', '#fb_service'].map(id=>$(id));
+      svcSelects.forEach(sel => {
+        sel.innerHTML = DB.services.map(s=>`<option value="${s.id}">${s.name} – ${INR(s.price)}</option>`).join('');
+      });
+
+      // Admin table refresh if visible
+      renderAdminTable();
+    }
+
+    function selectService(id){
+      const s = DB.services.find(x=>x.id===id);
+      if(!s) return;
+      $('#bf_service').value = id;
+      scrollToHash('booking');
+    }
+
+    // Tabs
+    $$('#serviceTabs .tab').forEach(btn => btn.addEventListener('click', e=>{
+      $$('#serviceTabs .tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderServices(btn.dataset.cat);
+    }))
+
+    /* ----------------------------- Booking ------------------------------- */
+    function renderAppts(){
+      const tbody = $('#apptTable tbody');
+      const who = DB.session?.role==='user' ? DB.session.email : null;
+      const list = who ? DB.appts.filter(a=>a.email===who) : DB.appts; // users see their own; admins can see all if needed
+      tbody.innerHTML = list.slice().reverse().map(a=>{
+        const s = DB.services.find(x=>x.id===a.serviceId);
+        const when = `${a.date} ${a.time}`;
+        return `<tr><td>${when}</td><td>${s?.name||'—'}</td><td>${a.name}</td><td>${a.paid?'Paid':'Pending'}</td></tr>`
+      }).join('');
+    }
+
+    function requireUser(){ if(!isUser()){ openUserAuth(); showToast('Please login as User to continue.'); return false;} return true; }
+
+    $('#bookForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      if(!requireUser()) return;
+      const serviceId = $('#bf_service').value;
+      const date = $('#bf_date').value;
+      const time = $('#bf_time').value;
+      const name = $('#bf_name').value.trim();
+      const phone = $('#bf_phone').value.trim();
+      const email = $('#bf_email').value.trim();
+      const paymethod = (new FormData(e.target)).get('paymethod');
+      if(!serviceId || !date || !time || !name || !phone || !email) return;
+      const s = DB.services.find(x=>x.id===serviceId);
+      const appt = { id: uid(), serviceId, date, time, name, phone, email, method: paymethod, amount: s.price, paid: paymethod==='cash'?false:false };
+      DB.appts = [...DB.appts, appt];
+      if(paymethod==='online'){
+        DB.payments = [...DB.payments, { id: uid(), apptId: appt.id, name, service: s.name, amount:s.price, method:'online', status:'requires_payment' }];
+        showToast('Appointment created. Proceed to Payments to complete online payment.');
+      } else {
+        DB.payments = [...DB.payments, { id: uid(), apptId: appt.id, name, service: s.name, amount:s.price, method:'cash', status:'cash_due' }];
+        showToast('Appointment created. Pay cash at the salon.');
+      }
+      renderPayments();
+      renderAppts();
+      e.target.reset();
+      $('#bf_date').value = todayISO();
+      $('#bf_time').value = '10:00';
+    });
+
+    /* ------------------------------ Feedback ----------------------------- */
+    function renderFeedback(){
+      const tbody = $('#fbTable tbody');
+      tbody.innerHTML = DB.feedback.slice().reverse().map(f=>{
+        const s = DB.services.find(x=>x.id===f.serviceId);
+        return `<tr><td>${s?.name||'—'}</td><td>${f.name}</td><td>${'★'.repeat(f.rating)}${'☆'.repeat(5-f.rating)}</td><td>${f.text||''}</td></tr>`
+      }).join('');
+    }
+
+    $('#fbForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      if(!requireUser()) return;
+      const name = $('#fb_name').value.trim();
+      const serviceId = $('#fb_service').value;
+      const rating = Number($('#fb_rating').value);
+      const text = $('#fb_text').value.trim();
+      if(!name || !serviceId || !rating) return;
+      DB.feedback = [...DB.feedback, { id:uid(), name, serviceId, rating, text, ts:Date.now(), email: DB.session?.email||null }];
+      renderFeedback();
+      e.target.reset();
+      showToast('Thanks for the feedback!');
+    })
+
+    /* ------------------------------ Payments ----------------------------- */
+    function renderPayments(){
+      const tbody = $('#payTable tbody');
+      const who = DB.session?.role==='user' ? DB.session.email : null;
+      const list = who ? DB.payments.filter(p=> DB.appts.find(a=>a.id===p.apptId)?.email===who ) : DB.payments;
+      tbody.innerHTML = list.slice().reverse().map(p=>{
+        return `<tr>
+          <td>${p.apptId}</td>
+          <td>${p.name}</td>
+          <td>${p.service}</td>
+          <td>${INR(p.amount)}</td>
+          <td>${p.method}</td>
+          <td>${p.status.replace('_',' ')}</td>
+          <td>${p.method==='online' && p.status==='requires_payment' ? `<button class='btn ok' onclick='demoPay("${p.id}")'>Pay</button>` : ''}
+              ${p.method==='cash' && p.status==='cash_due' ? `<span class='chip'>Pay at salon</span>` : ''}
+          </td>
+        </tr>`
+      }).join('');
+    }
+
+    function demoPay(pid){
+      if(!requireUser()) return;
+      DB.payments = DB.payments.map(p=> p.id===pid ? {...p, status:'paid'} : p );
+      const paid = DB.payments.find(p=>p.id===pid);
+      if(paid){
+        DB.appts = DB.appts.map(a=> a.id===paid.apptId ? {...a, paid:true} : a);
+      }
+      renderPayments();
+      renderAppts();
+      showToast('Payment successful (demo).');
+    }
+
+    /* ------------------------------- Admin -------------------------------- */
+    function ensureAdmin(){ if(!isAdmin()){ showToast('Admin access required.'); openAdminAuth(); return false;} return true; }
+
+    function renderAdminTable(){
+      const tbody = $('#adminSvcTable tbody'); if(!tbody) return;
+      tbody.innerHTML = DB.services.map(s=>`
+        <tr>
+          <td>${s.name}</td>
+          <td>${s.category}</td>
+          <td>${s.price}</td>
+          <td>${s.duration}</td>
+          <td style="text-align:right">
+            ${isAdmin()?`<button class="btn" onclick='editSvc("${s.id}")'>Edit</button>
+            <button class="btn danger" onclick='delSvc("${s.id}")'>Delete</button>`:''}
+          </td>
+        </tr>
+      `).join('');
+      // Toggle admin panel visibility
+      $('#adminPanel').style.display = isAdmin()? 'block':'none';
+      $('#adminNotice').style.display = isAdmin()? 'none':'block';
+    }
+
+    function editSvc(id){ if(!ensureAdmin()) return; const s = DB.services.find(x=>x.id===id); if(!s) return;
+      $('#svc_id').value = s.id;
+      $('#svc_name').value = s.name;
+      $('#svc_price').value = s.price;
+      $('#svc_duration').value = s.duration;
+      $('#svc_category').value = s.category;
+      $('#svc_image').value = s.image||'';
+      $('#svc_desc').value = s.desc||'';
+      scrollToHash('admin');
+    }
+
+    function delSvc(id){ if(!ensureAdmin()) return; if(!confirm('Delete this service?')) return;
+      DB.services = DB.services.filter(s=>s.id!==id);
+      renderServices($('#serviceTabs .tab.active').dataset.cat);
+      showToast('Service removed.');
+    }
+
+    $('#btnWipeAll')?.addEventListener('click', ()=>{ if(!ensureAdmin()) return; if(!confirm('Delete ALL services?')) return; DB.services = []; renderServices('all'); })
+    $('#btnClearSvc')?.addEventListener('click', ()=>{ $('#svcForm').reset(); $('#svc_id').value=''; })
+
+    $('#svcForm')?.addEventListener('submit', e=>{
+      e.preventDefault(); if(!ensureAdmin()) return;
+      const id = $('#svc_id').value || uid();
+      const payload = {
+        id,
+        name: $('#svc_name').value.trim(),
+        price: Number($('#svc_price').value),
+        duration: Number($('#svc_duration').value),
+        category: $('#svc_category').value,
+        image: $('#svc_image').value.trim(),
+        desc: $('#svc_desc').value.trim()
+      };
+      if(!payload.name) return;
+      const exists = DB.services.some(s=>s.id===id);
+      DB.services = exists ? DB.services.map(s=> s.id===id ? payload : s) : [...DB.services, payload];
+      renderServices($('#serviceTabs .tab.active').dataset.cat);
+      $('#svcForm').reset(); $('#svc_id').value='';
+      showToast(exists? 'Service updated.' : 'Service added.');
+    })
+
+    /* ------------------------------- Auth --------------------------------- */
+    // User Auth modal
+    function openUserAuth(){ $('#userAuth').classList.add('open'); switchUserAuth('login'); }
+    function closeUserAuth(){ $('#userAuth').classList.remove('open'); }
+    function switchUserAuth(mode){
+      $$('#userAuthTabs .tab').forEach(b=>b.classList.remove('active'));
+      $(`#userAuthTabs .tab[data-mode="${mode}"]`).classList.add('active');
+      $('#userLoginForm').style.display = mode==='login'? 'grid':'none';
+      $('#userSignupForm').style.display = mode==='signup'? 'grid':'none';
+    }
+    $('#userAuthTabs')?.addEventListener('click', (e)=>{ if(e.target.classList.contains('tab')) switchUserAuth(e.target.dataset.mode); })
+
+    // Admin Auth modal
+    function openAdminAuth(){ $('#adminAuth').classList.add('open'); switchAdminAuth('login'); }
+    function closeAdminAuth(){ $('#adminAuth').classList.remove('open'); }
+    function switchAdminAuth(mode){
+      $$('#adminAuthTabs .tab').forEach(b=>b.classList.remove('active'));
+      $(`#adminAuthTabs .tab[data-mode="${mode}"]`).classList.add('active');
+      $('#adminLoginForm').style.display = mode==='login'? 'grid':'none';
+      $('#adminSignupForm').style.display = mode==='signup'? 'grid':'none';
+    }
+    $('#adminAuthTabs')?.addEventListener('click', (e)=>{ if(e.target.classList.contains('tab')) switchAdminAuth(e.target.dataset.mode); })
+
+    // Buttons
+    $('#btnUserAuth').addEventListener('click', openUserAuth);
+    $('#btnAdminAuth').addEventListener('click', openAdminAuth);
+    $('#btnLogout').addEventListener('click', ()=>{ DB.session=null; updateAuthUI(); renderAppts(); renderPayments(); showToast('Logged out.'); });
+
+    // Forms
+    $('#userSignupForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = $('#us_name').value.trim();
+      const email = $('#us_email').value.trim().toLowerCase();
+      const phone = $('#us_phone').value.trim();
+      const pass = $('#us_pass').value;
+      if(DB.users.some(u=>u.email===email)) return showToast('User already exists.');
+      DB.users = [...DB.users, { id:uid(), name, email, phone, pass }];
+      showToast('User account created. Please login.');
+      switchUserAuth('login');
+    });
+
+    $('#userLoginForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const email = $('#ul_email').value.trim().toLowerCase();
+      const pass = $('#ul_pass').value;
+      const u = DB.users.find(u=>u.email===email && u.pass===pass);
+      if(!u) return showToast('Invalid user credentials.');
+      DB.session = { role:'user', id:u.id, name:u.name, email:u.email };
+      closeUserAuth();
+      showToast(`Welcome, ${u.name}!`);
+      updateAuthUI();
+      prefillBookingFromUser();
+      renderAppts();
+      renderPayments();
+    });
+
+    $('#adminSignupForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = $('#as_name').value.trim();
+      const email = $('#as_email').value.trim().toLowerCase();
+      const pass = $('#as_pass').value;
+      if(DB.admins.some(a=>a.email===email)) return showToast('Admin already exists.');
+      DB.admins = [...DB.admins, { id:uid(), name, email, pass }];
+      showToast('Admin created. Please login.');
+      switchAdminAuth('login');
+    });
+
+    $('#adminLoginForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const email = $('#al_email').value.trim().toLowerCase();
+      const pass = $('#al_pass').value;
+      const a = DB.admins.find(a=>a.email===email && a.pass===pass);
+      if(!a) return showToast('Invalid admin credentials.');
+      DB.session = { role:'admin', id:a.id, name:a.name, email:a.email };
+      closeAdminAuth();
+      showToast(`Welcome, Admin ${a.name}!`);
+      updateAuthUI();
+      renderAdminTable();
+    });
+
+    function updateAuthUI(){
+      const badge = $('#whoami');
+      if(DB.session){
+        badge.style.display='inline-flex';
+        badge.textContent = `${DB.session.role.toUpperCase()}: ${DB.session.name}`;
+        $('#btnLogout').style.display='inline-flex';
+      } else {
+        badge.style.display='none';
+        $('#btnLogout').style.display='none';
+      }
+      // Prefill forms if logged user
+      prefillBookingFromUser();
+      // Admin section visibility
+      renderAdminTable();
+    }
+
+    function prefillBookingFromUser(){
+      if(isUser()){
+        const u = DB.users.find(x=>x.id===DB.session.id);
+        if(u){ $('#bf_name').value = u.name; $('#bf_email').value = u.email; $('#bf_phone').value = u.phone||''; }
+      }
+    }
+
+    /* ---------------------------- Init on load ---------------------------- */
+    function init(){
+      DB.seed();
+      // Default booking date/time
+      $('#bf_date').value = todayISO();
+      $('#bf_time').value = '10:00';
+      renderServices('all');
+      renderAppts();
+      renderFeedback();
+      renderPayments();
+      updateAuthUI();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

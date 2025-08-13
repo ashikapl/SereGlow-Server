@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Customer SignUp</title>
-  <link rel="stylesheet" href="/Users/ashikapl/Desktop/SereGlow/SereGlow-Server/static/css/admin/signup.css" />
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="/Users/ashikapl/Desktop/SereGlow/SereGlow-Server/static/css/signup.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
@@ -14,60 +15,47 @@
 
       <div class="row">
         <div class="field">
-          <label for="admin-firstname">First Name</label>
+          <label for="admin-firstname">Firstname:</label>
           <input id="admin-firstname" name="firstname" type="text" required placeholder="Firstname" />
         </div>
 
         <div class="field">
-          <label for="admin-lastname">Last Name</label>
+          <label for="admin-lastname">Lastname:</label>
           <input id="admin-lastname" name="lastname" type="text" required placeholder="Lastname" />
         </div>
       </div>
 
       <div class="field">
         <label for="admin-email">Email Id:</label>
-        <input
-          id="admin-email"
-          name="email"
-          type="email"
-          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-          required
-          placeholder="you@example.com"
-        />
+        <input id="admin-email" name="email" type="text"
+               pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
+               required placeholder="you@gmail.com" />
+        <span id="emailError" class="error-message"></span>
       </div>
 
       <div class="field password-field">
-        <label for="admin-password">Password</label>
-        <input
-          id="admin-password"
-          name="password"
-          type="password"
-          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8}$"
-          title="Exactly 8 characters with uppercase, lowercase, number, and special character"
-          required
-          placeholder="8 chars: Aa1@xxxx"
-        />
+        <label for="admin-password">Password:</label>
+        <input id="admin-password" name="password" type="password"
+               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+               title="At least 8 characters with uppercase, lowercase, number, and special character"
+               required placeholder="8+ chars: Aa1@xxxx" />
         <span class="toggle-password" onclick="togglePassword()">
           <i class="fa fa-eye" id="toggle-icon"></i>
         </span>
+        <span id="passwordError" class="error-message"></span>
       </div>
 
       <div class="field">
-        <label for="admin-address">Address</label>
-        <textarea id="admin-address" name="address" rows="3" placeholder="Address"></textarea>
+        <label for="admin-address">Address:</label>
+        <textarea id="admin-address" name="address" rows="3" placeholder="Salon Address"></textarea>
       </div>
 
       <div class="field">
-        <label for="admin-phone">Phone Number</label>
-        <input
-          id="admin-phone"
-          name="phone"
-          type="tel"
-          pattern="^[0-9]{10}$"
-          title="Enter exactly 10 digits"
-          placeholder="+91 9876543210"
-          required
-        />
+        <label for="admin-phone">Phone No:</label>
+        <input id="admin-phone" name="phone" type="tel"
+               pattern="^[0-9]{10}$"
+               title="Enter exactly 10 digits"
+               placeholder="9876543210" required />
       </div>
 
       <div class="actions">
@@ -80,20 +68,44 @@
     function togglePassword() {
       const passField = document.getElementById('admin-password');
       const icon = document.getElementById('toggle-icon');
-      if (passField.type === 'password') {
-        passField.type = 'text';
+      if (passField.type === "password") {
+        passField.type = "text";
         icon.classList.remove('fa-eye');
         icon.classList.add('fa-eye-slash');
       } else {
-        passField.type = 'password';
+        passField.type = "password";
         icon.classList.remove('fa-eye-slash');
         icon.classList.add('fa-eye');
       }
     }
 
-    // Restrict phone to digits only and max 10 digits
-    document.getElementById('admin-phone').addEventListener('input', function () {
-      this.value = this.value.replace(/\D/g, '').slice(0, 10);
+    document.getElementById("admin-signup").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      let emailVal = document.getElementById("admin-email").value.trim();
+      let passwordVal = document.getElementById("admin-password").value.trim();
+      let emailError = document.getElementById("emailError");
+      let passwordError = document.getElementById("passwordError");
+
+      emailError.textContent = "";
+      passwordError.textContent = "";
+
+      // Email validation (simple Gmail check)
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+      if (!emailPattern.test(emailVal)) {
+        emailError.textContent = "Enter a valid Gmail address";
+        return;
+      }
+
+      // Strong password check
+      const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!strongPasswordPattern.test(passwordVal)) {
+        passwordError.textContent = "Password must be at least 8 chars, include uppercase, lowercase, number, and special character";
+        return;
+      }
+
+      alert("Account created successfully!");
+      // You can submit form here if backend ready, e.g. this.submit();
     });
   </script>
 </body>
