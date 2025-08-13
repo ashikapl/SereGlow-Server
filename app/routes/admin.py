@@ -1,4 +1,4 @@
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, redirect, url_for
 from app.services.admin import admin_signup_service, admin_login_service
 
 admin_bp = Blueprint("admin_bp", __name__)
@@ -6,14 +6,18 @@ admin_bp = Blueprint("admin_bp", __name__)
 
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
-    data = request.get_json()
+    # data = request.get_json()
+    data = request.form.to_dict()
+
+    print("data :", data)
 
     result = admin_signup_service(data)
 
     print("routers result: ", result)
 
     if isinstance(result, tuple):
-        return result
+        # return result
+        return redirect(url_for("signup_form"))
 
     return jsonify(result.data), 201
 
