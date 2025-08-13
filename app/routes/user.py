@@ -6,7 +6,8 @@ user_bp = Blueprint("user_bp", __name__)
 
 @user_bp.route('/register', methods=['POST'])
 def user_signUp():
-    data = request.get_json()
+    # data = request.get_json()
+    data = request.form.to_dict()
 
     result = user_signup_service(data)
 
@@ -19,7 +20,8 @@ def user_signUp():
 
 @user_bp.route("/login", methods=["POST"])
 def user_login():
-    data = request.get_json()
+    # data = request.get_json()
+    data = request.form.to_dict()
 
     result = user_login_service(data)
 

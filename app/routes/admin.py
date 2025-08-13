@@ -16,15 +16,16 @@ def admin_signUp():
     print("routers result: ", result)
 
     if isinstance(result, tuple):
-        # return result
-        return redirect(url_for("signup_form"))
+        return result
+        # return redirect(url_for("admin_bp.admin_signUp"))
 
     return jsonify(result.data), 201
 
 
 @admin_bp.route("/login", methods=["POST"])
 def admin_login():
-    data = request.get_json()
+    # data = request.get_json()
+    data = request.form.to_dict()
 
     result = admin_login_service(data)
 
