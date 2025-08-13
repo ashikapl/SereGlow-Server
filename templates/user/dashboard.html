@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+  </head>
+  <body>
+    <!-- User Dashboard (Hidden by default) -->
+    <div id="userDashboard" class="dashboard-container" style="display: none">
+      <nav class="dashboard-nav">
+        <div class="nav-brand">
+          <i class="fas fa-cut"></i>
+          <span>User Dashboard</span>
+        </div>
+        <div class="nav-actions">
+          <span id="userWelcome">Welcome, User!</span>
+          <button class="btn btn-outline" onclick="logout()">Logout</button>
+        </div>
+      </nav>
+
+      <div class="dashboard-content">
+        <div class="dashboard-sidebar">
+          <ul class="sidebar-menu">
+            <li>
+              <a href="#" onclick="showUserSection('services')" class="active"
+                ><i class="fas fa-list"></i> View Services</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showUserSection('booking')"
+                ><i class="fas fa-calendar-plus"></i> Book Appointment</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showUserSection('appointments')"
+                ><i class="fas fa-calendar"></i> My Appointments</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showUserSection('feedback')"
+                ><i class="fas fa-comment"></i> Add Feedback</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showUserSection('profile')"
+                ><i class="fas fa-user"></i> Profile</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="dashboard-main">
+          <!-- Services Section -->
+          <div id="userServicesSection" class="dashboard-section">
+            <h2>Available Services</h2>
+            <div id="userServicesList" class="services-grid"></div>
+          </div>
+
+          <!-- Booking Section -->
+          <div
+            id="userBookingSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>Book Appointment</h2>
+            <form id="bookingForm" class="form-grid">
+              <div class="form-group">
+                <label>Select Service</label>
+                <select id="bookingService" required>
+                  <option value="">Choose a service</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="bookingDate" required />
+              </div>
+              <div class="form-group">
+                <label>Time</label>
+                <select id="bookingTime" required>
+                  <option value="">Select time</option>
+                  <option value="09:00">09:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="12:00">12:00 PM</option>
+                  <option value="13:00">01:00 PM</option>
+                  <option value="14:00">02:00 PM</option>
+                  <option value="15:00">03:00 PM</option>
+                  <option value="16:00">04:00 PM</option>
+                  <option value="17:00">05:00 PM</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Payment Method</label>
+                <select id="paymentMethod" required>
+                  <option value="">Select payment method</option>
+                  <option value="online">Online Payment</option>
+                  <option value="cash">Cash Payment</option>
+                </select>
+              </div>
+              <div class="form-group full-width">
+                <label>Special Requirements</label>
+                <textarea
+                  id="bookingNotes"
+                  placeholder="Any special requirements or notes"
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Book Appointment
+              </button>
+            </form>
+          </div>
+
+          <!-- User Appointments Section -->
+          <div
+            id="userAppointmentsSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>My Appointments</h2>
+            <div id="userAppointmentsList" class="appointments-list"></div>
+          </div>
+
+          <!-- Feedback Section -->
+          <div
+            id="userFeedbackSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>Add Feedback</h2>
+            <form id="feedbackForm" class="form-grid">
+              <div class="form-group">
+                <label>Rating</label>
+                <div class="rating">
+                  <input type="radio" name="rating" value="5" id="star5" />
+                  <label for="star5">★</label>
+                  <input type="radio" name="rating" value="4" id="star4" />
+                  <label for="star4">★</label>
+                  <input type="radio" name="rating" value="3" id="star3" />
+                  <label for="star3">★</label>
+                  <input type="radio" name="rating" value="2" id="star2" />
+                  <label for="star2">★</label>
+                  <input type="radio" name="rating" value="1" id="star1" />
+                  <label for="star1">★</label>
+                </div>
+              </div>
+              <div class="form-group full-width">
+                <label>Your Feedback</label>
+                <textarea
+                  id="feedbackText"
+                  required
+                  placeholder="Share your experience with us"
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Submit Feedback
+              </button>
+            </form>
+          </div>
+
+          <!-- User Profile Section -->
+          <div
+            id="userProfileSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>My Profile</h2>
+            <form id="userProfileForm" class="form-grid">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="userFirstName" required />
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="userLastName" required />
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="userEmail" required />
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="userPhone" required />
+              </div>
+              <div class="form-group full-width">
+                <label>Address</label>
+                <textarea id="userAddress" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Update Profile
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

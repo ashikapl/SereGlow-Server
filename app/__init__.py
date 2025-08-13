@@ -7,15 +7,17 @@ from app.routes.service import service_bp
 from app.routes.payment import payment_bp
 from app.routes.feedback import feedback_bp
 from app.routes.appointment import appointment_bp
+from app.routes.main import main_bp
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="../static")
     app.config.from_object(Config)
 
     # Enable CORS
     CORS(app, supports_credentials=True)
 
+    app.register_blueprint(main_bp, url_prefix="")
     app.register_blueprint(admin_bp, url_prefix="/admin")
     app.register_blueprint(user_bp, url_prefix="/user")
     app.register_blueprint(service_bp, url_prefix="/service")
