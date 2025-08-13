@@ -1,1821 +1,2894 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SeréGlow – Beauty Salon</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glamour Salon - Premium Beauty Services</title>
+    <link rel="stylesheet" href="styles.css" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
-    <style>
-      :root {
-        --bg: #f7f8fb; /* page background */
-        --card: #ffffff; /* card background */
-        --ink: #0f172a; /* text */
-        --muted: #475569; /* muted text */
-        --primary: #e11d48; /* rose */
-        --primary-600: #be123c; /* darker rose */
-        --ring: #fda4af; /* focus ring */
-        --ok: #16a34a; /* success */
-        --warn: #ea580c; /* warning */
-        --danger: #dc2626; /* danger */
-        --border: #e5e7eb; /* border */
-        --shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
-        --radius: 16px;
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        height: 100%;
-      }
-      body {
-        margin: 0;
-        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto,
-          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-        line-height: 1.5;
-        color: var(--ink);
-        background: var(--bg);
-      }
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      img {
-        max-width: 100%;
-        display: block;
-      }
-
-      /* Layout */
-      .container {
-        width: min(1120px, 95vw);
-        margin-inline: auto;
-        padding-inline: 1rem;
-      }
-      .grid {
-        display: grid;
-        gap: 16px;
-      }
-
-      /* Topbar */
-      .topbar {
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: saturate(180%) blur(10px);
-        border-bottom: 1px solid var(--border);
-      }
-      .nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 0;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .brand {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        font-weight: 700;
-        font-size: clamp(14px, 2.5vw, 18px);
-      }
-      .brand .logo {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, var(--primary), #fb7185);
-        display: grid;
-        place-items: center;
-        color: white;
-        box-shadow: var(--shadow);
-        font-size: 16px;
-      }
-      .brand span {
-        letter-spacing: 0.3px;
-        white-space: nowrap;
-      }
-      .nav-links {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      .nav a {
-        padding: 8px 10px;
-        border-radius: 8px;
-        font-size: 14px;
-        white-space: nowrap;
-      }
-      .nav a:hover {
-        background: #fdf2f8;
-      }
-      .actions {
-        display: flex;
-        gap: 6px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      .btn {
-        padding: 8px 12px;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        background: var(--card);
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-        white-space: nowrap;
-        transition: all 0.2s ease;
-      }
-      .btn:hover {
-        transform: translateY(-1px);
-      }
-      .btn.primary {
-        background: var(--primary);
-        color: #fff;
-        border-color: transparent;
-      }
-      .btn.primary:hover {
-        background: var(--primary-600);
-      }
-      .btn.ghost {
-        background: transparent;
-      }
-      .btn.danger {
-        background: var(--danger);
-        color: #fff;
-        border-color: transparent;
-      }
-      .btn.ok {
-        background: var(--ok);
-        color: #fff;
-        border-color: transparent;
-      }
-      .badge {
-        padding: 4px 8px;
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        font-size: 11px;
-        color: var(--muted);
-        white-space: nowrap;
-      }
-
-      /* Hero */
-      .hero {
-        padding: 32px 0 24px;
-      }
-      .hero .wrap {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 24px;
-        align-items: center;
-      }
-      .hero h1 {
-        font-size: clamp(24px, 5vw, 48px);
-        line-height: 1.1;
-        margin: 0 0 8px;
-        text-align: center;
-      }
-      .hero p {
-        color: var(--muted);
-        margin: 0 0 18px;
-        text-align: center;
-        font-size: clamp(14px, 2vw, 16px);
-      }
-      .hero .actions {
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-top: 16px;
-      }
-      .pill {
-        display: inline-flex;
-        gap: 8px;
-        align-items: center;
-        padding: 6px 12px;
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        background: #fff;
-        font-size: 12px;
-        margin-bottom: 16px;
-      }
-
-      .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-      }
-      .card.pad {
-        padding: 16px;
-      }
-
-      /* Sections */
-      section {
-        padding: 24px 0;
-      }
-      h2 {
-        font-size: clamp(18px, 3.5vw, 28px);
-        margin: 0 0 12px;
-        text-align: center;
-      }
-      .sub {
-        color: var(--muted);
-        margin-bottom: 16px;
-        text-align: center;
-        font-size: clamp(13px, 2vw, 15px);
-      }
-
-      /* Services */
-      .service-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 16px;
-        margin-top: 20px;
-      }
-      .service {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-      .service .cover {
-        aspect-ratio: 16/10;
-        object-fit: cover;
-      }
-      .service .body {
-        padding: 14px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        flex-grow: 1;
-      }
-      .service h3 {
-        margin: 0;
-        font-size: clamp(14px, 2.5vw, 18px);
-      }
-      .service .chip {
-        align-self: flex-start;
-      }
-      .price {
-        font-weight: 700;
-        font-size: clamp(13px, 2vw, 16px);
-      }
-      .chip {
-        font-size: 11px;
-        padding: 4px 8px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        color: var(--muted);
-      }
-
-      /* Forms */
-      .field {
-        display: grid;
-        gap: 6px;
-        margin-bottom: 12px;
-      }
-      .label {
-        font-weight: 600;
-        font-size: 14px;
-      }
-      .input,
-      .select,
-      .textarea {
-        padding: 10px 12px;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        background: #fff;
-        outline: none;
-        font: inherit;
-        font-size: 14px;
-      }
-      .input:focus,
-      .select:focus,
-      .textarea:focus {
-        box-shadow: 0 0 0 3px var(--ring);
-        border-color: var(--primary);
-      }
-      .textarea {
-        min-height: 80px;
-        resize: vertical;
-      }
-
-      /* Tables */
-      .table-container {
-        overflow-x: auto;
-      }
-      table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        font-size: 13px;
-        min-width: 500px;
-      }
-      th,
-      td {
-        padding: 8px 10px;
-        border-bottom: 1px solid var(--border);
-        text-align: left;
-      }
-      th {
-        color: var(--muted);
-        font-weight: 600;
-        background: #fafafa;
-      }
-      tr:hover td {
-        background: #fff1f2;
-      }
-
-      /* Tabs */
-      .tabs {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-        margin-bottom: 12px;
-        justify-content: center;
-      }
-      .tab {
-        padding: 6px 12px;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        cursor: pointer;
-        background: #fff;
-        font-size: 13px;
-        transition: all 0.2s ease;
-      }
-      .tab.active {
-        background: var(--primary);
-        color: #fff;
-        border-color: transparent;
-      }
-      .tab:hover:not(.active) {
-        background: #f8f9fa;
-      }
-
-      /* Footer */
-      footer {
-        padding: 24px 0;
-        color: var(--muted);
-        text-align: center;
-      }
-
-      /* Modal */
-      .modal {
-        position: fixed;
-        inset: 0;
-        display: none;
-        place-items: center;
-        background: rgba(2, 6, 23, 0.6);
-        z-index: 50;
-        padding: 16px;
-      }
-      .modal.open {
-        display: grid;
-      }
-      .modal .panel {
-        width: min(500px, 95vw);
-        background: var(--card);
-        border-radius: 16px;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow);
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-
-      /* Responsive Grid Layouts */
-      .responsive-grid {
-        display: grid;
-        gap: 16px;
-      }
-      .responsive-grid.two-col {
-        grid-template-columns: 1fr;
-      }
-
-      /* Mobile Navigation */
-      .mobile-menu {
-        display: none;
-      }
-      .mobile-menu-btn {
-        display: none;
-        background: transparent;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
-        padding: 8px;
-      }
-
-      /* Responsive Styles */
-      @media (min-width: 768px) {
-        .container {
-          padding-inline: 2rem;
-        }
-        .hero .wrap {
-          grid-template-columns: 1.1fr 0.9fr;
-          text-align: left;
-        }
-        .hero h1,
-        .hero p {
-          text-align: left;
-        }
-        .hero .actions {
-          justify-content: flex-start;
-        }
-        .responsive-grid.two-col {
-          grid-template-columns: 1fr 1fr;
-        }
-        h2,
-        .sub {
-          text-align: left;
-        }
-        .tabs {
-          justify-content: flex-start;
-        }
-      }
-
-      @media (min-width: 1024px) {
-        .service-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        .responsive-grid.two-col {
-          grid-template-columns: 1fr 1.2fr;
-        }
-      }
-
-      @media (max-width: 767px) {
-        .nav-links {
-          display: none;
-        }
-        .mobile-menu-btn {
-          display: block;
-        }
-        .mobile-menu.open {
-          display: flex;
-          flex-direction: column;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: white;
-          border-bottom: 1px solid var(--border);
-          padding: 16px;
-          box-shadow: var(--shadow);
-        }
-        .mobile-menu a {
-          padding: 12px 0;
-          border-bottom: 1px solid #f1f5f9;
-        }
-        .mobile-menu a:last-child {
-          border-bottom: none;
-        }
-        .hero {
-          padding: 24px 0 16px;
-        }
-        .actions {
-          gap: 8px;
-        }
-        .btn {
-          padding: 8px 10px;
-          font-size: 13px;
-        }
-        .service .body {
-          padding: 12px;
-        }
-        .card.pad {
-          padding: 14px;
-        }
-        section {
-          padding: 20px 0;
-        }
-        .modal .panel {
-          border-radius: 12px;
-        }
-        table {
-          font-size: 12px;
-        }
-        th,
-        td {
-          padding: 6px 8px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .container {
-          width: 100%;
-          padding-inline: 1rem;
-        }
-        .actions {
-          flex-direction: column;
-          width: 100%;
-          align-items: stretch;
-        }
-        .btn {
-          width: 100%;
-          text-align: center;
-        }
-        .hero .actions {
-          flex-direction: row;
-          align-items: center;
-        }
-        .hero .actions .btn {
-          width: auto;
-        }
-        .service-grid {
-          grid-template-columns: 1fr;
-        }
-        .tabs {
-          gap: 4px;
-        }
-        .tab {
-          padding: 6px 8px;
-          font-size: 12px;
-        }
-        .responsive-grid {
-          gap: 12px;
-        }
-        .card.pad {
-          padding: 12px;
-        }
-        .field {
-          margin-bottom: 10px;
-        }
-        .input,
-        .select,
-        .textarea,
-        .btn {
-          padding: 8px 10px;
-        }
-      }
-
-      /* Additional Responsive Utilities */
-      .hide-mobile {
-        display: block;
-      }
-      .show-mobile {
-        display: none;
-      }
-
-      @media (max-width: 767px) {
-        .hide-mobile {
-          display: none;
-        }
-        .show-mobile {
-          display: block;
-        }
-      }
-
-      /* Improved Form Layouts */
-      .form-row {
-        display: grid;
-        gap: 12px;
-        grid-template-columns: 1fr;
-      }
-      @media (min-width: 768px) {
-        .form-row {
-          grid-template-columns: 1fr 1fr;
-        }
-      }
-
-      /* Better button groups */
-      .btn-group {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-      @media (max-width: 480px) {
-        .btn-group {
-          flex-direction: column;
-        }
-        .btn-group .btn {
-          width: 100%;
-        }
-      }
-    </style>
   </head>
   <body>
-    <!-- Topbar -->
-    <div class="topbar">
-      <div class="container nav">
-        <div class="brand">
-          <div class="logo">💮</div>
-          <span>SeréGlow Salon</span>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <i class="fas fa-cut"></i>
+          <span>Glamour Salon</span>
         </div>
-        <nav class="nav-links">
-          <a href="#services">Services</a>
-          <a href="#booking">Appointment</a>
-          <a href="#feedback">Feedback</a>
-          <a href="#payments">Payment</a>
-          <a href="#admin">Admin</a>
-        </nav>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-        <div class="mobile-menu" id="mobileMenu">
-          <a href="#services" onclick="closeMobileMenu()">Services</a>
-          <a href="#booking" onclick="closeMobileMenu()">Appointment</a>
-          <a href="#feedback" onclick="closeMobileMenu()">Feedback</a>
-          <a href="#payments" onclick="closeMobileMenu()">Payment</a>
-          <a href="#admin" onclick="closeMobileMenu()">Admin</a>
+        <div class="nav-menu" id="navMenu">
+          <a href="#home" class="nav-link">Home</a>
+          <a href="#services" class="nav-link">Services</a>
+          <a href="#about" class="nav-link">About</a>
+          <a href="#contact" class="nav-link">Contact</a>
+          <button class="btn btn-outline" onclick="showLoginModal()">
+            Login
+          </button>
+          <button class="btn btn-primary" onclick="showSignupModal()">
+            Sign Up
+          </button>
         </div>
-        <div class="actions">
-          <span id="whoami" class="badge" style="display: none"></span>
-          <button class="btn ghost hide-mobile" id="btnUserAuth">User</button>
-          <button class="btn ghost hide-mobile" id="btnAdminAuth">Admin</button>
-          <button class="btn show-mobile" id="btnUserAuthMobile">User</button>
-          <button class="btn show-mobile" id="btnAdminAuthMobile">Admin</button>
-          <button class="btn" id="btnLogout" style="display: none">
-            Logout
-          </button>
-          <button class="btn primary" onclick="scrollToHash('booking')">
-            Book Now
-          </button>
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
       </div>
-    </div>
+    </nav>
 
-    <!-- Hero -->
-    <header class="hero">
-      <div class="container wrap">
-        <div>
-          <div class="pill">Open Daily · 9:00–19:00 · Walk‑ins Welcome</div>
-          <h1>Glow up, the easy way.</h1>
-          <p>
-            Premium hair, skin, and beauty services with transparent pricing.
-            Book online, pay online or cash at the desk.
-          </p>
-          <div class="actions">
-            <button class="btn primary" onclick="scrollToHash('services')">
-              Explore Services
-            </button>
-            <button class="btn" onclick="scrollToHash('booking')">
-              Make Appointment
-            </button>
+    <!-- User Dashboard (Hidden by default) -->
+    <div id="userDashboard" class="dashboard-container" style="display: none">
+      <nav class="dashboard-nav">
+        <div class="nav-brand">
+          <i class="fas fa-cut"></i>
+          <span>User Dashboard</span>
+        </div>
+        <div class="nav-actions">
+          <span id="userWelcome">Welcome, User!</span>
+          <button class="btn btn-outline" onclick="logout()">Logout</button>
+        </div>
+      </nav>
+
+      <div class="dashboard-content">
+        <div class="dashboard-sidebar">
+          <ul class="sidebar-menu">
+            <li>
+              <a href="#" onclick="showUserSection('services')" class="active"
+                ><i class="fas fa-list"></i> View Services</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showUserSection('booking')"
+                ><i class="fas fa-calendar-plus"></i> Book Appointment</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showUserSection('appointments')"
+                ><i class="fas fa-calendar"></i> My Appointments</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showUserSection('feedback')"
+                ><i class="fas fa-comment"></i> Add Feedback</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showUserSection('profile')"
+                ><i class="fas fa-user"></i> Profile</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="dashboard-main">
+          <!-- Services Section -->
+          <div id="userServicesSection" class="dashboard-section">
+            <h2>Available Services</h2>
+            <div id="userServicesList" class="services-grid"></div>
           </div>
-        </div>
-        <div class="card">
-          <img
-            src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1600&auto=format&fit=crop"
-            alt="Salon"
-            style="border-radius: 16px"
-          />
-        </div>
-      </div>
-    </header>
 
-    <!-- Services -->
-    <section id="services">
-      <div class="container">
-        <h2>Services</h2>
-        <p class="sub">
-          Discover our most‑booked services. <b>Admins</b> can add, update, or
-          remove services below (after logging in).
-        </p>
-        <div class="tabs" id="serviceTabs">
-          <button class="tab active" data-cat="all">All</button>
-          <button class="tab" data-cat="Hair">Hair</button>
-          <button class="tab" data-cat="Skin">Skin</button>
-          <button class="tab" data-cat="Nails">Nails</button>
-          <button class="tab" data-cat="Makeup">Makeup</button>
-        </div>
-        <div class="service-grid" id="serviceGrid"></div>
-      </div>
-    </section>
-
-    <!-- Booking -->
-    <section id="booking">
-      <div class="container">
-        <div class="responsive-grid two-col">
-          <div>
-            <h2>Book an Appointment</h2>
-            <p class="sub">
-              Login as a <b>User</b> to book. Choose a service and your
-              preferred date/time.
-            </p>
-            <form id="bookForm" class="card pad">
-              <div class="field">
-                <label class="label" for="bf_service">Service</label>
-                <select class="select" id="bf_service" required></select>
+          <!-- Booking Section -->
+          <div
+            id="userBookingSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>Book Appointment</h2>
+            <form id="bookingForm" class="form-grid">
+              <div class="form-group">
+                <label>Select Service</label>
+                <select id="bookingService" required>
+                  <option value="">Choose a service</option>
+                </select>
               </div>
-              <div class="form-row">
-                <div class="field">
-                  <label class="label" for="bf_date">Date</label>
-                  <input class="input" type="date" id="bf_date" required />
-                </div>
-                <div class="field">
-                  <label class="label" for="bf_time">Time</label>
-                  <input class="input" type="time" id="bf_time" required />
-                </div>
+              <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="bookingDate" required />
               </div>
-              <div class="form-row">
-                <div class="field">
-                  <label class="label" for="bf_name">Full Name</label>
-                  <input
-                    class="input"
-                    id="bf_name"
-                    placeholder="Your name"
-                    required
-                  />
-                </div>
-                <div class="field">
-                  <label class="label" for="bf_phone">Phone</label>
-                  <input
-                    class="input"
-                    id="bf_phone"
-                    placeholder="98765 43210"
-                    pattern="[0-9]{10}"
-                    required
-                  />
-                </div>
+              <div class="form-group">
+                <label>Time</label>
+                <select id="bookingTime" required>
+                  <option value="">Select time</option>
+                  <option value="09:00">09:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="12:00">12:00 PM</option>
+                  <option value="13:00">01:00 PM</option>
+                  <option value="14:00">02:00 PM</option>
+                  <option value="15:00">03:00 PM</option>
+                  <option value="16:00">04:00 PM</option>
+                  <option value="17:00">05:00 PM</option>
+                </select>
               </div>
-              <div class="field">
-                <label class="label" for="bf_email">Email</label>
-                <input
-                  class="input"
-                  type="email"
-                  id="bf_email"
-                  placeholder="you@mail.com"
-                  required
-                />
+              <div class="form-group">
+                <label>Payment Method</label>
+                <select id="paymentMethod" required>
+                  <option value="">Select payment method</option>
+                  <option value="online">Online Payment</option>
+                  <option value="cash">Cash Payment</option>
+                </select>
               </div>
-              <div class="field">
-                <label class="label">Payment Method</label>
-                <div
-                  style="
-                    display: flex;
-                    gap: 16px;
-                    flex-wrap: wrap;
-                    margin-top: 8px;
-                  "
-                >
-                  <label style="display: flex; align-items: center; gap: 6px"
-                    ><input
-                      type="radio"
-                      name="paymethod"
-                      value="online"
-                      checked
-                    />
-                    Online</label
-                  >
-                  <label style="display: flex; align-items: center; gap: 6px"
-                    ><input type="radio" name="paymethod" value="cash" /> Cash
-                    at Salon</label
-                  >
-                </div>
+              <div class="form-group full-width">
+                <label>Special Requirements</label>
+                <textarea
+                  id="bookingNotes"
+                  placeholder="Any special requirements or notes"
+                ></textarea>
               </div>
-              <button class="btn primary" type="submit" style="width: 100%">
-                Confirm & Continue
+              <button type="submit" class="btn btn-primary">
+                Book Appointment
               </button>
             </form>
           </div>
-          <aside>
-            <h2>Your Appointments</h2>
-            <p class="sub">Upcoming & recent bookings.</p>
-            <div class="card pad">
-              <div class="table-container">
-                <table id="apptTable">
-                  <thead>
-                    <tr>
-                      <th>When</th>
-                      <th>Service</th>
-                      <th>Client</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </section>
 
-    <!-- Feedback -->
-    <section id="feedback">
-      <div class="container">
-        <div class="responsive-grid two-col">
-          <div>
-            <h2>Feedback</h2>
-            <p class="sub">Login as a <b>User</b> to submit feedback.</p>
-            <form id="fbForm" class="card pad">
-              <div class="field">
-                <label class="label" for="fb_name">Name</label>
-                <input
-                  class="input"
-                  id="fb_name"
-                  placeholder="Your name"
-                  required
-                />
+          <!-- User Appointments Section -->
+          <div
+            id="userAppointmentsSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>My Appointments</h2>
+            <div id="userAppointmentsList" class="appointments-list"></div>
+          </div>
+
+          <!-- Feedback Section -->
+          <div
+            id="userFeedbackSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>Add Feedback</h2>
+            <form id="feedbackForm" class="form-grid">
+              <div class="form-group">
+                <label>Rating</label>
+                <div class="rating">
+                  <input type="radio" name="rating" value="5" id="star5" />
+                  <label for="star5">★</label>
+                  <input type="radio" name="rating" value="4" id="star4" />
+                  <label for="star4">★</label>
+                  <input type="radio" name="rating" value="3" id="star3" />
+                  <label for="star3">★</label>
+                  <input type="radio" name="rating" value="2" id="star2" />
+                  <label for="star2">★</label>
+                  <input type="radio" name="rating" value="1" id="star1" />
+                  <label for="star1">★</label>
+                </div>
               </div>
-              <div class="field">
-                <label class="label" for="fb_service">Service</label>
-                <select class="select" id="fb_service" required></select>
-              </div>
-              <div class="field">
-                <label class="label" for="fb_rating">Rating</label>
-                <select class="select" id="fb_rating" required>
-                  <option value="5">★★★★★ – Loved it</option>
-                  <option value="4">★★★★☆ – Great</option>
-                  <option value="3">★★★☆☆ – Good</option>
-                  <option value="2">★★☆☆☆ – Okay</option>
-                  <option value="1">★☆☆☆☆ – Poor</option>
-                </select>
-              </div>
-              <div class="field">
-                <label class="label" for="fb_text">Comments</label>
+              <div class="form-group full-width">
+                <label>Your Feedback</label>
                 <textarea
-                  class="textarea"
-                  id="fb_text"
-                  placeholder="Write your feedback..."
+                  id="feedbackText"
+                  required
+                  placeholder="Share your experience with us"
                 ></textarea>
               </div>
-              <button class="btn primary" type="submit" style="width: 100%">
+              <button type="submit" class="btn btn-primary">
                 Submit Feedback
               </button>
             </form>
           </div>
-          <aside>
-            <h2>What clients say</h2>
-            <p class="sub">Recent feedback from clients.</p>
-            <div class="card pad">
-              <div class="table-container">
-                <table id="fbTable">
-                  <thead>
-                    <tr>
-                      <th>Service</th>
-                      <th>Name</th>
-                      <th>Rating</th>
-                      <th>Comment</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </section>
 
-    <!-- Payments -->
-    <section id="payments">
-      <div class="container">
-        <h2>Payments</h2>
-        <p class="sub">
-          Pay online now or choose cash at salon. (Demo checkout)
-        </p>
-        <div class="card pad">
-          <div class="table-container">
-            <table id="payTable">
-              <thead>
-                <tr>
-                  <th>Appt ID</th>
-                  <th>Client</th>
-                  <th>Service</th>
-                  <th>Amount</th>
-                  <th>Method</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Admin -->
-    <section id="admin">
-      <div class="container">
-        <h2>Admin Dashboard</h2>
-        <p class="sub">
-          Admins can manage all services. This is a front‑end demo—do not use
-          real passwords.
-        </p>
-
-        <div id="adminPanel" style="display: none">
-          <div class="responsive-grid two-col">
-            <form id="svcForm" class="card pad">
-              <h3 style="margin: 0 0 12px">Add / Update Service</h3>
-              <input type="hidden" id="svc_id" />
-              <div class="field">
-                <label class="label" for="svc_name">Name</label>
-                <input class="input" id="svc_name" required />
+          <!-- User Profile Section -->
+          <div
+            id="userProfileSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>My Profile</h2>
+            <form id="userProfileForm" class="form-grid">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="userFirstName" required />
               </div>
-              <div class="form-row">
-                <div class="field">
-                  <label class="label" for="svc_price">Price (₹)</label>
-                  <input
-                    class="input"
-                    id="svc_price"
-                    type="number"
-                    min="0"
-                    step="50"
-                    required
-                  />
-                </div>
-                <div class="field">
-                  <label class="label" for="svc_duration">Duration (min)</label>
-                  <input
-                    class="input"
-                    id="svc_duration"
-                    type="number"
-                    min="10"
-                    step="5"
-                    required
-                  />
-                </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="userLastName" required />
               </div>
-              <div class="form-row">
-                <div class="field">
-                  <label class="label" for="svc_category">Category</label>
-                  <select class="select" id="svc_category">
-                    <option>Hair</option>
-                    <option>Skin</option>
-                    <option>Nails</option>
-                    <option>Makeup</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label class="label" for="svc_image"
-                    >Image URL (optional)</label
-                  >
-                  <input
-                    class="input"
-                    id="svc_image"
-                    placeholder="https://..."
-                  />
-                </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="userEmail" required />
               </div>
-              <div class="field">
-                <label class="label" for="svc_desc">Description</label>
-                <textarea
-                  class="textarea"
-                  id="svc_desc"
-                  placeholder="Short description..."
-                ></textarea>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="userPhone" required />
               </div>
-              <div class="btn-group">
-                <button class="btn primary" type="submit">Save Service</button>
-                <button class="btn" type="button" id="btnClearSvc">
-                  Clear
-                </button>
-                <button class="btn danger" type="button" id="btnWipeAll">
-                  Delete All (Demo)
-                </button>
+              <div class="form-group full-width">
+                <label>Address</label>
+                <textarea id="userAddress" required></textarea>
               </div>
+              <button type="submit" class="btn btn-primary">
+                Update Profile
+              </button>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            <div class="card pad">
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  margin-bottom: 12px;
-                "
+    <!-- Admin Dashboard (Hidden by default) -->
+    <div id="adminDashboard" class="dashboard-container" style="display: none">
+      <nav class="dashboard-nav">
+        <div class="nav-brand">
+          <i class="fas fa-cog"></i>
+          <span>Admin Dashboard</span>
+        </div>
+        <div class="nav-actions">
+          <span id="adminWelcome">Welcome, Admin!</span>
+          <button class="btn btn-outline" onclick="logout()">Logout</button>
+        </div>
+      </nav>
+
+      <div class="dashboard-content">
+        <div class="dashboard-sidebar">
+          <ul class="sidebar-menu">
+            <li>
+              <a href="#" onclick="showAdminSection('overview')" class="active"
+                ><i class="fas fa-chart-bar"></i> Overview</a
               >
-                <strong>All Services</strong>
+            </li>
+            <li>
+              <a href="#" onclick="showAdminSection('services')"
+                ><i class="fas fa-list"></i> Manage Services</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showAdminSection('appointments')"
+                ><i class="fas fa-calendar"></i> Appointments</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showAdminSection('schedule')"
+                ><i class="fas fa-clock"></i> Shop Schedule</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showAdminSection('feedback')"
+                ><i class="fas fa-comments"></i> Feedback</a
+              >
+            </li>
+            <li>
+              <a href="#" onclick="showAdminSection('profile')"
+                ><i class="fas fa-user"></i> Profile</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="dashboard-main">
+          <!-- Overview Section -->
+          <div id="adminOverviewSection" class="dashboard-section">
+            <h2>Dashboard Overview</h2>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <i class="fas fa-calendar-check"></i>
+                <h3 id="totalAppointments">0</h3>
+                <p>Total Appointments</p>
               </div>
-              <div class="table-container">
-                <table id="adminSvcTable">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Cat</th>
-                      <th>₹</th>
-                      <th>Min</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
+              <div class="stat-card">
+                <i class="fas fa-list"></i>
+                <h3 id="totalServices">0</h3>
+                <p>Active Services</p>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3 id="totalUsers">0</h3>
+                <p>Registered Users</p>
+              </div>
+              <div class="stat-card">
+                <i class="fas fa-star"></i>
+                <h3 id="avgRating">0</h3>
+                <p>Average Rating</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Services Management -->
+          <div
+            id="adminServicesSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <div class="section-header">
+              <h2>Manage Services</h2>
+              <button class="btn btn-primary" onclick="showAddServiceModal()">
+                Add New Service
+              </button>
+            </div>
+            <div id="adminServicesList" class="services-grid"></div>
+          </div>
+
+          <!-- Appointments Management -->
+          <div
+            id="adminAppointmentsSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>Manage Appointments</h2>
+            <div class="appointments-filters">
+              <select id="appointmentFilter">
+                <option value="all">All Appointments</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div id="adminAppointmentsList" class="appointments-list"></div>
+          </div>
+
+          <!-- Schedule Management -->
+          <div
+            id="adminScheduleSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>Shop Schedule</h2>
+            <form id="scheduleForm" class="schedule-form">
+              <div class="schedule-grid">
+                <div class="schedule-day">
+                  <label>Monday</label>
+                  <input type="checkbox" id="mondayOpen" checked />
+                  <input type="time" id="mondayStart" value="09:00" />
+                  <input type="time" id="mondayEnd" value="18:00" />
+                </div>
+                <div class="schedule-day">
+                  <label>Tuesday</label>
+                  <input type="checkbox" id="tuesdayOpen" checked />
+                  <input type="time" id="tuesdayStart" value="09:00" />
+                  <input type="time" id="tuesdayEnd" value="18:00" />
+                </div>
+                <div class="schedule-day">
+                  <label>Wednesday</label>
+                  <input type="checkbox" id="wednesdayOpen" checked />
+                  <input type="time" id="wednesdayStart" value="09:00" />
+                  <input type="time" id="wednesdayEnd" value="18:00" />
+                </div>
+                <div class="schedule-day">
+                  <label>Thursday</label>
+                  <input type="checkbox" id="thursdayOpen" checked />
+                  <input type="time" id="thursdayStart" value="09:00" />
+                  <input type="time" id="thursdayEnd" value="18:00" />
+                </div>
+                <div class="schedule-day">
+                  <label>Friday</label>
+                  <input type="checkbox" id="fridayOpen" checked />
+                  <input type="time" id="fridayStart" value="09:00" />
+                  <input type="time" id="fridayEnd" value="18:00" />
+                </div>
+                <div class="schedule-day">
+                  <label>Saturday</label>
+                  <input type="checkbox" id="saturdayOpen" checked />
+                  <input type="time" id="saturdayStart" value="09:00" />
+                  <input type="time" id="saturdayEnd" value="17:00" />
+                </div>
+                <div class="schedule-day">
+                  <label>Sunday</label>
+                  <input type="checkbox" id="sundayOpen" />
+                  <input type="time" id="sundayStart" value="10:00" />
+                  <input type="time" id="sundayEnd" value="16:00" />
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Update Schedule
+              </button>
+            </form>
+          </div>
+
+          <!-- Feedback Management -->
+          <div
+            id="adminFeedbackSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>Customer Feedback</h2>
+            <div id="adminFeedbackList" class="feedback-list"></div>
+          </div>
+
+          <!-- Admin Profile Section -->
+          <div
+            id="adminProfileSection"
+            class="dashboard-section"
+            style="display: none"
+          >
+            <h2>Admin Profile</h2>
+            <form id="adminProfileForm" class="form-grid">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="adminFirstName" required />
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="adminLastName" required />
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="adminEmail" required />
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="adminPhone" required />
+              </div>
+              <div class="form-group full-width">
+                <label>Salon Address</label>
+                <textarea id="adminAddress" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Update Profile
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Website Content -->
+    <main id="mainContent">
+      <!-- Hero Section -->
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <h1>Welcome to Glamour Salon</h1>
+          <p>
+            Experience luxury beauty treatments with our professional stylists
+          </p>
+          <div class="hero-buttons">
+            <button
+              class="btn btn-primary"
+              onclick="scrollToSection('services')"
+            >
+              View Services
+            </button>
+            <button class="btn btn-outline" onclick="showSignupModal()">
+              Book Now
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services Section -->
+      <section id="services" class="services-section">
+        <div class="container">
+          <h2>Our Services</h2>
+          <div id="publicServicesList" class="services-grid">
+            <!-- Services will be loaded here -->
+          </div>
+          <div class="service-note">
+            <p>
+              <i class="fas fa-info-circle"></i> Please login to book
+              appointments and make payments
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about" class="about-section">
+        <div class="container">
+          <div class="about-content">
+            <div class="about-text">
+              <h2>About Glamour Salon</h2>
+              <p>
+                With over 10 years of experience in the beauty industry, Glamour
+                Salon has been providing exceptional hair and beauty services to
+                our valued customers. Our team of professional stylists and
+                beauticians are dedicated to making you look and feel your best.
+              </p>
+              <div class="features">
+                <div class="feature">
+                  <i class="fas fa-award"></i>
+                  <h4>Professional Staff</h4>
+                  <p>Certified and experienced beauticians</p>
+                </div>
+                <div class="feature">
+                  <i class="fas fa-spa"></i>
+                  <h4>Premium Products</h4>
+                  <p>Using only the finest beauty products</p>
+                </div>
+                <div class="feature">
+                  <i class="fas fa-clock"></i>
+                  <h4>Flexible Hours</h4>
+                  <p>Open 6 days a week for your convenience</p>
+                </div>
+              </div>
+            </div>
+            <div class="about-image">
+              <div class="image-placeholder">
+                <i class="fas fa-cut"></i>
               </div>
             </div>
           </div>
         </div>
+      </section>
 
-        <div id="adminNotice" class="card pad">
-          <b>Admin access required.</b>
-          <p class="sub">
-            Use the <em>Admin Login/Signup</em> button in the top right to sign
-            in as an admin.
-          </p>
+      <!-- Contact Section -->
+      <section id="contact" class="contact-section">
+        <div class="container">
+          <h2>Contact Us</h2>
+          <div class="contact-content">
+            <div class="contact-info">
+              <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>
+                  <h4>Address</h4>
+                  <p id="salonAddress">
+                    123 Beauty Street, Style City, SC 12345
+                  </p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <div>
+                  <h4>Phone</h4>
+                  <p id="salonPhone">(555) 123-4567</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <div>
+                  <h4>Email</h4>
+                  <p>info@glamoursalon.com</p>
+                </div>
+              </div>
+              <div class="contact-item">
+                <i class="fas fa-clock"></i>
+                <div>
+                  <h4>Hours</h4>
+                  <div id="salonHours">
+                    <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
+                    <p>Saturday: 9:00 AM - 5:00 PM</p>
+                    <p>Sunday: Closed</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <div class="footer-logo">
+              <i class="fas fa-cut"></i>
+              <span>Glamour Salon</span>
+            </div>
+            <p>Your trusted partner for all beauty needs</p>
+          </div>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Follow Us</h4>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Glamour Salon. All rights reserved.</p>
         </div>
       </div>
-    </section>
+    </footer>
 
-    <!-- Toast -->
-    <div id="toast" class="modal">
-      <div class="panel card pad" style="text-align: center">
-        <div id="toastText" style="font-weight: 600; margin-bottom: 8px">
-          Saved
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Login</h2>
+          <span class="close" onclick="closeModal('loginModal')">&times;</span>
         </div>
-        <button class="btn" onclick="closeToast()">Close</button>
+        <form id="loginForm">
+          <div class="form-group">
+            <label>User Type</label>
+            <select id="loginUserType" required>
+              <option value="">Select user type</option>
+              <option value="user">Customer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" required />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" required />
+          </div>
+          <button type="submit" class="btn btn-primary full-width">
+            Login
+          </button>
+        </form>
+        <p class="modal-footer">
+          Don't have an account?
+          <a href="#" onclick="switchModal('loginModal', 'signupModal')"
+            >Sign up</a
+          >
+        </p>
       </div>
     </div>
 
-    <!-- User Auth Modal -->
-    <div id="userAuth" class="modal">
-      <div class="panel card pad">
-        <div class="tabs" id="userAuthTabs">
-          <button class="tab active" data-mode="login">User Login</button>
-          <button class="tab" data-mode="signup">User Signup</button>
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Sign Up</h2>
+          <span class="close" onclick="closeModal('signupModal')">&times;</span>
         </div>
-        <form
-          id="userLoginForm"
-          class="grid"
-          style="grid-template-columns: 1fr"
-        >
-          <div class="field">
-            <label class="label">Email</label
-            ><input class="input" id="ul_email" type="email" required />
+        <form id="signupForm">
+          <div class="form-group">
+            <label>User Type</label>
+            <select id="signupUserType" required>
+              <option value="">Select user type</option>
+              <option value="user">Customer</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
-          <div class="field">
-            <label class="label">Password</label
-            ><input class="input" id="ul_pass" type="password" required />
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" id="signupFirstName" required />
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" id="signupLastName" required />
+            </div>
           </div>
-          <button class="btn primary" type="submit">Login</button>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="signupEmail" required />
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="signupPhone" required />
+          </div>
+          <div class="form-group">
+            <label id="addressLabel">Address</label>
+            <textarea id="signupAddress" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="signupPassword" required minlength="6" />
+          </div>
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" id="signupConfirmPassword" required />
+          </div>
+          <button type="submit" class="btn btn-primary full-width">
+            Sign Up
+          </button>
         </form>
-        <form
-          id="userSignupForm"
-          class="grid"
-          style="grid-template-columns: 1fr; display: none"
-        >
-          <div class="field">
-            <label class="label">Full Name</label
-            ><input class="input" id="us_name" required />
-          </div>
-          <div class="field">
-            <label class="label">Email</label
-            ><input class="input" id="us_email" type="email" required />
-          </div>
-          <div class="field">
-            <label class="label">Phone</label
-            ><input class="input" id="us_phone" pattern="[0-9]{10}" required />
-          </div>
-          <div class="field">
-            <label class="label">Password</label
-            ><input
-              class="input"
-              id="us_pass"
-              type="password"
-              minlength="6"
-              required
-            />
-          </div>
-          <button class="btn primary" type="submit">Create Account</button>
-        </form>
-        <div style="display: flex; justify-content: flex-end; margin-top: 12px">
-          <button class="btn" onclick="closeUserAuth()">Close</button>
-        </div>
+        <p class="modal-footer">
+          Already have an account?
+          <a href="#" onclick="switchModal('signupModal', 'loginModal')"
+            >Login</a
+          >
+        </p>
       </div>
     </div>
 
-    <!-- Admin Auth Modal -->
-    <div id="adminAuth" class="modal">
-      <div class="panel card pad">
-        <div class="tabs" id="adminAuthTabs">
-          <button class="tab active" data-mode="login">Admin Login</button>
-          <button class="tab" data-mode="signup">Admin Signup</button>
+    <!-- Add Service Modal -->
+    <div id="addServiceModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add New Service</h2>
+          <span class="close" onclick="closeModal('addServiceModal')"
+            >&times;</span
+          >
         </div>
-        <form
-          id="adminLoginForm"
-          class="grid"
-          style="grid-template-columns: 1fr"
-        >
-          <div class="field">
-            <label class="label">Email</label
-            ><input class="input" id="al_email" type="email" required />
+        <form id="addServiceForm">
+          <div class="form-group">
+            <label>Service Name</label>
+            <input type="text" id="serviceName" required />
           </div>
-          <div class="field">
-            <label class="label">Password</label
-            ><input class="input" id="al_pass" type="password" required />
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="serviceDescription" required></textarea>
           </div>
-          <button class="btn primary" type="submit">Login</button>
-        </form>
-        <form
-          id="adminSignupForm"
-          class="grid"
-          style="grid-template-columns: 1fr; display: none"
-        >
-          <div class="field">
-            <label class="label">Name</label
-            ><input class="input" id="as_name" required />
-          </div>
-          <div class="field">
-            <label class="label">Email</label
-            ><input class="input" id="as_email" type="email" required />
-          </div>
-          <div class="field">
-            <label class="label">Password</label
-            ><input
-              class="input"
-              id="as_pass"
-              type="password"
-              minlength="6"
+          <div class="form-group">
+            <label>Price ($)</label>
+            <input
+              type="number"
+              id="servicePrice"
               required
+              min="0"
+              step="0.01"
             />
           </div>
-          <button class="btn primary" type="submit">Create Admin</button>
+          <div class="form-group">
+            <label>Duration (minutes)</label>
+            <input
+              type="number"
+              id="serviceDuration"
+              required
+              min="15"
+              step="15"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary full-width">
+            Add Service
+          </button>
         </form>
-        <small class="sub"
-          >Demo only: credentials are stored locally in your browser.</small
-        >
-        <div style="display: flex; justify-content: flex-end; margin-top: 12px">
-          <button class="btn" onclick="closeAdminAuth()">Close</button>
+      </div>
+    </div>
+
+    <!-- Edit Service Modal -->
+    <div id="editServiceModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Service</h2>
+          <span class="close" onclick="closeModal('editServiceModal')"
+            >&times;</span
+          >
+        </div>
+        <form id="editServiceForm">
+          <input type="hidden" id="editServiceId" />
+          <div class="form-group">
+            <label>Service Name</label>
+            <input type="text" id="editServiceName" required />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="editServiceDescription" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Price ($)</label>
+            <input
+              type="number"
+              id="editServicePrice"
+              required
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div class="form-group">
+            <label>Duration (minutes)</label>
+            <input
+              type="number"
+              id="editServiceDuration"
+              required
+              min="15"
+              step="15"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary full-width">
+            Update Service
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Payment</h2>
+          <span class="close" onclick="closeModal('paymentModal')"
+            >&times;</span
+          >
+        </div>
+        <div id="paymentContent">
+          <div class="payment-summary">
+            <h3>Booking Summary</h3>
+            <div id="paymentSummary"></div>
+          </div>
+          <form id="paymentForm">
+            <div class="form-group">
+              <label>Card Number</label>
+              <input
+                type="text"
+                id="cardNumber"
+                placeholder="1234 5678 9012 3456"
+                maxlength="19"
+              />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry Date</label>
+                <input
+                  type="text"
+                  id="expiryDate"
+                  placeholder="MM/YY"
+                  maxlength="5"
+                />
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" id="cvv" placeholder="123" maxlength="3" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Cardholder Name</label>
+              <input type="text" id="cardholderName" required />
+            </div>
+            <button type="submit" class="btn btn-primary full-width">
+              Pay Now
+            </button>
+          </form>
         </div>
       </div>
     </div>
 
     <script>
-      /* ----------------------------- Utilities ----------------------------- */
-      const $ = (q, el = document) => el.querySelector(q);
-      const $ = (q, el = document) => Array.from(el.querySelectorAll(q));
-      const uid = () => Math.random().toString(36).slice(2, 10);
-      const INR = (n) => `₹${Number(n).toLocaleString("en-IN")}`;
-      const todayISO = () => new Date().toISOString().slice(0, 10);
-      function scrollToHash(id) {
-        location.hash = id;
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-      }
+      // Global variables
+      let currentUser = null;
+      let services = [
+        {
+          id: 1,
+          name: "Haircut & Style",
+          description: "Professional haircut with styling",
+          price: 45,
+          duration: 60,
+        },
+        {
+          id: 2,
+          name: "Hair Coloring",
+          description: "Full hair color treatment",
+          price: 85,
+          duration: 120,
+        },
+        {
+          id: 3,
+          name: "Facial Treatment",
+          description: "Deep cleansing facial",
+          price: 65,
+          duration: 90,
+        },
+        {
+          id: 4,
+          name: "Manicure",
+          description: "Complete nail care and polish",
+          price: 35,
+          duration: 45,
+        },
+        {
+          id: 5,
+          name: "Pedicure",
+          description: "Foot spa and nail treatment",
+          price: 40,
+          duration: 50,
+        },
+      ];
+      let appointments = [];
+      let feedbacks = [];
+      let users = [
+        {
+          id: 1,
+          type: "admin",
+          firstName: "Admin",
+          lastName: "User",
+          email: "admin@salon.com",
+          password: "admin123",
+          phone: "555-0001",
+          address: "123 Beauty Street, Style City, SC 12345",
+        },
+        {
+          id: 2,
+          type: "user",
+          firstName: "John",
+          lastName: "Doe",
+          email: "john@example.com",
+          password: "user123",
+          phone: "555-0002",
+          address: "456 User Lane, City, ST 67890",
+          username: "JOHN001",
+        },
+      ];
+      let nextUserId = 3;
+      let nextServiceId = 6;
+      let nextAppointmentId = 1;
 
-      function showToast(txt) {
-        $("#toastText").textContent = txt;
-        $("#toast").classList.add("open");
-      }
-      function closeToast() {
-        $("#toast").classList.remove("open");
-      }
-
-      // Mobile Menu Functions
-      function toggleMobileMenu() {
-        const menu = $("#mobileMenu");
-        menu.classList.toggle("open");
-      }
-      function closeMobileMenu() {
-        $("#mobileMenu").classList.remove("open");
-      }
-
-      /* ------------------------------ Storage ------------------------------ */
-      const DB = {
-        get services() {
-          return JSON.parse(localStorage.getItem("services") || "[]");
-        },
-        set services(v) {
-          localStorage.setItem("services", JSON.stringify(v));
-        },
-        get appts() {
-          return JSON.parse(localStorage.getItem("appts") || "[]");
-        },
-        set appts(v) {
-          localStorage.setItem("appts", JSON.stringify(v));
-        },
-        get feedback() {
-          return JSON.parse(localStorage.getItem("feedback") || "[]");
-        },
-        set feedback(v) {
-          localStorage.setItem("feedback", JSON.stringify(v));
-        },
-        get payments() {
-          return JSON.parse(localStorage.getItem("payments") || "[]");
-        },
-        set payments(v) {
-          localStorage.setItem("payments", JSON.stringify(v));
-        },
-        get users() {
-          return JSON.parse(localStorage.getItem("users") || "[]");
-        },
-        set users(v) {
-          localStorage.setItem("users", JSON.stringify(v));
-        },
-        get admins() {
-          return JSON.parse(localStorage.getItem("admins") || "[]");
-        },
-        set admins(v) {
-          localStorage.setItem("admins", JSON.stringify(v));
-        },
-        get session() {
-          return JSON.parse(localStorage.getItem("session") || "null");
-        },
-        set session(v) {
-          if (v) localStorage.setItem("session", JSON.stringify(v));
-          else localStorage.removeItem("session");
-        },
-        seed() {
-          if (!this.services.length) {
-            this.services = [
-              {
-                id: uid(),
-                name: "Classic Haircut",
-                price: 499,
-                duration: 30,
-                category: "Hair",
-                desc: "Tailored cut with wash & blow‑dry.",
-                image:
-                  "https://images.unsplash.com/photo-1517832606299-7ae9b720a186?q=80&w=1400&auto=format&fit=crop",
-              },
-              {
-                id: uid(),
-                name: "Detan Facial",
-                price: 899,
-                duration: 45,
-                category: "Skin",
-                desc: "Deep cleansing & tan removal.",
-                image:
-                  "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1400&auto=format&fit=crop",
-              },
-              {
-                id: uid(),
-                name: "Gel Manicure",
-                price: 799,
-                duration: 50,
-                category: "Nails",
-                desc: "Long‑lasting shine with gel polish.",
-                image:
-                  "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=1400&auto=format&fit=crop",
-              },
-              {
-                id: uid(),
-                name: "Bridal Makeup Trial",
-                price: 2499,
-                duration: 90,
-                category: "Makeup",
-                desc: "Consultation + full look trial.",
-                image:
-                  "https://images.unsplash.com/photo-1508182311256-e3f7d50c0f08?q=80&w=1400&auto=format&fit=crop",
-              },
-            ];
-          }
-          if (!this.admins.length) {
-            this.admins = [
-              {
-                id: uid(),
-                name: "Demo Admin",
-                email: "admin@demo.com",
-                pass: "admin123",
-              },
-            ];
-          }
-          if (!this.users.length) {
-            this.users = [
-              {
-                id: uid(),
-                name: "Demo User",
-                email: "user@demo.com",
-                phone: "9999999999",
-                pass: "user1234",
-              },
-            ];
-          }
-        },
-      };
-
-      function isAdmin() {
-        return DB.session?.role === "admin";
-      }
-      function isUser() {
-        return DB.session?.role === "user";
-      }
-
-      /* ----------------------------- Services UI --------------------------- */
-      function renderServices(filter = "all") {
-        const grid = $("#serviceGrid");
-        const list = DB.services.filter((s) =>
-          filter === "all" ? true : s.category === filter
-        );
-        grid.innerHTML = list
-          .map(
-            (s) => `
-        <article class="service card">
-          <img class="cover" src="${
-            s.image ||
-            "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1400&auto=format&fit=crop"
-          }" alt="${s.name}">
-          <div class="body">
-            <div style="display:flex; gap:8px; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-              <h3>${s.name}</h3>
-              <span class="chip">${s.category}</span>
-            </div>
-            <div class="sub">${s.desc || ""}</div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top: 8px;">
-              <div class="price">${INR(s.price)} · ${s.duration} min</div>
-              <button class="btn" onclick='selectService("${
-                s.id
-              }")'>Book</button>
-            </div>
-          </div>
-        </article>
-      `
-          )
-          .join("");
-
-        // update selects
-        const svcSelects = ["#bf_service", "#fb_service"].map((id) => $(id));
-        svcSelects.forEach((sel) => {
-          if (sel)
-            sel.innerHTML = DB.services
-              .map(
-                (s) =>
-                  `<option value="${s.id}">${s.name} – ${INR(s.price)}</option>`
-              )
-              .join("");
+      // Navigation
+      document
+        .getElementById("hamburger")
+        .addEventListener("click", function () {
+          const navMenu = document.getElementById("navMenu");
+          navMenu.classList.toggle("active");
         });
 
-        // Admin table refresh if visible
-        renderAdminTable();
+      // Modal functions
+      function showLoginModal() {
+        document.getElementById("loginModal").style.display = "block";
       }
 
-      function selectService(id) {
-        const s = DB.services.find((x) => x.id === id);
-        if (!s) return;
-        $("#bf_service").value = id;
-        scrollToHash("booking");
+      function showSignupModal() {
+        document.getElementById("signupModal").style.display = "block";
       }
 
-      // Tabs
-      $("#serviceTabs .tab").forEach((btn) =>
-        btn.addEventListener("click", (e) => {
-          $("#serviceTabs .tab").forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          renderServices(btn.dataset.cat);
-        })
-      );
-
-      /* ----------------------------- Booking ------------------------------- */
-      function renderAppts() {
-        const tbody = $("#apptTable tbody");
-        if (!tbody) return;
-        const who = DB.session?.role === "user" ? DB.session.email : null;
-        const list = who ? DB.appts.filter((a) => a.email === who) : DB.appts; // users see their own; admins can see all if needed
-        tbody.innerHTML = list
-          .slice()
-          .reverse()
-          .map((a) => {
-            const s = DB.services.find((x) => x.id === a.serviceId);
-            const when = `${a.date} ${a.time}`;
-            return `<tr><td>${when}</td><td>${s?.name || "—"}</td><td>${
-              a.name
-            }</td><td>${a.paid ? "Paid" : "Pending"}</td></tr>`;
-          })
-          .join("");
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
       }
 
-      function requireUser() {
-        if (!isUser()) {
-          openUserAuth();
-          showToast("Please login as User to continue.");
-          return false;
-        }
-        return true;
+      function switchModal(fromModal, toModal) {
+        closeModal(fromModal);
+        document.getElementById(toModal).style.display = "block";
       }
 
-      $("#bookForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (!requireUser()) return;
-        const serviceId = $("#bf_service").value;
-        const date = $("#bf_date").value;
-        const time = $("#bf_time").value;
-        const name = $("#bf_name").value.trim();
-        const phone = $("#bf_phone").value.trim();
-        const email = $("#bf_email").value.trim();
-        const paymethod = new FormData(e.target).get("paymethod");
-        if (!serviceId || !date || !time || !name || !phone || !email) return;
-        const s = DB.services.find((x) => x.id === serviceId);
-        const appt = {
-          id: uid(),
-          serviceId,
-          date,
-          time,
-          name,
-          phone,
-          email,
-          method: paymethod,
-          amount: s.price,
-          paid: paymethod === "cash" ? false : false,
-        };
-        DB.appts = [...DB.appts, appt];
-        if (paymethod === "online") {
-          DB.payments = [
-            ...DB.payments,
-            {
-              id: uid(),
-              apptId: appt.id,
-              name,
-              service: s.name,
-              amount: s.price,
-              method: "online",
-              status: "requires_payment",
-            },
-          ];
-          showToast(
-            "Appointment created. Proceed to Payments to complete online payment."
+      // Authentication
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const userType = document.getElementById("loginUserType").value;
+          const email = document.getElementById("loginEmail").value;
+          const password = document.getElementById("loginPassword").value;
+
+          const user = users.find(
+            (u) =>
+              u.email === email &&
+              u.password === password &&
+              u.type === userType
           );
-        } else {
-          DB.payments = [
-            ...DB.payments,
-            {
-              id: uid(),
-              apptId: appt.id,
-              name,
-              service: s.name,
-              amount: s.price,
-              method: "cash",
-              status: "cash_due",
-            },
-          ];
-          showToast("Appointment created. Pay cash at the salon.");
-        }
-        renderPayments();
-        renderAppts();
-        e.target.reset();
-        $("#bf_date").value = todayISO();
-        $("#bf_time").value = "10:00";
-      });
 
-      /* ------------------------------ Feedback ----------------------------- */
-      function renderFeedback() {
-        const tbody = $("#fbTable tbody");
-        if (!tbody) return;
-        tbody.innerHTML = DB.feedback
-          .slice()
-          .reverse()
-          .map((f) => {
-            const s = DB.services.find((x) => x.id === f.serviceId);
-            return `<tr><td>${s?.name || "—"}</td><td>${
-              f.name
-            }</td><td>${"★".repeat(f.rating)}${"☆".repeat(
-              5 - f.rating
-            )}</td><td>${f.text || ""}</td></tr>`;
-          })
-          .join("");
-      }
-
-      $("#fbForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (!requireUser()) return;
-        const name = $("#fb_name").value.trim();
-        const serviceId = $("#fb_service").value;
-        const rating = Number($("#fb_rating").value);
-        const text = $("#fb_text").value.trim();
-        if (!name || !serviceId || !rating) return;
-        DB.feedback = [
-          ...DB.feedback,
-          {
-            id: uid(),
-            name,
-            serviceId,
-            rating,
-            text,
-            ts: Date.now(),
-            email: DB.session?.email || null,
-          },
-        ];
-        renderFeedback();
-        e.target.reset();
-        showToast("Thanks for the feedback!");
-      });
-
-      /* ------------------------------ Payments ----------------------------- */
-      function renderPayments() {
-        const tbody = $("#payTable tbody");
-        if (!tbody) return;
-        const who = DB.session?.role === "user" ? DB.session.email : null;
-        const list = who
-          ? DB.payments.filter(
-              (p) => DB.appts.find((a) => a.id === p.apptId)?.email === who
-            )
-          : DB.payments;
-        tbody.innerHTML = list
-          .slice()
-          .reverse()
-          .map((p) => {
-            return `<tr>
-          <td>${p.apptId.substring(0, 6)}...</td>
-          <td>${p.name}</td>
-          <td>${p.service}</td>
-          <td>${INR(p.amount)}</td>
-          <td>${p.method}</td>
-          <td>${p.status.replace("_", " ")}</td>
-          <td>${
-            p.method === "online" && p.status === "requires_payment"
-              ? `<button class='btn ok' onclick='demoPay("${p.id}")'>Pay</button>`
-              : ""
+          if (user) {
+            currentUser = user;
+            closeModal("loginModal");
+            showDashboard(user.type);
+            showNotification("Login successful!", "success");
+          } else {
+            showNotification("Invalid credentials!", "error");
           }
-              ${
-                p.method === "cash" && p.status === "cash_due"
-                  ? `<span class='chip'>Pay at salon</span>`
-                  : ""
-              }
-          </td>
-        </tr>`;
-          })
-          .join("");
-      }
+        });
 
-      function demoPay(pid) {
-        if (!requireUser()) return;
-        DB.payments = DB.payments.map((p) =>
-          p.id === pid ? { ...p, status: "paid" } : p
-        );
-        const paid = DB.payments.find((p) => p.id === pid);
-        if (paid) {
-          DB.appts = DB.appts.map((a) =>
-            a.id === paid.apptId ? { ...a, paid: true } : a
-          );
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const userType = document.getElementById("signupUserType").value;
+          const firstName = document.getElementById("signupFirstName").value;
+          const lastName = document.getElementById("signupLastName").value;
+          const email = document.getElementById("signupEmail").value;
+          const phone = document.getElementById("signupPhone").value;
+          const address = document.getElementById("signupAddress").value;
+          const password = document.getElementById("signupPassword").value;
+          const confirmPassword = document.getElementById(
+            "signupConfirmPassword"
+          ).value;
+
+          if (password !== confirmPassword) {
+            showNotification("Passwords do not match!", "error");
+            return;
+          }
+
+          if (users.find((u) => u.email === email)) {
+            showNotification("Email already exists!", "error");
+            return;
+          }
+
+          let username = "";
+          if (userType === "user") {
+            username = (firstName.toUpperCase() + "00" + nextUserId).slice(
+              0,
+              10
+            );
+          }
+
+          const newUser = {
+            id: nextUserId++,
+            type: userType,
+            firstName,
+            lastName,
+            email,
+            password,
+            phone,
+            address,
+            username,
+          };
+
+          users.push(newUser);
+          closeModal("signupModal");
+          showNotification("Account created successfully!", "success");
+        });
+
+      // Dashboard functions
+      function showDashboard(userType) {
+        document.getElementById("mainContent").style.display = "none";
+        document.querySelector(".navbar").style.display = "none";
+        document.querySelector(".footer").style.display = "none";
+
+        if (userType === "admin") {
+          document.getElementById("adminDashboard").style.display = "block";
+          document.getElementById(
+            "adminWelcome"
+          ).textContent = `Welcome, ${currentUser.firstName}!`;
+          loadAdminData();
+          showAdminSection("overview");
+        } else {
+          document.getElementById("userDashboard").style.display = "block";
+          document.getElementById(
+            "userWelcome"
+          ).textContent = `Welcome, ${currentUser.firstName}!`;
+          loadUserData();
+          showUserSection("services");
         }
-        renderPayments();
-        renderAppts();
-        showToast("Payment successful (demo).");
       }
 
-      /* ------------------------------- Admin -------------------------------- */
-      function ensureAdmin() {
-        if (!isAdmin()) {
-          showToast("Admin access required.");
-          openAdminAuth();
-          return false;
-        }
-        return true;
+      function logout() {
+        currentUser = null;
+        document.getElementById("adminDashboard").style.display = "none";
+        document.getElementById("userDashboard").style.display = "none";
+        document.getElementById("mainContent").style.display = "block";
+        document.querySelector(".navbar").style.display = "block";
+        document.querySelector(".footer").style.display = "block";
+        showNotification("Logged out successfully!", "success");
       }
 
-      function renderAdminTable() {
-        const tbody = $("#adminSvcTable tbody");
-        if (!tbody) return;
-        tbody.innerHTML = DB.services
+      // Admin Dashboard Functions
+      function showAdminSection(section) {
+        // Hide all sections
+        document
+          .querySelectorAll("#adminDashboard .dashboard-section")
+          .forEach((s) => (s.style.display = "none"));
+
+        // Remove active class from all menu items
+        document
+          .querySelectorAll("#adminDashboard .sidebar-menu a")
+          .forEach((a) => a.classList.remove("active"));
+
+        // Show selected section
+        document.getElementById(
+          "admin" +
+            section.charAt(0).toUpperCase() +
+            section.slice(1) +
+            "Section"
+        ).style.display = "block";
+
+        // Add active class to selected menu item
+        event.target.classList.add("active");
+      }
+
+      function loadAdminData() {
+        updateAdminStats();
+        loadAdminServices();
+        loadAdminAppointments();
+        loadAdminFeedback();
+        loadAdminProfile();
+      }
+
+      function updateAdminStats() {
+        document.getElementById("totalAppointments").textContent =
+          appointments.length;
+        document.getElementById("totalServices").textContent = services.length;
+        document.getElementById("totalUsers").textContent = users.filter(
+          (u) => u.type === "user"
+        ).length;
+
+        const avgRating =
+          feedbacks.length > 0
+            ? (
+                feedbacks.reduce((sum, f) => sum + f.rating, 0) /
+                feedbacks.length
+              ).toFixed(1)
+            : "0";
+        document.getElementById("avgRating").textContent = avgRating;
+      }
+
+      function loadAdminServices() {
+        const container = document.getElementById("adminServicesList");
+        container.innerHTML = services
           .map(
-            (s) => `
-        <tr>
-          <td>${s.name}</td>
-          <td>${s.category}</td>
-          <td>${s.price}</td>
-          <td>${s.duration}</td>
-          <td style="text-align:right">
-            ${
-              isAdmin()
-                ? `<button class="btn" onclick='editSvc("${s.id}")' style="margin-right: 4px;">Edit</button>
-            <button class="btn danger" onclick='delSvc("${s.id}")'>Delete</button>`
-                : ""
-            }
-          </td>
-        </tr>
-      `
+            (service) => `
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3>${service.name}</h3>
+                        <div class="service-actions">
+                            <button class="btn-icon" onclick="editService(${service.id})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon delete" onclick="deleteService(${service.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="service-description">${service.description}</p>
+                    <div class="service-details">
+                        <span class="service-price">${service.price}</span>
+                        <span class="service-duration">${service.duration} min</span>
+                    </div>
+                </div>
+            `
           )
           .join("");
-        // Toggle admin panel visibility
-        const adminPanel = $("#adminPanel");
-        const adminNotice = $("#adminNotice");
-        if (adminPanel && adminNotice) {
-          adminPanel.style.display = isAdmin() ? "block" : "none";
-          adminNotice.style.display = isAdmin() ? "none" : "block";
+      }
+
+      function loadAdminAppointments() {
+        const filter =
+          document.getElementById("appointmentFilter")?.value || "all";
+        let filteredAppointments = appointments;
+
+        if (filter !== "all") {
+          filteredAppointments = appointments.filter(
+            (apt) => apt.status === filter
+          );
+        }
+
+        const container = document.getElementById("adminAppointmentsList");
+        container.innerHTML = filteredAppointments
+          .map((appointment) => {
+            const user = users.find((u) => u.id === appointment.userId);
+            const service = services.find(
+              (s) => s.id === appointment.serviceId
+            );
+            return `
+                    <div class="appointment-card">
+                        <div class="appointment-header">
+                            <h4>${
+                              user
+                                ? user.firstName + " " + user.lastName
+                                : "Unknown User"
+                            }</h4>
+                            <span class="status status-${appointment.status}">${
+              appointment.status
+            }</span>
+                        </div>
+                        <div class="appointment-details">
+                            <p><strong>Service:</strong> ${
+                              service ? service.name : "Unknown Service"
+                            }</p>
+                            <p><strong>Date:</strong> ${appointment.date}</p>
+                            <p><strong>Time:</strong> ${appointment.time}</p>
+                            <p><strong>Payment:</strong> ${
+                              appointment.paymentMethod
+                            }</p>
+                            ${
+                              appointment.notes
+                                ? `<p><strong>Notes:</strong> ${appointment.notes}</p>`
+                                : ""
+                            }
+                        </div>
+                        <div class="appointment-actions">
+                            ${
+                              appointment.status === "pending"
+                                ? `
+                                <button class="btn btn-sm btn-success" onclick="updateAppointmentStatus(${appointment.id}, 'confirmed')">Confirm</button>
+                                <button class="btn btn-sm btn-danger" onclick="updateAppointmentStatus(${appointment.id}, 'cancelled')">Cancel</button>
+                            `
+                                : ""
+                            }
+                            ${
+                              appointment.status === "confirmed"
+                                ? `
+                                <button class="btn btn-sm btn-primary" onclick="updateAppointmentStatus(${appointment.id}, 'completed')">Mark Complete</button>
+                            `
+                                : ""
+                            }
+                        </div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      function loadAdminFeedback() {
+        const container = document.getElementById("adminFeedbackList");
+        container.innerHTML = feedbacks
+          .map((feedback) => {
+            const user = users.find((u) => u.id === feedback.userId);
+            return `
+                    <div class="feedback-card">
+                        <div class="feedback-header">
+                            <h4>${
+                              user
+                                ? user.firstName + " " + user.lastName
+                                : "Anonymous"
+                            }</h4>
+                            <div class="rating">
+                                ${"★".repeat(feedback.rating)}${"☆".repeat(
+              5 - feedback.rating
+            )}
+                            </div>
+                        </div>
+                        <p class="feedback-text">${feedback.text}</p>
+                        <span class="feedback-date">${feedback.date}</span>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      function loadAdminProfile() {
+        if (currentUser && currentUser.type === "admin") {
+          document.getElementById("adminFirstName").value =
+            currentUser.firstName;
+          document.getElementById("adminLastName").value = currentUser.lastName;
+          document.getElementById("adminEmail").value = currentUser.email;
+          document.getElementById("adminPhone").value = currentUser.phone;
+          document.getElementById("adminAddress").value = currentUser.address;
         }
       }
 
-      function editSvc(id) {
-        if (!ensureAdmin()) return;
-        const s = DB.services.find((x) => x.id === id);
-        if (!s) return;
-        $("#svc_id").value = s.id;
-        $("#svc_name").value = s.name;
-        $("#svc_price").value = s.price;
-        $("#svc_duration").value = s.duration;
-        $("#svc_category").value = s.category;
-        $("#svc_image").value = s.image || "";
-        $("#svc_desc").value = s.desc || "";
-        scrollToHash("admin");
+      // User Dashboard Functions
+      function showUserSection(section) {
+        // Hide all sections
+        document
+          .querySelectorAll("#userDashboard .dashboard-section")
+          .forEach((s) => (s.style.display = "none"));
+
+        // Remove active class from all menu items
+        document
+          .querySelectorAll("#userDashboard .sidebar-menu a")
+          .forEach((a) => a.classList.remove("active"));
+
+        // Show selected section
+        document.getElementById(
+          "user" +
+            section.charAt(0).toUpperCase() +
+            section.slice(1) +
+            "Section"
+        ).style.display = "block";
+
+        // Add active class to selected menu item
+        event.target.classList.add("active");
       }
 
-      function delSvc(id) {
-        if (!ensureAdmin()) return;
-        if (!confirm("Delete this service?")) return;
-        DB.services = DB.services.filter((s) => s.id !== id);
-        renderServices($("#serviceTabs .tab.active").dataset.cat);
-        showToast("Service removed.");
+      function loadUserData() {
+        loadUserServices();
+        loadUserAppointments();
+        loadUserProfile();
+        loadBookingServices();
       }
 
-      $("#btnWipeAll")?.addEventListener("click", () => {
-        if (!ensureAdmin()) return;
-        if (!confirm("Delete ALL services?")) return;
-        DB.services = [];
-        renderServices("all");
-      });
-      $("#btnClearSvc")?.addEventListener("click", () => {
-        $("#svcForm").reset();
-        $("#svc_id").value = "";
-      });
-
-      $("#svcForm")?.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (!ensureAdmin()) return;
-        const id = $("#svc_id").value || uid();
-        const payload = {
-          id,
-          name: $("#svc_name").value.trim(),
-          price: Number($("#svc_price").value),
-          duration: Number($("#svc_duration").value),
-          category: $("#svc_category").value,
-          image: $("#svc_image").value.trim(),
-          desc: $("#svc_desc").value.trim(),
-        };
-        if (!payload.name) return;
-        const exists = DB.services.some((s) => s.id === id);
-        DB.services = exists
-          ? DB.services.map((s) => (s.id === id ? payload : s))
-          : [...DB.services, payload];
-        renderServices($("#serviceTabs .tab.active").dataset.cat);
-        $("#svcForm").reset();
-        $("#svc_id").value = "";
-        showToast(exists ? "Service updated." : "Service added.");
-      });
-
-      /* ------------------------------- Auth --------------------------------- */
-      // User Auth modal
-      function openUserAuth() {
-        $("#userAuth").classList.add("open");
-        switchUserAuth("login");
+      function loadUserServices() {
+        const container = document.getElementById("userServicesList");
+        container.innerHTML = services
+          .map(
+            (service) => `
+                <div class="service-card">
+                    <h3>${service.name}</h3>
+                    <p class="service-description">${service.description}</p>
+                    <div class="service-details">
+                        <span class="service-price">${service.price}</span>
+                        <span class="service-duration">${service.duration} min</span>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
       }
-      function closeUserAuth() {
-        $("#userAuth").classList.remove("open");
-      }
-      function switchUserAuth(mode) {
-        $("#userAuthTabs .tab").forEach((b) => b.classList.remove("active"));
-        const activeTab = $(`#userAuthTabs .tab[data-mode="${mode}"]`);
-        if (activeTab) activeTab.classList.add("active");
-        const loginForm = $("#userLoginForm");
-        const signupForm = $("#userSignupForm");
-        if (loginForm)
-          loginForm.style.display = mode === "login" ? "grid" : "none";
-        if (signupForm)
-          signupForm.style.display = mode === "signup" ? "grid" : "none";
-      }
-      $("#userAuthTabs")?.addEventListener("click", (e) => {
-        if (e.target.classList.contains("tab"))
-          switchUserAuth(e.target.dataset.mode);
-      });
 
-      // Admin Auth modal
-      function openAdminAuth() {
-        $("#adminAuth").classList.add("open");
-        switchAdminAuth("login");
-      }
-      function closeAdminAuth() {
-        $("#adminAuth").classList.remove("open");
-      }
-      function switchAdminAuth(mode) {
-        $("#adminAuthTabs .tab").forEach((b) => b.classList.remove("active"));
-        const activeTab = $(`#adminAuthTabs .tab[data-mode="${mode}"]`);
-        if (activeTab) activeTab.classList.add("active");
-        const loginForm = $("#adminLoginForm");
-        const signupForm = $("#adminSignupForm");
-        if (loginForm)
-          loginForm.style.display = mode === "login" ? "grid" : "none";
-        if (signupForm)
-          signupForm.style.display = mode === "signup" ? "grid" : "none";
-      }
-      $("#adminAuthTabs")?.addEventListener("click", (e) => {
-        if (e.target.classList.contains("tab"))
-          switchAdminAuth(e.target.dataset.mode);
-      });
+      function loadUserAppointments() {
+        const userAppointments = appointments.filter(
+          (apt) => apt.userId === currentUser.id
+        );
+        const container = document.getElementById("userAppointmentsList");
 
-      // Buttons
-      $("#btnUserAuth")?.addEventListener("click", openUserAuth);
-      $("#btnAdminAuth")?.addEventListener("click", openAdminAuth);
-      $("#btnUserAuthMobile")?.addEventListener("click", openUserAuth);
-      $("#btnAdminAuthMobile")?.addEventListener("click", openAdminAuth);
-      $("#btnLogout")?.addEventListener("click", () => {
-        DB.session = null;
-        updateAuthUI();
-        renderAppts();
-        renderPayments();
-        showToast("Logged out.");
-      });
-
-      // Forms
-      $("#userSignupForm")?.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = $("#us_name").value.trim();
-        const email = $("#us_email").value.trim().toLowerCase();
-        const phone = $("#us_phone").value.trim();
-        const pass = $("#us_pass").value;
-        if (DB.users.some((u) => u.email === email))
-          return showToast("User already exists.");
-        DB.users = [...DB.users, { id: uid(), name, email, phone, pass }];
-        showToast("User account created. Please login.");
-        switchUserAuth("login");
-      });
-
-      $("#userLoginForm")?.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const email = $("#ul_email").value.trim().toLowerCase();
-        const pass = $("#ul_pass").value;
-        const u = DB.users.find((u) => u.email === email && u.pass === pass);
-        if (!u) return showToast("Invalid user credentials.");
-        DB.session = { role: "user", id: u.id, name: u.name, email: u.email };
-        closeUserAuth();
-        closeMobileMenu();
-        showToast(`Welcome, ${u.name}!`);
-        updateAuthUI();
-        prefillBookingFromUser();
-        renderAppts();
-        renderPayments();
-      });
-
-      $("#adminSignupForm")?.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = $("#as_name").value.trim();
-        const email = $("#as_email").value.trim().toLowerCase();
-        const pass = $("#as_pass").value;
-        if (DB.admins.some((a) => a.email === email))
-          return showToast("Admin already exists.");
-        DB.admins = [...DB.admins, { id: uid(), name, email, pass }];
-        showToast("Admin created. Please login.");
-        switchAdminAuth("login");
-      });
-
-      $("#adminLoginForm")?.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const email = $("#al_email").value.trim().toLowerCase();
-        const pass = $("#al_pass").value;
-        const a = DB.admins.find((a) => a.email === email && a.pass === pass);
-        if (!a) return showToast("Invalid admin credentials.");
-        DB.session = { role: "admin", id: a.id, name: a.name, email: a.email };
-        closeAdminAuth();
-        closeMobileMenu();
-        showToast(`Welcome, Admin ${a.name}!`);
-        updateAuthUI();
-        renderAdminTable();
-      });
-
-      function updateAuthUI() {
-        const badge = $("#whoami");
-        const logoutBtn = $("#btnLogout");
-        if (DB.session && badge && logoutBtn) {
-          badge.style.display = "inline-flex";
-          badge.textContent = `${DB.session.role.toUpperCase()}: ${
-            DB.session.name
-          }`;
-          logoutBtn.style.display = "inline-flex";
-        } else if (badge && logoutBtn) {
-          badge.style.display = "none";
-          logoutBtn.style.display = "none";
+        if (userAppointments.length === 0) {
+          container.innerHTML = '<p class="no-data">No appointments found.</p>';
+          return;
         }
-        // Prefill forms if logged user
-        prefillBookingFromUser();
-        // Admin section visibility
-        renderAdminTable();
+
+        container.innerHTML = userAppointments
+          .map((appointment) => {
+            const service = services.find(
+              (s) => s.id === appointment.serviceId
+            );
+            return `
+                    <div class="appointment-card">
+                        <div class="appointment-header">
+                            <h4>${
+                              service ? service.name : "Unknown Service"
+                            }</h4>
+                            <span class="status status-${appointment.status}">${
+              appointment.status
+            }</span>
+                        </div>
+                        <div class="appointment-details">
+                            <p><strong>Date:</strong> ${appointment.date}</p>
+                            <p><strong>Time:</strong> ${appointment.time}</p>
+                            <p><strong>Price:</strong> ${
+                              service ? service.price : 0
+                            }</p>
+                            <p><strong>Payment:</strong> ${
+                              appointment.paymentMethod
+                            }</p>
+                            ${
+                              appointment.notes
+                                ? `<p><strong>Notes:</strong> ${appointment.notes}</p>`
+                                : ""
+                            }
+                        </div>
+                        ${
+                          appointment.status === "pending"
+                            ? `
+                            <div class="appointment-actions">
+                                <button class="btn btn-sm btn-danger" onclick="cancelAppointment(${appointment.id})">Cancel</button>
+                            </div>
+                        `
+                            : ""
+                        }
+                    </div>
+                `;
+          })
+          .join("");
       }
 
-      function prefillBookingFromUser() {
-        if (isUser()) {
-          const u = DB.users.find((x) => x.id === DB.session.id);
-          if (u) {
-            const nameField = $("#bf_name");
-            const emailField = $("#bf_email");
-            const phoneField = $("#bf_phone");
-            if (nameField) nameField.value = u.name;
-            if (emailField) emailField.value = u.email;
-            if (phoneField) phoneField.value = u.phone || "";
+      function loadUserProfile() {
+        if (currentUser && currentUser.type === "user") {
+          document.getElementById("userFirstName").value =
+            currentUser.firstName;
+          document.getElementById("userLastName").value = currentUser.lastName;
+          document.getElementById("userEmail").value = currentUser.email;
+          document.getElementById("userPhone").value = currentUser.phone;
+          document.getElementById("userAddress").value = currentUser.address;
+        }
+      }
+
+      function loadBookingServices() {
+        const select = document.getElementById("bookingService");
+        select.innerHTML =
+          '<option value="">Choose a service</option>' +
+          services
+            .map(
+              (service) =>
+                `<option value="${service.id}">${service.name} - ${service.price}</option>`
+            )
+            .join("");
+      }
+
+      // Service Management
+      function showAddServiceModal() {
+        document.getElementById("addServiceModal").style.display = "block";
+      }
+
+      document
+        .getElementById("addServiceForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const newService = {
+            id: nextServiceId++,
+            name: document.getElementById("serviceName").value,
+            description: document.getElementById("serviceDescription").value,
+            price: parseFloat(document.getElementById("servicePrice").value),
+            duration: parseInt(
+              document.getElementById("serviceDuration").value
+            ),
+          };
+
+          services.push(newService);
+          closeModal("addServiceModal");
+          loadAdminServices();
+          updateAdminStats();
+          showNotification("Service added successfully!", "success");
+          document.getElementById("addServiceForm").reset();
+        });
+
+      function editService(serviceId) {
+        const service = services.find((s) => s.id === serviceId);
+        if (service) {
+          document.getElementById("editServiceId").value = service.id;
+          document.getElementById("editServiceName").value = service.name;
+          document.getElementById("editServiceDescription").value =
+            service.description;
+          document.getElementById("editServicePrice").value = service.price;
+          document.getElementById("editServiceDuration").value =
+            service.duration;
+          document.getElementById("editServiceModal").style.display = "block";
+        }
+      }
+
+      document
+        .getElementById("editServiceForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const serviceId = parseInt(
+            document.getElementById("editServiceId").value
+          );
+          const serviceIndex = services.findIndex((s) => s.id === serviceId);
+
+          if (serviceIndex !== -1) {
+            services[serviceIndex] = {
+              id: serviceId,
+              name: document.getElementById("editServiceName").value,
+              description: document.getElementById("editServiceDescription")
+                .value,
+              price: parseFloat(
+                document.getElementById("editServicePrice").value
+              ),
+              duration: parseInt(
+                document.getElementById("editServiceDuration").value
+              ),
+            };
+
+            closeModal("editServiceModal");
+            loadAdminServices();
+            showNotification("Service updated successfully!", "success");
           }
+        });
+
+      function deleteService(serviceId) {
+        if (confirm("Are you sure you want to delete this service?")) {
+          services = services.filter((s) => s.id !== serviceId);
+          loadAdminServices();
+          updateAdminStats();
+          showNotification("Service deleted successfully!", "success");
         }
       }
 
-      // Close mobile menu when clicking on links
-      document.addEventListener("click", (e) => {
-        if (e.target.matches('a[href^="#"]')) {
-          closeMobileMenu();
-        }
-      });
+      // Appointment Management
+      document
+        .getElementById("bookingForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
 
-      // Close modals when clicking outside
-      document.addEventListener("click", (e) => {
-        if (e.target.classList.contains("modal")) {
-          if (e.target.id === "userAuth") closeUserAuth();
-          if (e.target.id === "adminAuth") closeAdminAuth();
-          if (e.target.id === "toast") closeToast();
-        }
-      });
+          const serviceId = parseInt(
+            document.getElementById("bookingService").value
+          );
+          const date = document.getElementById("bookingDate").value;
+          const time = document.getElementById("bookingTime").value;
+          const paymentMethod = document.getElementById("paymentMethod").value;
+          const notes = document.getElementById("bookingNotes").value;
 
-      /* ---------------------------- Init on load ---------------------------- */
-      function init() {
-        DB.seed();
-        // Default booking date/time
-        const dateField = $("#bf_date");
-        const timeField = $("#bf_time");
-        if (dateField) dateField.value = todayISO();
-        if (timeField) timeField.value = "10:00";
+          const newAppointment = {
+            id: nextAppointmentId++,
+            userId: currentUser.id,
+            serviceId: serviceId,
+            date: date,
+            time: time,
+            paymentMethod: paymentMethod,
+            notes: notes,
+            status: "pending",
+          };
 
-        renderServices("all");
-        renderAppts();
-        renderFeedback();
-        renderPayments();
-        updateAuthUI();
+          if (paymentMethod === "online") {
+            // Show payment modal
+            const service = services.find((s) => s.id === serviceId);
+            showPaymentModal(newAppointment, service);
+          } else {
+            appointments.push(newAppointment);
+            showNotification("Appointment booked successfully!", "success");
+            document.getElementById("bookingForm").reset();
+            loadUserAppointments();
+          }
+        });
+
+      function showPaymentModal(appointment, service) {
+        const summary = `
+                <p><strong>Service:</strong> ${service.name}</p>
+                <p><strong>Date:</strong> ${appointment.date}</p>
+                <p><strong>Time:</strong> ${appointment.time}</p>
+                <p><strong>Duration:</strong> ${service.duration} minutes</p>
+                <p><strong>Amount:</strong> ${service.price}</p>
+            `;
+        document.getElementById("paymentSummary").innerHTML = summary;
+        document.getElementById("paymentModal").style.display = "block";
+
+        // Store appointment data for processing after payment
+        document
+          .getElementById("paymentModal")
+          .setAttribute("data-appointment", JSON.stringify(appointment));
       }
 
-      document.addEventListener("DOMContentLoaded", init);
+      document
+        .getElementById("paymentForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Simulate payment processing
+          setTimeout(() => {
+            const appointmentData = JSON.parse(
+              document
+                .getElementById("paymentModal")
+                .getAttribute("data-appointment")
+            );
+            appointments.push(appointmentData);
+
+            closeModal("paymentModal");
+            showNotification(
+              "Payment successful! Appointment booked.",
+              "success"
+            );
+            document.getElementById("bookingForm").reset();
+            document.getElementById("paymentForm").reset();
+            loadUserAppointments();
+          }, 2000);
+
+          showNotification("Processing payment...", "info");
+        });
+
+      function updateAppointmentStatus(appointmentId, status) {
+        const appointment = appointments.find(
+          (apt) => apt.id === appointmentId
+        );
+        if (appointment) {
+          appointment.status = status;
+          loadAdminAppointments();
+          updateAdminStats();
+          showNotification(`Appointment ${status} successfully!`, "success");
+        }
+      }
+
+      function cancelAppointment(appointmentId) {
+        if (confirm("Are you sure you want to cancel this appointment?")) {
+          updateAppointmentStatus(appointmentId, "cancelled");
+          loadUserAppointments();
+        }
+      }
+
+      // Feedback Management
+      document
+        .getElementById("feedbackForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const rating = parseInt(
+            document.querySelector('input[name="rating"]:checked')?.value || 0
+          );
+          const text = document.getElementById("feedbackText").value;
+
+          if (rating === 0) {
+            showNotification("Please select a rating!", "error");
+            return;
+          }
+
+          const newFeedback = {
+            id: feedbacks.length + 1,
+            userId: currentUser.id,
+            rating: rating,
+            text: text,
+            date: new Date().toLocaleDateString(),
+          };
+
+          feedbacks.push(newFeedback);
+          showNotification("Feedback submitted successfully!", "success");
+          document.getElementById("feedbackForm").reset();
+        });
+
+      // Profile Management
+      document
+        .getElementById("adminProfileForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          currentUser.firstName =
+            document.getElementById("adminFirstName").value;
+          currentUser.lastName = document.getElementById("adminLastName").value;
+          currentUser.email = document.getElementById("adminEmail").value;
+          currentUser.phone = document.getElementById("adminPhone").value;
+          currentUser.address = document.getElementById("adminAddress").value;
+
+          // Update user in users array
+          const userIndex = users.findIndex((u) => u.id === currentUser.id);
+          if (userIndex !== -1) {
+            users[userIndex] = currentUser;
+          }
+
+          showNotification("Profile updated successfully!", "success");
+        });
+
+      document
+        .getElementById("userProfileForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          currentUser.firstName =
+            document.getElementById("userFirstName").value;
+          currentUser.lastName = document.getElementById("userLastName").value;
+          currentUser.email = document.getElementById("userEmail").value;
+          currentUser.phone = document.getElementById("userPhone").value;
+          currentUser.address = document.getElementById("userAddress").value;
+
+          // Update user in users array
+          const userIndex = users.findIndex((u) => u.id === currentUser.id);
+          if (userIndex !== -1) {
+            users[userIndex] = currentUser;
+          }
+
+          showNotification("Profile updated successfully!", "success");
+        });
+
+      // Schedule Management
+      document
+        .getElementById("scheduleForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          showNotification("Schedule updated successfully!", "success");
+        });
+
+      // Appointment filter
+      document
+        .getElementById("appointmentFilter")
+        ?.addEventListener("change", function () {
+          loadAdminAppointments();
+        });
+
+      // Public services loading
+      function loadPublicServices() {
+        const container = document.getElementById("publicServicesList");
+        container.innerHTML = services
+          .map(
+            (service) => `
+                <div class="service-card">
+                    <h3>${service.name}</h3>
+                    <p class="service-description">${service.description}</p>
+                    <div class="service-details">
+                        <span class="service-price">${service.price}</span>
+                        <span class="service-duration">${service.duration} min</span>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Utility functions
+      function showNotification(message, type) {
+        const notification = document.createElement("div");
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">&times;</button>
+            `;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.remove();
+        }, 5000);
+      }
+
+      function scrollToSection(sectionId) {
+        document
+          .getElementById(sectionId)
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Input formatting
+      document
+        .getElementById("cardNumber")
+        ?.addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\s/g, "").replace(/[^0-9]/gi, "");
+          let formattedValue = value.match(/.{1,4}/g)?.join(" ") || value;
+          e.target.value = formattedValue;
+        });
+
+      document
+        .getElementById("expiryDate")
+        ?.addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, "");
+          if (value.length >= 2) {
+            value = value.substring(0, 2) + "/" + value.substring(2, 4);
+          }
+          e.target.value = value;
+        });
+
+      document.getElementById("cvv")?.addEventListener("input", function (e) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, "");
+      });
+
+      // Signup form handling
+      document
+        .getElementById("signupUserType")
+        .addEventListener("change", function () {
+          const addressLabel = document.getElementById("addressLabel");
+          if (this.value === "admin") {
+            addressLabel.textContent = "Salon Address";
+          } else {
+            addressLabel.textContent = "Address";
+          }
+        });
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", function () {
+        loadPublicServices();
+
+        // Set minimum date for booking
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("bookingDate").min = today;
+      });
+
+      // Close modal when clicking outside
+      window.addEventListener("click", function (e) {
+        const modals = document.querySelectorAll(".modal");
+        modals.forEach((modal) => {
+          if (e.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+      });
     </script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Navigation */
+      .navbar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+      }
+
+      .nav-logo i {
+        margin-right: 10px;
+        font-size: 1.8rem;
+      }
+
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: #ffd700;
+      }
+
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+      }
+
+      .hamburger span {
+        width: 25px;
+        height: 3px;
+        background: white;
+        margin: 3px 0;
+        transition: 0.3s;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-align: center;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+      }
+
+      .btn-outline:hover {
+        background: white;
+        color: #667eea;
+      }
+
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.875rem;
+      }
+
+      .btn-icon {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn-icon:hover {
+        background-color: #f8f9fa;
+      }
+
+      .btn-icon.delete:hover {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      .full-width {
+        width: 100%;
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 120px 0 80px;
+        text-align: center;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .hero-content h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        opacity: 0;
+        animation: fadeInUp 1s ease forwards;
+      }
+
+      .hero-content p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0;
+        animation: fadeInUp 1s ease 0.2s forwards;
+      }
+
+      .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        opacity: 0;
+        animation: fadeInUp 1s ease 0.4s forwards;
+      }
+
+      /* Services Section */
+      .service-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .service-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transition: left 0.3s ease;
+      }
+
+      .service-card:hover::before {
+        left: 0;
+      }
+
+      .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      }
+
+      .service-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .service-header h3 {
+        color: #333;
+        font-size: 1.25rem;
+      }
+
+      .service-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .service-description {
+        color: #666;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+
+      .service-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .service-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .service-duration {
+        color: #666;
+        font-size: 0.9rem;
+      }
+
+      .service-note {
+        text-align: center;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #e3f2fd;
+        border-radius: 10px;
+        color: #1976d2;
+      }
+
+      /* About Section */
+      .about-section {
+        padding: 80px 0;
+      }
+
+      .about-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+      }
+
+      .about-text h2 {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        color: #333;
+      }
+
+      .about-text p {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 2rem;
+        line-height: 1.8;
+      }
+
+      .features {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .feature {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .feature i {
+        font-size: 2rem;
+        color: #667eea;
+        min-width: 40px;
+      }
+
+      .feature h4 {
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .feature p {
+        color: #666;
+        margin: 0;
+      }
+
+      .about-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .image-placeholder {
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 4rem;
+      }
+
+      /* Contact Section */
+      .contact-section {
+        padding: 80px 0;
+        background: #f8f9fa;
+      }
+
+      .contact-section h2 {
+        text-align: center;
+        margin-bottom: 3rem;
+        font-size: 2.5rem;
+        color: #333;
+      }
+
+      .contact-content {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .contact-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .contact-item i {
+        font-size: 1.5rem;
+        color: #667eea;
+        margin-top: 0.25rem;
+      }
+
+      .contact-item h4 {
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      .contact-item p {
+        color: #666;
+        margin: 0;
+      }
+
+      /* Footer */
+      .footer {
+        background: #333;
+        color: white;
+        padding: 3rem 0 1rem;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+      }
+
+      .footer-logo i {
+        margin-right: 10px;
+        font-size: 1.8rem;
+      }
+
+      .footer-section h4 {
+        margin-bottom: 1rem;
+        color: #ffd700;
+      }
+
+      .footer-section ul {
+        list-style: none;
+      }
+
+      .footer-section ul li {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-section ul li a {
+        color: #ccc;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer-section ul li a:hover {
+        color: #ffd700;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: #667eea;
+        color: white;
+        border-radius: 50%;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+
+      .social-links a:hover {
+        background: #ffd700;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 2rem;
+        border-top: 1px solid #555;
+        color: #ccc;
+      }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+      }
+
+      .modal-content {
+        background: white;
+        margin: 0% auto;
+        padding: 0;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0rem;
+        border-bottom: 1px solid #eee;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        color: #333;
+      }
+
+      .close {
+        font-size: 2rem;
+        cursor: pointer;
+        color: #999;
+        transition: color 0.3s ease;
+      }
+
+      .close:hover {
+        color: #333;
+      }
+
+      .modal form {
+        padding: 0rem;
+      }
+
+      .modal-footer {
+        text-align: center;
+        margin-top: 0rem;
+        padding-bottom: 1rem;
+      }
+
+      .modal-footer a {
+        color: #667eea;
+        text-decoration: none;
+      }
+
+      .modal-footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Form Styles */
+      .form-group {
+        margin-bottom: 0rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0%;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        height: 50px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0rem;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 0rem;
+      }
+
+      .full-width {
+        grid-column: 1 / -1;
+      }
+
+      /* Dashboard Styles */
+      .dashboard-container {
+        min-height: 100vh;
+        background: #f8f9fa;
+      }
+
+      .dashboard-nav {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-left: 2rem;
+      }
+
+      .nav-brand i {
+        margin-right: 10px;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-right: 2rem;
+      }
+
+      .dashboard-content {
+        display: flex;
+        min-height: calc(100vh - 80px);
+      }
+
+      .dashboard-sidebar {
+        width: 250px;
+        background: white;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar-menu li {
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .sidebar-menu a {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        text-decoration: none;
+        color: #666;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-menu a:hover,
+      .sidebar-menu a.active {
+        background: #667eea;
+        color: white;
+      }
+
+      .sidebar-menu a i {
+        margin-right: 10px;
+        width: 20px;
+      }
+
+      .dashboard-main {
+        flex: 1;
+        padding: 2rem;
+      }
+
+      .dashboard-section {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-section h2 {
+        margin-bottom: 2rem;
+        color: #333;
+        font-size: 2rem;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+      }
+
+      .stat-card i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        opacity: 0.8;
+      }
+
+      .stat-card h3 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-card p {
+        font-size: 1rem;
+        opacity: 0.9;
+      }
+
+      /* Appointments */
+      .appointments-list {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .appointment-card {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        padding: 1.5rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .appointment-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .appointment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .appointment-header h4 {
+        color: #333;
+        margin: 0;
+      }
+
+      .status {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+
+      .status-pending {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .status-confirmed {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+
+      .status-completed {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-cancelled {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .appointment-details {
+        margin-bottom: 1rem;
+      }
+
+      .appointment-details p {
+        margin: 0.5rem 0;
+        color: #666;
+      }
+
+      .appointment-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      /* Filters */
+      .appointments-filters {
+        margin-bottom: 2rem;
+      }
+
+      .appointments-filters select {
+        padding: 8px 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+      }
+
+      /* Schedule Form */
+      .schedule-form {
+        max-width: 800px;
+      }
+
+      .schedule-grid {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .schedule-day {
+        display: grid;
+        grid-template-columns: 100px 50px 1fr 1fr;
+        gap: 1rem;
+        align-items: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .schedule-day label {
+        font-weight: 500;
+        color: #333;
+      }
+
+      .schedule-day input[type="checkbox"] {
+        transform: scale(1.2);
+      }
+
+      .schedule-day input[type="time"] {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      /* Feedback */
+      .feedback-list {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .feedback-card {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        padding: 1.5rem;
+      }
+
+      .feedback-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .feedback-header h4 {
+        color: #333;
+        margin: 0;
+      }
+
+      .rating {
+        display: flex;
+        color: #ffd700;
+      }
+
+      .rating input {
+        display: none;
+      }
+
+      .rating label {
+        font-size: 2rem;
+        cursor: pointer;
+        color: #ddd;
+        transition: color 0.2s ease;
+      }
+
+      .rating input:checked ~ label,
+      .rating label:hover {
+        color: #ffd700;
+      }
+
+      .rating input:checked ~ label ~ label {
+        color: #ddd;
+      }
+
+      .feedback-text {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      .feedback-date {
+        color: #999;
+        font-size: 0.875rem;
+      }
+
+      /* Payment */
+      .payment-summary {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+      }
+
+      .payment-summary h3 {
+        margin-bottom: 1rem;
+        color: #333;
+      }
+
+      /* Notifications */
+      .notification {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        z-index: 3000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 300px;
+        animation: slideInRight 0.3s ease;
+      }
+
+      .notification-success {
+        background: #28a745;
+      }
+
+      .notification-error {
+        background: #dc3545;
+      }
+
+      .notification-info {
+        background: #17a2b8;
+      }
+
+      .notification button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin-left: 1rem;
+      }
+
+      .no-data {
+        text-align: center;
+        color: #999;
+        font-style: italic;
+        padding: 2rem;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .hamburger {
+          display: flex;
+        }
+
+        .nav-menu {
+          position: fixed;
+          left: -100%;
+          top: 70px;
+          flex-direction: column;
+          background-color: rgba(102, 126, 234, 0.95);
+          width: 100%;
+          text-align: center;
+          transition: 0.3s;
+          box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+          backdrop-filter: blur(10px);
+          padding: 2rem 0;
+          gap: 1rem;
+        }
+
+        .nav-menu.active {
+          left: 0;
+        }
+
+        .hero-content h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .about-content {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
+        .contact-info {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+
+        .services-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .dashboard-content {
+          flex-direction: column;
+        }
+
+        .dashboard-sidebar {
+          width: 100%;
+          order: 2;
+        }
+
+        .dashboard-main {
+          order: 1;
+          padding: 1rem;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .schedule-day {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+          text-align: center;
+        }
+
+        .appointment-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        .appointment-actions {
+          justify-content: center;
+        }
+
+        .modal-content {
+          margin: 10% auto;
+          width: 95%;
+        }
+
+        .nav-brand,
+        .nav-actions {
+          margin-left: 1rem;
+          margin-right: 1rem;
+        }
+
+        .notification {
+          right: 10px;
+          left: 10px;
+          min-width: auto;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-content h1 {
+          font-size: 2rem;
+        }
+
+        .hero-content p {
+          font-size: 1rem;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .dashboard-section {
+          padding: 1rem;
+        }
+
+        .modal-content {
+          margin: 5% auto;
+        }
+
+        .modal form {
+          padding: 1rem;
+        }
+      }
+
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #5a6fd8;
+      }
+    </style>
   </body>
 </html>
