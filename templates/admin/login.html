@@ -28,21 +28,23 @@
                 ></a>
               </div>
               <span>or use your account</span>
-              <input
+              <!-- <input
                 type="email"
                 name="email"
                 pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
                 placeholder="Email"
                 required
-              />
-              <input
+              /> -->
+              <input type="email" name="email" id="email" value="{{ email }}">
+              <!-- <input
                 type="password"
                 name="password"
                 pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                 title="At least 8 characters with uppercase, lowercase, number, and special character"
                 placeholder="Password"
                 required
-              />
+              /> -->
+              <input type="password" name="password" id="password" value="{{ password }}">
               <a href="#">Forgot your password?</a>
               <button>Sign In</button>
             </form>
@@ -110,6 +112,17 @@
         closeModal(fromModal);
         document.getElementById(toModal).style.display = "block";
       }
+      fetch("/admin/data", {
+    headers: { "Authorization": `Bearer ${localStorage.getItem("authToken")}` }
+});
+  window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const email = params.get("email");
+      const password = params.get("password");
+
+      if (email) document.getElementById("email").value = email;
+      if (password) document.getElementById("password").value = password;
+  };
     </script>
     <script src="../static/js/main.js"></script>
   </body>
