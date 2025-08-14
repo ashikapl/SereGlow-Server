@@ -30,14 +30,14 @@ def user_login():
 
     result = user_login_service(data)
 
-    if isinstance(result, tuple):
-        return result
+    # if isinstance(result, tuple):
+    #     return result
 
     if isinstance(result, dict) and "error" in result:
         return jsonify({"message": "Login Failed!", "error": result["error"]}), 401
 
-    return jsonify({"message": "Login Successfull!"})
-    # return render_template("user/dashboard.html")
+    # return jsonify({"message": "Login Successfull!"}), 200
+    return redirect(url_for("user_bp.show_user_dashboard"))
 
 
 @user_bp.route("/logout", methods=["GET"])
@@ -55,3 +55,8 @@ def show_user_signup():
 @user_bp.route("/login", methods=["GET"])
 def show_user_login():
     return render_template("user/login.html")
+
+
+@user_bp.route("/", methods=["GET"])
+def show_user_dashboard():
+    return render_template("user/dashboard.html")
