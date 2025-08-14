@@ -209,6 +209,21 @@
       </div>
     </footer>
 
-    <script src="../static/js/main.js"></script>
+    <script src="../static/js/main.js">
+      // Function to get a cookie value by name
+      function getCookie(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) return match[2];
+        return null;
+      }
+
+      // Store token from cookie into localStorage (if not already stored)
+      const token = getCookie("authToken");
+      if (token && !localStorage.getItem("authToken")) {
+        localStorage.setItem("authToken", token);
+        console.log("Token saved to localStorage:", token);
+      }
+
+    </script>
   </body>
 </html>
