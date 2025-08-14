@@ -1,112 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin SignUp</title>
-  <!-- Link to external CSS -->
-  <link rel="stylesheet" href="/Users/ashikapl/Desktop/SereGlow/SereGlow-Server/static/css/signup.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-</head>
-<body>
-  <main class="page">
-    <form class="card form" id="admin-signup" action="#" method="post">
-      <h1 class="title">Admin SignUp</h1>
-
-      <div class="row">
-        <div class="field">
-          <label for="admin-firstname">Firstname:</label>
-          <input id="admin-firstname" name="firstname" type="text" required placeholder="Firstname" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Signup</title>
+    <link rel="stylesheet" href="../../static/css/main.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="adminModel" class="adminModel modal" style="display: block">
+      <div class="modal-content">
+        <div class="container right-panel-active" id="container">
+          <div class="form-container sign-up-container">
+            <form action="{{ url_for('admin_bp.admin_signUp') }}" method="POST">
+              <h1>Create Account</h1>
+              <a class="adminclose" href="/">&times;</a>
+              <div class="social-container">
+                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social"
+                  ><i class="fab fa-google-plus-g"></i
+                ></a>
+                <a href="#" class="social"
+                  ><i class="fab fa-linkedin-in"></i
+                ></a>
+              </div>
+              <span>or use your email for registration</span>
+              <input
+                type="text"
+                name="firstname"
+                placeholder="Firstname"
+                required
+              />
+              <input
+                type="text"
+                name="lastname"
+                placeholder="Lastname"
+                required
+              />
+              <input
+                type="email"
+                name="email"
+                pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
+                placeholder="Email"
+                required
+              />
+              <input
+                type="password"
+                name="password"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                title="At least 8 characters with uppercase, lowercase, number, and special character"
+                placeholder="Password"
+                required
+              />
+              <textarea
+                type="text"
+                name="address"
+                placeholder="Salon Address"
+                rows="3"
+                required
+              ></textarea>
+              <input
+                type="tel"
+                name="phone"
+                pattern="^[0-9]{10}$"
+                placeholder="Mobile Number"
+                required
+              />
+              <button>Sign Up</button>
+            </form>
+          </div>
+          <div class="overlay-container">
+            <div class="overlay">
+              <div class="overlay-panel overlay-left">
+                <h1>Welcome Back!</h1>
+                <p>
+                  To keep connected with us please login with your personal info
+                </p>
+                <a
+                  href="{{ url_for('admin_bp.show_admin_login') }}"
+                  class="ghost"
+                  >Sign In</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div class="field">
-          <label for="admin-lastname">Lastname:</label>
-          <input id="admin-lastname" name="lastname" type="text" required placeholder="Lastname" />
-        </div>
       </div>
+    </div>
 
-      <div class="field">
-        <label for="admin-email">Email Id:</label>
-        <input id="admin-email" name="email" type="text"
-               pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
-               required placeholder="you@gmail.com" />
-        <span id="emailError" class="error-message"></span>
-      </div>
+    <script>
+      /* Admin Model */
+      const adminsignUpButton = document.querySelector("#adminModel #signUp");
+      const adminsignInButton = document.querySelector("#adminModel #signIn");
+      const admincontainer = document.querySelector("#adminModel #container");
 
-      <div class="field password-field">
-        <label for="admin-password">Password:</label>
-        <input id="admin-password" name="password" type="password"
-               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-               title="At least 8 characters with uppercase, lowercase, number, and special character"
-               required placeholder="8+ chars: Aa1@xxxx" />
-        <span class="toggle-password" onclick="togglePassword()">
-          <i class="fa fa-eye" id="toggle-icon"></i>
-        </span>
-        <span id="passwordError" class="error-message"></span>
-      </div>
+      adminsignUpButton.addEventListener("click", () => {
+        admincontainer.classList.add("right-panel-active");
+      });
 
-      <div class="field">
-        <label for="admin-address">Address:</label>
-        <textarea id="admin-address" name="address" rows="3" placeholder="Salon Address"></textarea>
-      </div>
+      adminsignInButton.addEventListener("click", () => {
+        admincontainer.classList.remove("right-panel-active");
+      });
+      /* Admin Model Close */
 
-      <div class="field">
-        <label for="admin-phone">Phone No:</label>
-        <input id="admin-phone" name="phone" type="tel"
-               pattern="^[0-9]{10}$"
-               title="Enter exactly 10 digits"
-               placeholder="9876543210" required />
-      </div>
+      /* User Model */
+      const usersignUpButton = document.querySelector("#userModel #signUp");
+      const usersignInButton = document.querySelector("#userModel #signIn");
+      const usercontainer = document.querySelector("#userModel #container");
 
-      <div class="actions">
-        <button type="submit" class="btn">Create Admin Account</button>
-      </div>
-    </form>
-  </main>
+      usersignUpButton.addEventListener("click", () => {
+        usercontainer.classList.add("right-panel-active");
+      });
 
-  <script>
-    function togglePassword() {
-      const passField = document.getElementById('admin-password');
-      const icon = document.getElementById('toggle-icon');
-      if (passField.type === "password") {
-        passField.type = "text";
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-      } else {
-        passField.type = "password";
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-      }
-    }
+      usersignInButton.addEventListener("click", () => {
+        usercontainer.classList.remove("right-panel-active");
+      });
+      /* User Model Close */
 
-    document.getElementById("admin-signup").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      let emailVal = document.getElementById("admin-email").value.trim();
-      let passwordVal = document.getElementById("admin-password").value.trim();
-      let emailError = document.getElementById("emailError");
-      let passwordError = document.getElementById("passwordError");
-
-      emailError.textContent = "";
-      passwordError.textContent = "";
-
-      // Email validation (simple Gmail check)
-      const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-      if (!emailPattern.test(emailVal)) {
-        emailError.textContent = "Enter a valid Gmail address";
-        return;
+      // Modal functions
+      function showAdminModel() {
+        document.getElementById("adminModel").style.display = "block";
       }
 
-      // Strong password check
-      const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-      if (!strongPasswordPattern.test(passwordVal)) {
-        passwordError.textContent = "Password must be at least 8 chars, include uppercase, lowercase, number, and special character";
-        return;
+      function showUserModal() {
+        document.getElementById("userModel").style.display = "block";
       }
 
-      alert("Account created successfully!");
-      // You can submit form here if backend ready, e.g. this.submit();
-    });
-  </script>
-</body>
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+      }
+
+      function switchModal(fromModal, toModal) {
+        closeModal(fromModal);
+        document.getElementById(toModal).style.display = "block";
+      }
+    </script>
+    <script src="../static/js/main.js"></script>
+  </body>
 </html>

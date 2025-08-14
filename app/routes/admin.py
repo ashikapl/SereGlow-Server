@@ -18,8 +18,13 @@ def admin_signUp():
     if isinstance(result, tuple):
         return result
 
+<<<<<<< HEAD
     if isinstance(result, dict) and "error" in result:
         return jsonify({"message": "Login Failed!", "error": result["error"]}), 401
+=======
+    # return jsonify(result.data), 201
+    return redirect(url_for("admin_bp.show_admin_login"))
+>>>>>>> 2e2b9f02abd58f6b50c2d60c65005d43a19ed5b9
 
     # return jsonify({"message": "Login Successfull!"}), 200
     return render_template("admin/login.html")
@@ -64,4 +69,18 @@ def admin_login():
 def admin_logout():
     """Logs out the admin by clearing session and redirecting to login page."""
     # session.clear()
+<<<<<<< HEAD
     return render_template("main.html")
+=======
+    return render_template("main.html")
+
+
+@admin_bp.route("/signup", methods=["GET"])
+def show_admin_signup():
+    return render_template("admin/signup.html")
+
+
+@admin_bp.route("/login", methods=["GET"])
+def show_admin_login():
+    return render_template("admin/login.html")
+>>>>>>> 2e2b9f02abd58f6b50c2d60c65005d43a19ed5b9

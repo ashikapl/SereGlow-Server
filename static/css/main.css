@@ -1226,6 +1226,32 @@ html {
     border-color: #ffffff;
 }
 
+.adminModel .ghost {
+    border-radius: 20px;
+    border: 1px solid #667eea;
+    background-color: #667eea;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+}
+
+.adminModel a:active {
+    transform: scale(0.95);
+}
+
+.adminModel a:focus {
+    outline: none;
+}
+
+.adminModel a.ghost {
+    background-color: transparent;
+    border-color: #ffffff;
+}
+
 .adminModel form {
     background-color: #ffffff;
     display: flex;
@@ -1462,6 +1488,32 @@ html {
 }
 
 .userModel button.ghost {
+    background-color: transparent;
+    border-color: #ffffff;
+}
+
+.userModel .ghost {
+    border-radius: 20px;
+    border: 1px solid #667eea;
+    background-color: #667eea;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+}
+
+.userModel a:active {
+    transform: scale(0.95);
+}
+
+.userModel a:focus {
+    outline: none;
+}
+
+.userModel a.ghost {
     background-color: transparent;
     border-color: #ffffff;
 }
