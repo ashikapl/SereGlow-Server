@@ -6,8 +6,10 @@ admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
-    # data = request.get_json()
-    data = request.form.to_dict()
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
 
     result = admin_signup_service(data)
 
@@ -15,16 +17,36 @@ def admin_signUp():
 
     if isinstance(result, tuple):
         return result
-        # return redirect(url_for("admin_bp.admin_signUp"))
 
-    # return jsonify(result.data), 201
-    return render_template("admin/dashboard.html")
+    if isinstance(result, dict) and "error" in result:
+        return jsonify({"message": "Login Failed!", "error": result["error"]}), 401
 
+    # return jsonify({"message": "Login Successfull!"}), 200
+    return render_template("admin/login.html")
+
+
+# @admin_bp.route("/login", methods=["POST"])
+# def admin_login():
+#     # data = request.get_json() or request.form.to_dict()
+#     data = request.form.to_dict()
+
+#     result = admin_login_service(data)
+
+#     if isinstance(result, tuple):
+#         return result
+
+#     if isinstance(result, dict) and "error" in result:
+#         return jsonify({"message": "Login Failed!", "error": result["error"]}), 401
+
+#     return jsonify({"message": "Login Successfull!"}), 200
+#     # return render_template("admin/dashboard.html")
 
 @admin_bp.route("/login", methods=["POST"])
 def admin_login():
-    # data = request.get_json() or request.form.to_dict()
-    data = request.form.to_dict()
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
 
     result = admin_login_service(data)
 
@@ -34,8 +56,8 @@ def admin_login():
     if isinstance(result, dict) and "error" in result:
         return jsonify({"message": "Login Failed!", "error": result["error"]}), 401
 
-    return jsonify({"message": "Login Successfull!"}), 200
-    # return render_template("admin/dashboard.html")
+    # return jsonify({"message": "Login Successfull!"}), 200
+    return render_template("admin/dashboard.html")
 
 
 @admin_bp.route("/logout", methods=["GET"])
