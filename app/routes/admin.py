@@ -6,8 +6,10 @@ admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
-    # data = request.get_json()
-    data = request.form.to_dict()
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
 
     result = admin_signup_service(data)
 
@@ -18,13 +20,15 @@ def admin_signUp():
         # return redirect(url_for("admin_bp.admin_signUp"))
 
     # return jsonify(result.data), 201
-    return render_template("admin/dashboard.html")
+    return redirect(url_for("admin_bp.show_admin_login"))
 
 
 @admin_bp.route("/login", methods=["POST"])
 def admin_login():
-    # data = request.get_json() or request.form.to_dict()
-    data = request.form.to_dict()
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
 
     result = admin_login_service(data)
 
@@ -43,3 +47,13 @@ def admin_logout():
     """Logs out the admin by clearing session and redirecting to login page."""
     # session.clear()
     return render_template("main.html")
+
+
+@admin_bp.route("/signup", methods=["GET"])
+def show_admin_signup():
+    return render_template("admin/signup.html")
+
+
+@admin_bp.route("/login", methods=["GET"])
+def show_admin_login():
+    return render_template("admin/login.html")

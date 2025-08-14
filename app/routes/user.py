@@ -6,8 +6,10 @@ user_bp = Blueprint("user_bp", __name__, template_folder="../../templates")
 
 @user_bp.route('/register', methods=['POST'])
 def user_signUp():
-    # data = request.get_json()
-    data = request.form.to_dict()
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
 
     result = user_signup_service(data)
 
@@ -15,9 +17,10 @@ def user_signUp():
 
     if isinstance(result, tuple):
         return result
+        # return redirect(url_for("user_bp.user_signUp"))
 
     # return jsonify(result.data), 201
-    return render_template("user/dashboard.html")
+    return redirect(url_for("user_bp.show_user_login"))
 
 
 @user_bp.route("/login", methods=["POST"])
@@ -27,11 +30,14 @@ def user_login():
 
     result = user_login_service(data)
 
-    if "error" in result:
-        return jsonify({"message": "Login Failed!"}), 404
+    if isinstance(result, tuple):
+        return result
 
-    # return jsonify({"message": "Login Successfull!"})
-    return render_template("user/dashboard.html")
+    if isinstance(result, dict) and "error" in result:
+        return jsonify({"message": "Login Failed!", "error": result["error"]}), 401
+
+    return jsonify({"message": "Login Successfull!"})
+    # return render_template("user/dashboard.html")
 
 
 @user_bp.route("/logout", methods=["GET"])
@@ -39,3 +45,13 @@ def user_logout():
     """Logs out the admin by clearing session and redirecting to login page."""
     # session.clear()
     return render_template("main.html")
+
+
+@user_bp.route("/signup", methods=["GET"])
+def show_user_signup():
+    return render_template("user/signup.html")
+
+
+@user_bp.route("/login", methods=["GET"])
+def show_user_login():
+    return render_template("user/login.html")

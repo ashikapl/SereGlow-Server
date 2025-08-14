@@ -1,76 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="/Users/ashikapl/Desktop/SereGlow/SereGlow-Server/static/css/login.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
-<body>
-    <div class="page">
-        <div class="card">
-            <h2 class="title">Login</h2>
-            <form id="loginForm" class="form">
-
-                <div class="field">
-                    <label for="email">Email</label>
-                    <input type="text" id="email" placeholder="Enter your email" required>
-                    <small id="emailError" class="error"></small>
-                </div>
-
-                <div class="field password-field">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter your password" required>
-                    <i class="fa-solid fa-eye" id="togglePassword"></i>
-                    <small id="passwordError" class="error"></small>
-                </div>
-
-                <div class="actions">
-                    <button type="submit" class="btn">Login</button>
-                </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Login</title>
+    <link rel="stylesheet" href="../../static/css/main.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="userModel" class="userModel modal" style="display: block">
+      <div class="modal-content">
+        <div class="container" id="container">
+          <div class="form-container sign-in-container">
+            <form action="{{ url_for('user_bp.user_login') }}" method="POST">
+              <h1>Sign in</h1>
+              <a class="userclose" href="/">&times;</a>
+              <div class="social-container">
+                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social"
+                  ><i class="fab fa-google-plus-g"></i
+                ></a>
+                <a href="#" class="social"
+                  ><i class="fab fa-linkedin-in"></i
+                ></a>
+              </div>
+              <span>or use your account</span>
+              <input
+                type="email"
+                name="email"
+                pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
+                placeholder="Email"
+                required
+              />
+              <input
+                type="password"
+                name="password"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                title="At least 8 characters with uppercase, lowercase, number, and special character"
+                placeholder="Password"
+                required
+              />
+              <a href="#">Forgot your password?</a>
+              <button>Sign In</button>
             </form>
+          </div>
+          <div class="overlay-container">
+            <div class="overlay">
+              <div class="overlay-panel overlay-right">
+                <h1>Hello, Admin!</h1>
+                <p>Enter your personal details and start journey with us</p>
+                <a
+                  href="{{ url_for('user_bp.show_user_signup') }}"
+                  class="ghost"
+                  >Sign Up</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <script>
-        // Toggle password visibility
-        const togglePassword = document.getElementById("togglePassword");
-        const password = document.getElementById("password");
-        togglePassword.addEventListener("click", () => {
-            const type = password.type === "password" ? "text" : "password";
-            password.type = type;
-            togglePassword.classList.toggle("fa-eye-slash");
-        });
+      /* Admin Model */
+      const adminsignUpButton = document.querySelector("#adminModel #signUp");
+      const adminsignInButton = document.querySelector("#adminModel #signIn");
+      const admincontainer = document.querySelector("#adminModel #container");
 
-        // Form validation
-        document.getElementById("loginForm").addEventListener("submit", function(e) {
-            e.preventDefault();
+      adminsignUpButton.addEventListener("click", () => {
+        admincontainer.classList.add("right-panel-active");
+      });
 
-            let emailVal = document.getElementById("email").value.trim();
-            let passwordVal = password.value.trim();
-            let emailError = document.getElementById("emailError");
-            let passwordError = document.getElementById("passwordError");
+      adminsignInButton.addEventListener("click", () => {
+        admincontainer.classList.remove("right-panel-active");
+      });
+      /* Admin Model Close */
 
-            emailError.textContent = "";
-            passwordError.textContent = "";
+      /* User Model */
+      const usersignUpButton = document.querySelector("#userModel #signUp");
+      const usersignInButton = document.querySelector("#userModel #signIn");
+      const usercontainer = document.querySelector("#userModel #container");
 
-            // Email validation
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-            if (!emailPattern.test(emailVal)) {
-                emailError.textContent = "Enter a valid Gmail address";
-                return;
-            }
+      usersignUpButton.addEventListener("click", () => {
+        usercontainer.classList.add("right-panel-active");
+      });
 
-            // Strong password check
-            const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            if (!strongPasswordPattern.test(passwordVal)) {
-                passwordError.textContent = "Password must be at least 8 chars, include uppercase, lowercase, number, and special character";
-                return;
-            }
+      usersignInButton.addEventListener("click", () => {
+        usercontainer.classList.remove("right-panel-active");
+      });
+      /* User Model Close */
 
-            alert("Login successful!");
-        });
+      // Modal functions
+      function showAdminModel() {
+        document.getElementById("adminModel").style.display = "block";
+      }
+
+      function showUserModal() {
+        document.getElementById("userModel").style.display = "block";
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+      }
+
+      function switchModal(fromModal, toModal) {
+        closeModal(fromModal);
+        document.getElementById(toModal).style.display = "block";
+      }
     </script>
-</body>
+    <script src="../static/js/main.js"></script>
+  </body>
 </html>
