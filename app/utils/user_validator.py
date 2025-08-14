@@ -36,9 +36,11 @@ def user_validator(email, password, table_name):
 
     user = result.data
 
-    # print("user: ", user[0])
+    if not user or len(user) == 0:
+        return False  # No user found
 
-    if user[0]['password'] == password:
-        return user[0]
+    # Compare passwords (you should use hashing like bcrypt in real apps)
+    if user[0]['password'] != password:
+        return False  # Wrong password
 
-    return False
+    return user[0]

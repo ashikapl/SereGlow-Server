@@ -1,15 +1,13 @@
-from flask import jsonify, request, Blueprint, redirect, url_for, render_template
+from flask import jsonify, request, Blueprint, redirect, url_for, render_template, session
 from app.services.admin import admin_signup_service, admin_login_service
 
-admin_bp = Blueprint("admin_bp", __name__)
+admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
 
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
     # data = request.get_json()
     data = request.form.to_dict()
-
-    print("data :", data)
 
     result = admin_signup_service(data)
 
@@ -19,7 +17,8 @@ def admin_signUp():
         return result
         # return redirect(url_for("admin_bp.admin_signUp"))
 
-    return jsonify(result.data), 201
+    # return jsonify(result.data), 201
+    return render_template("admin/dashboard.html")
 
 
 @admin_bp.route("/login", methods=["POST"])
@@ -29,6 +28,15 @@ def admin_login():
 
     result = admin_login_service(data)
 
-    if "error" in result:
+    if isinstance(result, tuple) and result[1] == 401:
         return jsonify({"message": "Login Failed!"}), 404
+
     return jsonify({"message": "Login Successfull!"})
+    # return render_template("admin/dashboard.html")
+
+
+@admin_bp.route("/logout", methods=["GET"])
+def admin_logout():
+    """Logs out the admin by clearing session and redirecting to login page."""
+    # session.clear()
+    return render_template("main.html")

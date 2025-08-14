@@ -4,10 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Dashboard</title>
+    <link rel="stylesheet" href="../static/css/main.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <!-- User Dashboard (Hidden by default) -->
-    <div id="userDashboard" class="dashboard-container" style="display: none">
+    <div id="userDashboard" class="dashboard-container">
       <nav class="dashboard-nav">
         <div class="nav-brand">
           <i class="fas fa-cut"></i>
@@ -15,7 +20,13 @@
         </div>
         <div class="nav-actions">
           <span id="userWelcome">Welcome, User!</span>
-          <button class="btn btn-outline" onclick="logout()">Logout</button>
+          <form
+            action="{{ url_for('user_bp.user_logout') }}"
+            method="get"
+            style="display: inline"
+          >
+            <button type="submit" class="btn btn-outline">Logout</button>
+          </form>
         </div>
       </nav>
 
