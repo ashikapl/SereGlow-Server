@@ -4,6 +4,7 @@ from flask import (
 )
 from app.services.user import user_signup_service, user_login_service
 from app.utils.user_validator import generate_token
+from app.utils.token_auth import user_token_required
 
 user_bp = Blueprint("user_bp", __name__, template_folder="../../templates")
 
@@ -51,20 +52,35 @@ def user_login():
 
     resp = make_response(redirect(url_for("user_bp.show_user_dashboard")))
     resp.set_cookie(
-        "authToken", 
+       "authToken",
         token,
         httponly=True,
-        secure=False,   # Change to True for HTTPS
-        samesite="Strict"
+        secure=False,
+        samesite="Lax",  # less restrictive for testing
+        path="/"
     )
     return resp
 
 
-# ---------- LOGOUT ----------
-@user_bp.route("/logout", methods=["GET"])
+# # ---------- LOGOUT ----------
+# @user_bp.route("/logout", methods=["GET"])
+# def user_logout():
+#     """Logs out the admin by clearing session and redirecting to main page."""
+#     return render_template("main.html")
+
+@user_bp.route("/logout")
 def user_logout():
-    """Logs out the admin by clearing session and redirecting to main page."""
-    return render_template("main.html")
+    resp = make_response(redirect(url_for("user_bp.show_user_login")))
+    resp.set_cookie(
+        "authToken", 
+        "", 
+        expires=0,
+        httponly=True,
+        secure=False,
+        samesite="Strict",
+        path="/"
+    )
+    return resp
 
 
 # ---------- SIGNUP (GET) ----------
@@ -74,7 +90,7 @@ def show_user_signup():
 
 
 # ---------- LOGIN (GET) ----------
-@user_bp.route("/getlogin", methods=["GET"])
+@user_bp.route("/login", methods=["GET"])
 def show_user_login():
     email = request.args.get("email", "")
     password = request.args.get("password", "")
@@ -83,5 +99,6 @@ def show_user_login():
 
 # ---------- DASHBOARD ----------
 @user_bp.route("/", methods=["GET"])
+@user_token_required
 def show_user_dashboard():
     return render_template("user/dashboard.html")

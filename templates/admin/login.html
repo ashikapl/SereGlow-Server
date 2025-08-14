@@ -28,23 +28,13 @@
                 ></a>
               </div>
               <span>or use your account</span>
-              <!-- <input
-                type="email"
-                name="email"
-                pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
-                placeholder="Email"
-                required
-              /> -->
-              <input type="email" name="email" id="email" value="{{ email }}">
-              <!-- <input
-                type="password"
-                name="password"
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                title="At least 8 characters with uppercase, lowercase, number, and special character"
-                placeholder="Password"
-                required
-              /> -->
-              <input type="password" name="password" id="password" value="{{ password }}">
+              <input type="email" name="email" id="email" value="{{ email }}", 
+                pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?",
+                placeholder="Email", required>
+              <input type="password" name="password" id="password" value="{{ password }}", 
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+                title="At least 8 characters with uppercase, lowercase, number, and special character",
+                placeholder="Password", required>
               <a href="#">Forgot your password?</a>
               <button>Sign In</button>
             </form>

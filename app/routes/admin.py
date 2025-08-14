@@ -4,6 +4,7 @@ from flask import (
 )
 from app.services.admin import admin_signup_service, admin_login_service
 from app.utils.user_validator import generate_token
+from app.utils.token_auth import admin_token_required
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
@@ -44,27 +45,43 @@ def admin_login():
         return jsonify({"message": "Login Failed!", "error": result["error"]}), 401
     
     data_dict = json.loads(result[0].data.decode('utf-8'))
-    admin_id = data_dict['admin']['id'] 
+    # admin_id = data_dict['admin']['id'] 
+    admin_id = data_dict.get('admin', {}).get('id')
 
     token = generate_token({"user_id": admin_id})
 
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
-        "authToken", 
+        "authToken",
         token,
         httponly=True,
-        secure=False,   # Change to True for HTTPS
-        samesite="Strict"
+        secure=False,
+        samesite="Lax",  # less restrictive for testing
+        path="/"
     )
     return resp
 
 
-# ---------- LOGOUT ----------
-@admin_bp.route("/logout", methods=["GET"])
-def admin_logout():
-    """Logs out the admin by clearing session and redirecting to main page."""
-    return render_template("main.html")
+# # ---------- LOGOUT ----------
+# @admin_bp.route("/logout", methods=["GET"])
+# def admin_logout():
+#     """Logs out the admin by clearing session and redirecting to main page."""
+#     return render_template("main.html")
 
+
+@admin_bp.route("/logout")
+def admin_logout():
+    resp = make_response(redirect(url_for("admin_bp.show_admin_login")))
+    resp.set_cookie(
+        "authToken", 
+        "", 
+        expires=0,
+        httponly=True,
+        secure=False,
+        samesite="Strict",
+        path="/"
+    )
+    return resp
 
 # ---------- SIGNUP (GET) ----------
 @admin_bp.route("/signup", methods=["GET"])
@@ -82,5 +99,6 @@ def show_admin_login():
 
 # ---------- DASHBOARD ----------
 @admin_bp.route("/", methods=["GET"])
+@admin_token_required
 def show_admin_dashboard():
     return render_template("admin/dashboard.html")
