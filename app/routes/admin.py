@@ -23,15 +23,18 @@ def admin_signUp():
 
 @admin_bp.route("/login", methods=["POST"])
 def admin_login():
-    # data = request.get_json()
+    # data = request.get_json() or request.form.to_dict()
     data = request.form.to_dict()
 
     result = admin_login_service(data)
 
-    if isinstance(result, tuple) and result[1] == 401:
-        return jsonify({"message": "Login Failed!"}), 404
+    if isinstance(result, tuple):
+        return result
 
-    return jsonify({"message": "Login Successfull!"})
+    if isinstance(result, dict) and "error" in result:
+        return jsonify({"message": "Login Failed!", "error": result["error"]}), 401
+
+    return jsonify({"message": "Login Successfull!"}), 200
     # return render_template("admin/dashboard.html")
 
 

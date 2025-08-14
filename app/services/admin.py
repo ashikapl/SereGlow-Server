@@ -31,6 +31,7 @@ def admin_login_service(data):
         token = generate_token(user_id)
 
         return jsonify({"token": token, "message": "Login Successfull"}), 200
+
     except Exception as e:
         print("Login Error", str(e))
-        return {"error": str(e)}
+        return jsonify({"error": str(e)}), 500
