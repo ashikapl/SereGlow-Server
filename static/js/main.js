@@ -72,23 +72,6 @@ document.getElementById("hamburger").addEventListener("click", function () {
   navMenu.classList.toggle("active");
 });
 
-// Modal functions
-function showLoginModal() {
-  document.getElementById("loginModal").style.display = "block";
-}
-
-function showSignupModal() {
-  document.getElementById("signupModal").style.display = "block";
-}
-
-function closeModal(modalId) {
-  document.getElementById(modalId).style.display = "none";
-}
-
-function switchModal(fromModal, toModal) {
-  closeModal(fromModal);
-  document.getElementById(toModal).style.display = "block";
-}
 
 // Authentication
 document.getElementById("loginForm").addEventListener("submit", function (e) {

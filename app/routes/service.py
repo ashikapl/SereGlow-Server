@@ -1,4 +1,4 @@
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, render_template
 from app.services.service import add_service_services, get_service_services, update_service_services, delete_service_services
 # from app.utils.token_auth import token_required
 
@@ -15,7 +15,8 @@ def add_service():
     if isinstance(result, tuple):
         return result
 
-    return jsonify(result.data), 201
+    # return jsonify(result.data), 201
+    return render_template("admin/service.html")
 
 
 @service_bp.route('/', methods=['GET'])
@@ -26,7 +27,8 @@ def get_services():
     if not result.data:
         return jsonify({"Massage": "Empty"}), 204
 
-    return jsonify(result.data), 200
+    # return jsonify(result.data), 200
+    return render_template("admin/service.html")
 
 
 @service_bp.route('/<int:service_id>', methods=['PUT'])
@@ -52,3 +54,15 @@ def delete_service(service_id):
         return jsonify(result[0]), result[1]
 
     return jsonify({"message": "Delete Successfull!"}), 200
+
+
+@service_bp.route('/add', methods=['GET'])
+# @token_required
+def show_add_service():
+    return render_template("admin/addService.html")
+
+
+@service_bp.route('/update', methods=['GET'])
+# @token_required
+def show_update_service():
+    return render_template("admin/updateService.html")

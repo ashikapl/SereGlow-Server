@@ -66,9 +66,12 @@
             >
               View Services
             </button>
-            <button class="btn btn-outline" onclick="showUserModal()">
+            <a
+              href="{{ url_for('user_bp.show_user_signup') }}"
+              class="btn btn-outline"
+            >
               Book Now
-            </button>
+            </a>
           </div>
         </div>
       </section>

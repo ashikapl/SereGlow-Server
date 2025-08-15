@@ -41,18 +41,24 @@ def user_login():
     result = user_login_service(data)
     print("res", result[0])
 
-    if isinstance(result, dict) and "error" in result:
-        return jsonify({"message": "Login Failed!", "error": result["error"]}), 401
-    
     data_dict = json.loads(result[0].data.decode('utf-8'))
-    # user_id = data_dict['user']['id'] 
+
+    if isinstance(result, tuple) and "error" in data_dict:
+        return jsonify({"message": "Login Failed!", "error": data_dict["error"]}), 401
+        # return redirect(url_for("user_bp.show_user_login"))
+
+    # user_id = data_dict['user']['id']
     user_id = data_dict.get('user', {}).get('id')
 
     token = generate_token({"user_id": user_id})
 
     resp = make_response(redirect(url_for("user_bp.show_user_dashboard")))
     resp.set_cookie(
+<<<<<<< HEAD
        "authToken",
+=======
+        "authToken",
+>>>>>>> 76c6ec5b13dda7b9de659b90c666efef037871e1
         token,
         httponly=True,
         secure=False,
@@ -72,8 +78,13 @@ def user_login():
 def user_logout():
     resp = make_response(redirect(url_for("user_bp.show_user_login")))
     resp.set_cookie(
+<<<<<<< HEAD
         "authToken", 
         "", 
+=======
+        "authToken",
+        "",
+>>>>>>> 76c6ec5b13dda7b9de659b90c666efef037871e1
         expires=0,
         httponly=True,
         secure=False,

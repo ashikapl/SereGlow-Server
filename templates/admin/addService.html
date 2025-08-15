@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Add Service</title>
+    <link rel="stylesheet" href="../static/css/main.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Add Service Modal -->
+    <div id="addServiceModal" class="modal" style="display: block">
+      <div class="modal-content" style="margin: auto">
+        <div class="modal-header">
+          <h2>Add New Service</h2>
+          <a
+            href="{{ url_for('service_bp.get_services') }}"
+            class="close"
+            style="text-decoration: none"
+            >&times;</a
+          >
+        </div>
+        <form id="addServiceForm">
+          <div class="form-group">
+            <label>Service Name</label>
+            <input type="text" id="serviceName" required />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="serviceDescription" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Price ($)</label>
+            <input
+              type="number"
+              id="servicePrice"
+              required
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div class="form-group">
+            <label>Duration (minutes)</label>
+            <input
+              type="number"
+              id="serviceDuration"
+              required
+              min="15"
+              step="15"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary full-width">
+            Add Service
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Service Modal -->
+    <div id="editServiceModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Service</h2>
+          <span class="close" onclick="closeModal('editServiceModal')"
+            >&times;</span
+          >
+        </div>
+        <form id="editServiceForm">
+          <input type="hidden" id="editServiceId" />
+          <div class="form-group">
+            <label>Service Name</label>
+            <input type="text" id="editServiceName" required />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="editServiceDescription" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Price ($)</label>
+            <input
+              type="number"
+              id="editServicePrice"
+              required
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div class="form-group">
+            <label>Duration (minutes)</label>
+            <input
+              type="number"
+              id="editServiceDuration"
+              required
+              min="15"
+              step="15"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary full-width">
+            Update Service
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

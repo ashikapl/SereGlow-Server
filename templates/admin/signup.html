@@ -91,53 +91,6 @@
       </div>
     </div>
 
-    <script>
-      /* Admin Model */
-      const adminsignUpButton = document.querySelector("#adminModel #signUp");
-      const adminsignInButton = document.querySelector("#adminModel #signIn");
-      const admincontainer = document.querySelector("#adminModel #container");
-
-      adminsignUpButton.addEventListener("click", () => {
-        admincontainer.classList.add("right-panel-active");
-      });
-
-      adminsignInButton.addEventListener("click", () => {
-        admincontainer.classList.remove("right-panel-active");
-      });
-      /* Admin Model Close */
-
-      /* User Model */
-      const usersignUpButton = document.querySelector("#userModel #signUp");
-      const usersignInButton = document.querySelector("#userModel #signIn");
-      const usercontainer = document.querySelector("#userModel #container");
-
-      usersignUpButton.addEventListener("click", () => {
-        usercontainer.classList.add("right-panel-active");
-      });
-
-      usersignInButton.addEventListener("click", () => {
-        usercontainer.classList.remove("right-panel-active");
-      });
-      /* User Model Close */
-
-      // Modal functions
-      function showAdminModel() {
-        document.getElementById("adminModel").style.display = "block";
-      }
-
-      function showUserModal() {
-        document.getElementById("userModel").style.display = "block";
-      }
-
-      function closeModal(modalId) {
-        document.getElementById(modalId).style.display = "none";
-      }
-
-      function switchModal(fromModal, toModal) {
-        closeModal(fromModal);
-        document.getElementById(toModal).style.display = "block";
-      }
-    </script>
     <script src="../static/js/main.js"></script>
   </body>
 </html>
