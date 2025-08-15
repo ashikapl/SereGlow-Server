@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard</title>
+    <title>Admin Feedback</title>
     <link rel="stylesheet" href="../static/css/main.css" />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -34,9 +34,7 @@
         <div class="dashboard-sidebar">
           <ul class="sidebar-menu">
             <li>
-              <a href="/admin/" class="active"
-                ><i class="fas fa-chart-bar"></i> Overview</a
-              >
+              <a href="/admin/"><i class="fas fa-chart-bar"></i> Overview</a>
             </li>
             <li>
               <a href="{{ url_for('service_bp.get_services') }}">
@@ -54,7 +52,9 @@
               >
             </li>
             <li>
-              <a href="{{ url_for('feedback_bp.show_feedback') }}"
+              <a
+                href="{{ url_for('feedback_bp.show_feedback') }}"
+                class="active"
                 ><i class="fas fa-comments"></i> Feedback</a
               >
             </li>
@@ -67,31 +67,10 @@
         </div>
 
         <div class="dashboard-main">
-          <!-- Overview Section -->
-          <div id="adminOverviewSection" class="dashboard-section">
-            <h2>Dashboard Overview</h2>
-            <div class="stats-grid">
-              <div class="stat-card">
-                <i class="fas fa-calendar-check"></i>
-                <h3 id="totalAppointments">0</h3>
-                <p>Total Appointments</p>
-              </div>
-              <div class="stat-card">
-                <i class="fas fa-list"></i>
-                <h3 id="totalServices">0</h3>
-                <p>Active Services</p>
-              </div>
-              <div class="stat-card">
-                <i class="fas fa-users"></i>
-                <h3 id="totalUsers">0</h3>
-                <p>Registered Users</p>
-              </div>
-              <div class="stat-card">
-                <i class="fas fa-star"></i>
-                <h3 id="avgRating">0</h3>
-                <p>Average Rating</p>
-              </div>
-            </div>
+          <!-- Feedback Management -->
+          <div id="adminFeedbackSection" class="dashboard-section">
+            <h2>Customer Feedback</h2>
+            <div id="adminFeedbackList" class="feedback-list"></div>
           </div>
         </div>
       </div>

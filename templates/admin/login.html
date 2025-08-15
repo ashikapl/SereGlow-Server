@@ -31,6 +31,8 @@
               <input
                 type="email"
                 name="email"
+                id="email"
+                value="{{ email }}"
                 pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
                 placeholder="Email"
                 required
@@ -38,6 +40,8 @@
               <input
                 type="password"
                 name="password"
+                id="password"
+                value="{{ password }}"
                 pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                 title="At least 8 characters with uppercase, lowercase, number, and special character"
                 placeholder="Password"
@@ -65,51 +69,19 @@
     </div>
 
     <script>
-      /* Admin Model */
-      const adminsignUpButton = document.querySelector("#adminModel #signUp");
-      const adminsignInButton = document.querySelector("#adminModel #signIn");
-      const admincontainer = document.querySelector("#adminModel #container");
-
-      adminsignUpButton.addEventListener("click", () => {
-        admincontainer.classList.add("right-panel-active");
+      fetch("/admin/data", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
       });
+      window.onload = function () {
+        const params = new URLSearchParams(window.location.search);
+        const email = params.get("email");
+        const password = params.get("password");
 
-      adminsignInButton.addEventListener("click", () => {
-        admincontainer.classList.remove("right-panel-active");
-      });
-      /* Admin Model Close */
-
-      /* User Model */
-      const usersignUpButton = document.querySelector("#userModel #signUp");
-      const usersignInButton = document.querySelector("#userModel #signIn");
-      const usercontainer = document.querySelector("#userModel #container");
-
-      usersignUpButton.addEventListener("click", () => {
-        usercontainer.classList.add("right-panel-active");
-      });
-
-      usersignInButton.addEventListener("click", () => {
-        usercontainer.classList.remove("right-panel-active");
-      });
-      /* User Model Close */
-
-      // Modal functions
-      function showAdminModel() {
-        document.getElementById("adminModel").style.display = "block";
-      }
-
-      function showUserModal() {
-        document.getElementById("userModel").style.display = "block";
-      }
-
-      function closeModal(modalId) {
-        document.getElementById(modalId).style.display = "none";
-      }
-
-      function switchModal(fromModal, toModal) {
-        closeModal(fromModal);
-        document.getElementById(toModal).style.display = "block";
-      }
+        if (email) document.getElementById("email").value = email;
+        if (password) document.getElementById("password").value = password;
+      };
     </script>
     <script src="../static/js/main.js"></script>
   </body>

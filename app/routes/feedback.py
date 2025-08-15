@@ -1,4 +1,4 @@
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, render_template
 from app.services.feedback import add_feedback_service, get_feedback_service, update_feedback_service, delete_feedback_service
 
 feedback_bp = Blueprint("feedback_bp", __name__)
@@ -45,3 +45,8 @@ def delete_feedback(service_id, id):
         return jsonify(result[0]), result[1]
 
     return jsonify({"message": "Deleted Successfully!"}), 201
+
+
+@feedback_bp.route("/", methods=["GET"])
+def show_feedback():
+    return render_template("admin/feedback.html")

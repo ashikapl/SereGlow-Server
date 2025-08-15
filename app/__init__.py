@@ -8,6 +8,7 @@ from app.routes.payment import payment_bp
 from app.routes.feedback import feedback_bp
 from app.routes.appointment import appointment_bp
 from app.routes.main import main_bp
+from app.routes.schedule import schedule_bp
 
 
 def create_app():
@@ -24,5 +25,6 @@ def create_app():
     app.register_blueprint(appointment_bp, url_prefix="/appointment")
     app.register_blueprint(payment_bp, url_prefix="/payment")
     app.register_blueprint(feedback_bp, url_prefix="/feedback")
+    app.register_blueprint(schedule_bp, url_prefix="/schedule")
 
     return app
