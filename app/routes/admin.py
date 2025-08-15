@@ -41,39 +41,27 @@ def admin_login():
     result = admin_login_service(data)
 
     data_dict = json.loads(result[0].data.decode('utf-8'))
-<<<<<<< HEAD
-    # admin_id = data_dict['admin']['id'] 
-=======
 
     if isinstance(result, tuple) and "error" in data_dict:
         return jsonify({"message": "Login Failed!", "error": data_dict["error"]}), 401
         # return redirect(url_for("admin_bp.show_admin_login"))
 
     print("res", data_dict)
->>>>>>> 76c6ec5b13dda7b9de659b90c666efef037871e1
     admin_id = data_dict.get('admin', {}).get('id')
 
     token = generate_token({"user_id": admin_id})
 
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
-        "authToken",
+        "AdminToken",
         token,
         httponly=True,
-        secure=False,
-        samesite="Lax",  # less restrictive for testing
-        path="/"
+        secure=False,   # Change to True for HTTPS
+        samesite="Strict"
     )
     return resp
 
 
-<<<<<<< HEAD
-# # ---------- LOGOUT ----------
-# @admin_bp.route("/logout", methods=["GET"])
-# def admin_logout():
-#     """Logs out the admin by clearing session and redirecting to main page."""
-#     return render_template("main.html")
-=======
 # ---------- LOGOUT ----------
 # @admin_bp.route("/logout", methods=["GET"])
 # def admin_logout():
@@ -86,7 +74,7 @@ def admin_login():
 def admin_logout():
     resp = make_response(redirect(url_for("admin_bp.show_admin_login")))
     resp.set_cookie(
-        "authToken",
+        "AdminToken",
         "",
         expires=0,
         httponly=True,
@@ -95,22 +83,7 @@ def admin_logout():
         path="/"
     )
     return resp
->>>>>>> 76c6ec5b13dda7b9de659b90c666efef037871e1
 
-
-@admin_bp.route("/logout")
-def admin_logout():
-    resp = make_response(redirect(url_for("admin_bp.show_admin_login")))
-    resp.set_cookie(
-        "authToken", 
-        "", 
-        expires=0,
-        httponly=True,
-        secure=False,
-        samesite="Strict",
-        path="/"
-    )
-    return resp
 
 # ---------- SIGNUP (GET) ----------
 @admin_bp.route("/signup", methods=["GET"])

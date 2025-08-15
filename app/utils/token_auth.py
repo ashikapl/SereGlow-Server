@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv("SUPABASE_APIKEY")
 def admin_token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.cookies.get("authToken")
+        token = request.cookies.get("AdminToken")
         # print(token)
         # if not token:
         #     abort(403)
@@ -50,40 +50,12 @@ def admin_token_required(f):
             return redirect(url_for("admin_bp.admin_login"))
 
         return f(*args, **kwargs)
-<<<<<<< HEAD
-=======
-    return decorated
-
-
-def user_token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = request.cookies.get("authToken")
-        # print(token)
-        # if not token:
-        #     abort(403)
-        if not token:
-            # No token → login page
-            return redirect(url_for("user_bp.show_user_login"))
-
-        try:
-            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-            user_id = data["user_id"]
-        except jwt.ExpiredSignatureError:
-            # Expired → login page
-            return redirect(url_for("user_bp.user_login"))
-        except jwt.InvalidTokenError:
-            # Invalid → login page
-            return redirect(url_for("user_bp.user_login"))
-
-        return f(*args, **kwargs)
->>>>>>> 76c6ec5b13dda7b9de659b90c666efef037871e1
     return decorated
 
 def user_token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.cookies.get("authToken")
+        token = request.cookies.get("UserToken")
         # print(token)
         # if not token:
         #     abort(403)

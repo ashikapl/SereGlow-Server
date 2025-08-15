@@ -54,11 +54,7 @@ def user_login():
 
     resp = make_response(redirect(url_for("user_bp.show_user_dashboard")))
     resp.set_cookie(
-<<<<<<< HEAD
-       "authToken",
-=======
-        "authToken",
->>>>>>> 76c6ec5b13dda7b9de659b90c666efef037871e1
+        "UserToken",
         token,
         httponly=True,
         secure=False,
@@ -78,13 +74,8 @@ def user_login():
 def user_logout():
     resp = make_response(redirect(url_for("user_bp.show_user_login")))
     resp.set_cookie(
-<<<<<<< HEAD
-        "authToken", 
-        "", 
-=======
-        "authToken",
+        "UserToken",
         "",
->>>>>>> 76c6ec5b13dda7b9de659b90c666efef037871e1
         expires=0,
         httponly=True,
         secure=False,
