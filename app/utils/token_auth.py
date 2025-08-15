@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv("SUPABASE_APIKEY")
 def admin_token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.cookies.get("authToken")
+        token = request.cookies.get("admin_authToken")
         # print(token)
         # if not token:
         #     abort(403)
@@ -41,7 +41,7 @@ def admin_token_required(f):
 
         try:
             data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-            user_id = data["user_id"]
+            admin_id = data["admin_id"]
         except jwt.ExpiredSignatureError:
             # Expired → login page
             return redirect(url_for("admin_bp.admin_login"))
@@ -56,7 +56,7 @@ def admin_token_required(f):
 def user_token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.cookies.get("authToken")
+        token = request.cookies.get("user_authToken")
         # print(token)
         # if not token:
         #     abort(403)

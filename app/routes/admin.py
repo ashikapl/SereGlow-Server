@@ -3,7 +3,7 @@ from flask import (
     make_response, json, flash
 )
 from app.services.admin import admin_signup_service, admin_login_service
-from app.utils.user_validator import generate_token
+from app.utils.user_validator import admin_generate_token
 from app.utils.token_auth import admin_token_required
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
@@ -49,11 +49,11 @@ def admin_login():
     print("res", data_dict)
     admin_id = data_dict.get('admin', {}).get('id')
 
-    token = generate_token({"user_id": admin_id})
+    token = admin_generate_token({"user_id": admin_id})
 
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
-        "authToken",
+        "admin_authToken",
         token,
         httponly=True,
         secure=False,   # Change to True for HTTPS
@@ -74,7 +74,7 @@ def admin_login():
 def admin_logout():
     resp = make_response(redirect(url_for("admin_bp.show_admin_login")))
     resp.set_cookie(
-        "authToken",
+        "admin_authToken",
         "",
         expires=0,
         httponly=True,
