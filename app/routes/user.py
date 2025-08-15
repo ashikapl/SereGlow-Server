@@ -3,7 +3,7 @@ from flask import (
     make_response, json
 )
 from app.services.user import user_signup_service, user_login_service
-from app.utils.user_validator import generate_token
+from app.utils.user_validator import user_generate_token
 from app.utils.token_auth import user_token_required
 
 user_bp = Blueprint("user_bp", __name__, template_folder="../../templates")
@@ -50,7 +50,7 @@ def user_login():
     # user_id = data_dict['user']['id']
     user_id = data_dict.get('user', {}).get('id')
 
-    token = generate_token({"user_id": user_id})
+    token = user_generate_token({"user_id": user_id})
 
     resp = make_response(redirect(url_for("user_bp.show_user_dashboard")))
     resp.set_cookie(

@@ -41,7 +41,7 @@ def admin_token_required(f):
 
         try:
             data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-            user_id = data["user_id"]
+            admin_id = data["admin_id"]
         except jwt.ExpiredSignatureError:
             # Expired → login page
             return redirect(url_for("admin_bp.admin_login"))

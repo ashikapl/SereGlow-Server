@@ -1,6 +1,6 @@
 from flask import jsonify
 from app.stores.admin import admin_signup_store
-from app.utils.user_validator import user_validator, generate_token
+from app.utils.user_validator import user_validator, admin_generate_token
 
 
 def admin_signup_service(data):
@@ -45,7 +45,7 @@ def admin_login_service(data):
 
         user_id = user["id"]
         print(user_id)
-        token = generate_token(user_id)
+        token = admin_generate_token(user_id)
 
         return jsonify({"token": token, "message": "Login Successfull", "admin": user}), 200
 
