@@ -51,9 +51,9 @@ def admin_login():
 
     token = generate_token({"user_id": admin_id})
 
-    my_list = data_dict.get('admin', {})
+    admin_info = data_dict.get('admin', {})
     # Convert list to JSON string
-    list_str = json.dumps(my_list)
+    admin_info_str = json.dumps(admin_info)
 
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
@@ -65,7 +65,7 @@ def admin_login():
     )
     resp.set_cookie(
         "Admin_Info",
-        list_str,
+        admin_info_str,
         httponly=True,
         secure=False,   # Change to True for HTTPS
         samesite="Strict"
