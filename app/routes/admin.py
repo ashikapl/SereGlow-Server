@@ -93,6 +93,15 @@ def admin_logout():
         samesite="Strict",
         path="/"
     )
+    resp.set_cookie(
+        "Admin_Info",
+        "",
+        expires=0,
+        httponly=True,
+        secure=False,
+        samesite="Strict",
+        path="/"
+    )
     return resp
 
 
