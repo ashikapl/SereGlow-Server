@@ -114,7 +114,6 @@ def show_admin_login():
 @admin_bp.route("/", methods=["GET"])
 @admin_token_required
 def show_admin_dashboard():
-    admin_name = ""
     admin_info = request.cookies.get("Admin_Info")
     if admin_info:
         admin_name = json.loads(admin_info)["firstname"]
