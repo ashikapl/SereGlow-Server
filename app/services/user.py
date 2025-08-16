@@ -1,6 +1,6 @@
 from flask import jsonify
 from app.stores.user import user_signup_store
-from app.utils.user_validator import user_validator, user_generate_token
+from app.utils.user_validator import user_validator, generate_token
 
 
 def user_signup_service(data):
@@ -28,7 +28,7 @@ def user_login_service(data):
         print("user: ", user)
 
         user_id = user["id"]
-        token = user_generate_token(user_id)
+        token = generate_token(user_id)
 
         return jsonify({"token": token, "message": "Login Successfull"}), 200
     except Exception as e:

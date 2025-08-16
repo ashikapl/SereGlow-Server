@@ -1,5 +1,6 @@
 import re
 import random
+from app.utils.supabase_client import supabase
 
 existing_usernames = []
 
@@ -26,3 +27,19 @@ def generate_username(first_name, last_name):
 
     existing_usernames.append(username)
     return username
+
+
+def total_count(table_name):
+    try:
+        response = supabase.table(table_name).select(
+            "*", count="exact").head(True).execute()
+
+        content_range = response.headers.get('Content-Range')
+        if content_range:
+
+            total_count = int(content_range.split('/')[1])
+            return total_count
+        return 0
+    except Exception as e:
+        print(f"Error getting count for table {table_name}: {e}")
+        return -1  # Indicate an error

@@ -50,3 +50,8 @@ def delete_feedback(service_id, id):
 @feedback_bp.route("/", methods=["GET"])
 def show_feedback():
     return render_template("admin/feedback.html")
+
+
+@feedback_bp.route("/addFeedback", methods=["GET"])
+def show_addFeedback():
+    return render_template("user/addFeedback.html")

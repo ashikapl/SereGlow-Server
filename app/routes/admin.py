@@ -51,10 +51,21 @@ def admin_login():
 
     token = generate_token({"user_id": admin_id})
 
+    my_list = data_dict.get('admin', {})
+    # Convert list to JSON string
+    list_str = json.dumps(my_list)
+
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
         "AdminToken",
         token,
+        httponly=True,
+        secure=False,   # Change to True for HTTPS
+        samesite="Strict"
+    )
+    resp.set_cookie(
+        "Admin_Info",
+        list_str,
         httponly=True,
         secure=False,   # Change to True for HTTPS
         samesite="Strict"
@@ -103,7 +114,12 @@ def show_admin_login():
 @admin_bp.route("/", methods=["GET"])
 @admin_token_required
 def show_admin_dashboard():
-    return render_template("admin/dashboard.html")
+    admin_name = ""
+    admin_info = request.cookies.get("Admin_Info")
+    if admin_info:
+        admin_name = json.loads(admin_info)["firstname"]
+        # print("ad", admin_name)
+    return render_template("admin/dashboard.html", admin_name=admin_name)
 
 
 # ---------- PROFILE ----------

@@ -59,3 +59,13 @@ def show_appointment():
 
     # return jsonify(result.data), 200
     return render_template("admin/appointment.html")
+
+
+@appointment_bp.route("/booking", methods=["GET"])
+def show_bookAppointment():
+    return render_template("user/bookAppointment.html")
+
+
+@appointment_bp.route("/appointment", methods=["GET"])
+def show_myAppointment():
+    return render_template("user/myAppointment.html")

@@ -104,3 +104,10 @@ def show_user_login():
 @user_token_required
 def show_user_dashboard():
     return render_template("user/dashboard.html")
+
+
+# ---------- PROFILE ----------
+@user_bp.route("/profile", methods=["GET"])
+@user_token_required
+def show_user_profile():
+    return render_template("user/userProfile.html")

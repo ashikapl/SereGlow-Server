@@ -2,6 +2,7 @@ from flask import jsonify, request, Blueprint, render_template
 from app.services.service import add_service_services, get_service_services, update_service_services, delete_service_services
 # from app.utils.token_auth import token_required
 
+
 service_bp = Blueprint("service_bp", __name__)
 
 
@@ -23,6 +24,8 @@ def add_service():
 # @token_required
 def get_services():
     result = get_service_services()
+    response = request.cookies.get("AdminToken")
+    print("res", response)
 
     if not result.data:
         return jsonify({"Massage": "Empty"}), 204
