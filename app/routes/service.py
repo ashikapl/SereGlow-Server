@@ -1,14 +1,19 @@
 from flask import jsonify, request, Blueprint, render_template
+# import requests
 from app.services.service import add_service_services, get_service_services, update_service_services, delete_service_services
-# from app.utils.token_auth import token_required
+from app.utils.token_auth import admin_token_required
+from app.routes.admin import admin
 
 service_bp = Blueprint("service_bp", __name__)
 
 
 @service_bp.route('/', methods=['POST'])
-# @token_required
+@admin_token_required
 def add_service():
-    data = request.get_json()
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
 
     result = add_service_services(data)
 
@@ -20,21 +25,31 @@ def add_service():
 
 
 @service_bp.route('/', methods=['GET'])
-# @token_required
+@admin_token_required
 def get_services():
     result = get_service_services()
+    
+    # print("name", admin["firstname"])
+    # admin_na
+    response = request.cookies.get("Admin_Info")
+    print("res", response)
+    # response = request.get('http://127.0.0.1:5000/admin/')
+    # print("response", response.cookies.get_dict())
 
-    if not result.data:
+    if not result:
         return jsonify({"Massage": "Empty"}), 204
 
     # return jsonify(result.data), 200
-    return render_template("admin/service.html")
+    return render_template("admin/service.html", admin_name=response)
 
 
 @service_bp.route('/<int:service_id>', methods=['PUT'])
-# @token_required
+@admin_token_required
 def update_service(service_id):
-    data = request.get_json()
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
     result = update_service_services(data, service_id)
 
     if isinstance(result, tuple):
@@ -44,7 +59,7 @@ def update_service(service_id):
 
 
 @service_bp.route('/<int:service_id>', methods=['DELETE'])
-# @token_required
+@admin_token_required
 def delete_service(service_id):
     result = delete_service_services(service_id)
 
@@ -57,12 +72,12 @@ def delete_service(service_id):
 
 
 @service_bp.route('/add', methods=['GET'])
-# @token_required
+@admin_token_required
 def show_add_service():
     return render_template("admin/addService.html")
 
 
 @service_bp.route('/update', methods=['GET'])
-# @token_required
+@admin_token_required
 def show_update_service():
     return render_template("admin/updateService.html")

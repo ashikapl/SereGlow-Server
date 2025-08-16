@@ -1,13 +1,15 @@
 from flask import (
     jsonify, request, Blueprint, redirect, url_for, render_template,
-    make_response, json, flash
+    make_response, json, flash, session
 )
 from app.services.admin import admin_signup_service, admin_login_service
 from app.utils.user_validator import admin_generate_token
 from app.utils.token_auth import admin_token_required
+from app.utils.helpers import total_count, average_rating, admin_info
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
+admin = None
 
 # ---------- SIGNUP (POST) ----------
 @admin_bp.route('/register', methods=['POST'])
@@ -33,6 +35,7 @@ def admin_signUp():
 # ---------- LOGIN (POST) ----------
 @admin_bp.route("/login", methods=["POST"])
 def admin_login():
+    global admin
     if request.is_json:
         data = request.get_json()
     else:
@@ -46,15 +49,29 @@ def admin_login():
         return jsonify({"message": "Login Failed!", "error": data_dict["error"]}), 401
         # return redirect(url_for("admin_bp.show_admin_login"))
 
-    print("res", data_dict)
+    # print("res", data_dict)
     admin_id = data_dict.get('admin', {}).get('id')
 
+    admin = admin_info(admin_id) 
+    # print("ad", admin)
+
     token = admin_generate_token({"user_id": admin_id})
+
+    # appointment = total_count("Appointment")
+    # service = total_count("Service")
+    # user = total_count("User")
 
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
         "AdminToken",
         token,
+        httponly=True,
+        secure=False,   # Change to True for HTTPS
+        samesite="Strict"
+    )
+    resp.set_cookie(
+        "Admin_Info",
+        admin["firstname"],
         httponly=True,
         secure=False,   # Change to True for HTTPS
         samesite="Strict"
@@ -103,7 +120,25 @@ def show_admin_login():
 @admin_bp.route("/", methods=["GET"])
 @admin_token_required
 def show_admin_dashboard():
-    return render_template("admin/dashboard.html")
+    appointment = total_count("Appointment")
+    service = total_count("Service")
+    user = total_count("User")
+    rating = average_rating("Feedback")
+    # admin_name = session.get("admin_name", "")
+
+    return render_template(
+        "admin/dashboard.html",
+        total_appointment=appointment,
+        total_services=service,
+        total_users=user,
+        avg_rating=rating,
+        admin_name=admin["firstname"]
+    )
+
+# @admin_bp.route("/", methods=["GET"])
+# @admin_token_required
+# def show_admin_services():
+#     return render_template("admin/service.html")
 
 
 # ---------- PROFILE ----------
