@@ -44,7 +44,6 @@ def admin_login_service(data):
             return jsonify({"error": "Invalid user or password!"}), 401
 
         user_id = user["id"]
-        print(user_id)
         token = generate_token(user_id)
 
         return jsonify({"token": token, "message": "Login Successfull", "admin": user}), 200

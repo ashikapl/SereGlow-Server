@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="5" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Dashboard</title>
     <link rel="stylesheet" href="../static/css/main.css" />
@@ -77,6 +76,9 @@
                 <label>Select Service</label>
                 <select id="bookingService" required>
                   <option value="">Choose a service</option>
+                  {% for service in services %}
+                  <option value="{{service.id}}">{{service.name}}</option>
+                  {% endfor %}
                 </select>
               </div>
               <div class="form-group">

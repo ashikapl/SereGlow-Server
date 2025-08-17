@@ -25,12 +25,10 @@ def user_login_service(data):
         if not user:
             return jsonify({"error": "Invalid user or password!"}), 401
 
-        print("user: ", user)
-
         user_id = user["id"]
         token = generate_token(user_id)
 
-        return jsonify({"token": token, "message": "Login Successfull"}), 200
+        return jsonify({"token": token, "message": "Login Successfull", "user": user}), 200
     except Exception as e:
         print("Login Error", str(e))
         return {"error": str(e)}

@@ -46,7 +46,6 @@ def admin_login():
         return jsonify({"message": "Login Failed!", "error": data_dict["error"]}), 401
         # return redirect(url_for("admin_bp.show_admin_login"))
 
-    print("res", data_dict)
     admin_id = data_dict.get('admin', {}).get('id')
 
     token = generate_token({"user_id": admin_id})

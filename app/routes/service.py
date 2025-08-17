@@ -1,7 +1,7 @@
-from flask import jsonify, request, Blueprint, render_template
+from flask import jsonify, request, Blueprint, render_template, redirect, url_for
 from app.services.service import add_service_services, get_service_services, update_service_services, delete_service_services
 # from app.utils.token_auth import token_required
-
+from app.stores.service import get_service_byId
 
 service_bp = Blueprint("service_bp", __name__)
 
@@ -9,7 +9,10 @@ service_bp = Blueprint("service_bp", __name__)
 @service_bp.route('/', methods=['POST'])
 # @token_required
 def add_service():
-    data = request.get_json()
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
 
     result = add_service_services(data)
 
@@ -17,46 +20,49 @@ def add_service():
         return result
 
     # return jsonify(result.data), 201
-    return render_template("admin/service.html")
+    return redirect(url_for("service_bp.get_services"))
 
 
 @service_bp.route('/', methods=['GET'])
 # @token_required
 def get_services():
     result = get_service_services()
-    response = request.cookies.get("AdminToken")
-    print("res", response)
 
     if not result.data:
         return jsonify({"Massage": "Empty"}), 204
 
+    services = result.data
     # return jsonify(result.data), 200
-    return render_template("admin/service.html")
+    return render_template("admin/service.html", services=services)
 
 
-@service_bp.route('/<int:service_id>', methods=['PUT'])
+@service_bp.route('/<int:service_id>', methods=['POST', "PUT"])
 # @token_required
 def update_service(service_id):
-    data = request.get_json()
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
+
     result = update_service_services(data, service_id)
 
     if isinstance(result, tuple):
         return jsonify(result[0]), result[1]
 
-    return jsonify({"message": "Update successful!"}), 200
+    # return jsonify({"message": "Update successful!"}), 200
+    return redirect(url_for("service_bp.get_services"))
 
 
-@service_bp.route('/<int:service_id>', methods=['DELETE'])
+@service_bp.route('/delete/<int:service_id>', methods=['GET', 'DELETE'])
 # @token_required
 def delete_service(service_id):
     result = delete_service_services(service_id)
 
-    # print("Rs", result)
-
     if isinstance(result, tuple):
         return jsonify(result[0]), result[1]
 
-    return jsonify({"message": "Delete Successfull!"}), 200
+    # return jsonify({"message": "Delete Successfull!"}), 200
+    return redirect(url_for("service_bp.get_services"))
 
 
 @service_bp.route('/add', methods=['GET'])
@@ -68,4 +74,7 @@ def show_add_service():
 @service_bp.route('/update', methods=['GET'])
 # @token_required
 def show_update_service():
-    return render_template("admin/updateService.html")
+    service_id = request.args.get("service_id", type=int)
+    service = get_service_byId(service_id)
+
+    return render_template("admin/updateService.html", service=service.data[0])

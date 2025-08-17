@@ -1,6 +1,7 @@
-from flask import jsonify, request, Blueprint, render_template
+from flask import jsonify, request, Blueprint, render_template, json
 from app.services.appointment import add_appointment_service, get_appointment_service, update_appointment_service, delete_appointment_service
 from app.utils.supabase_client import supabase
+from app.stores.service import get_service_store
 
 appointment_bp = Blueprint("appointment_bp", __name__)
 
@@ -54,6 +55,10 @@ def delete_appointment(service_id, id):
 def show_appointment():
     result = supabase.table("Appointment").select("*").execute()
 
+    admin_info = request.cookies.get("Admin_Info")
+    if admin_info:
+        admin_name = json.loads(admin_info)["firstname"]
+
     if isinstance(result, tuple):
         return result
 
@@ -63,7 +68,10 @@ def show_appointment():
 
 @appointment_bp.route("/booking", methods=["GET"])
 def show_bookAppointment():
-    return render_template("user/bookAppointment.html")
+    result = get_service_store()
+    services = result.data
+
+    return render_template("user/bookAppointment.html", services=services)
 
 
 @appointment_bp.route("/appointment", methods=["GET"])

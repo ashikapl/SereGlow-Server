@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- <meta http-equiv="refresh" content="5" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Service</title>
     <link rel="stylesheet" href="../static/css/main.css" />
@@ -78,32 +77,36 @@
               </a>
             </div>
             <div id="adminServicesList" class="services-grid">
+              {% for service in services %}
               <div class="service-card">
                 <div class="service-header">
-                  <h3>${service.name}</h3>
+                  <h3>{{ service.name }}</h3>
                   <div class="service-actions">
                     <a
                       class="btn-icon"
-                      href="{{ url_for('service_bp.show_update_service') }}"
+                      href="{{ url_for('service_bp.show_update_service', service_id=service.id) }}"
                       title="Edit"
                     >
                       <i class="fas fa-edit"></i>
                     </a>
-                    <button
+                    <a
                       class="btn-icon delete"
-                      onclick="deleteService(${service.id})"
+                      href="{{ url_for('service_bp.delete_service', service_id=service.id) }}"
                       title="Delete"
                     >
                       <i class="fas fa-trash"></i>
-                    </button>
+                    </a>
                   </div>
                 </div>
-                <p class="service-description">${service.description}</p>
+                <p class="service-description">{{ service.description }}</p>
                 <div class="service-details">
-                  <span class="service-price">${service.price}</span>
-                  <span class="service-duration">${service.duration} min</span>
+                  <span class="service-price">₹{{ service.price }}</span>
+                  <span class="service-duration"
+                    >{{ service.duration }} min</span
+                  >
                 </div>
               </div>
+              {% endfor %}
             </div>
           </div>
         </div>
