@@ -10,6 +10,7 @@
       rel="stylesheet"
     />
   </head>
+
   <body>
     <!-- Admin Dashboard (Hidden by default) -->
     <div id="adminDashboard" class="dashboard-container">
@@ -69,7 +70,7 @@
         <div class="dashboard-main">
           <!-- Appointments Management -->
           <div id="adminAppointmentsSection" class="dashboard-section">
-            <h2>Manage Appointments</h2>
+            <h2>Appointments</h2>
             <div class="appointments-filters">
               <select id="appointmentFilter">
                 <option value="all">All Appointments</option>
@@ -80,64 +81,147 @@
               </select>
             </div>
             <div id="adminAppointmentsList" class="appointments-list">
+              {% for appointment in appointments %}
               <div class="appointment-card">
                 <div class="appointment-header">
-                  <h4>
-                    ${ user ? user.firstName + " " + user.lastName : "Unknown
-                    User" }
+                  <h4 id="user_data">
+                    <a
+                      class="user-auto-link"
+                      href="{{ url_for('appointment_bp.find_user', user_id=appointment.user_id) }}"
+                      style="pointer-events: none; color: #666"
+                    >
+                      Loading...
+                    </a>
                   </h4>
                   <span class="status status-${appointment.status}"
-                    >${ appointment.status }</span
+                    >{{ appointment.status }}</span
                   >
                 </div>
                 <div class="appointment-details">
-                  <p>
-                    <strong>Service:</strong> ${ service ? service.name :
-                    "Unknown Service" }
+                  <p id="service_data">
+                    <strong>Service:</strong>
+                    <a
+                      class="service-auto-link"
+                      href="{{ url_for('appointment_bp.find_service', service_id=appointment.service_id) }}"
+                      style="pointer-events: none; color: #666"
+                    >
+                      Loading...
+                    </a>
                   </p>
-                  <p><strong>Date:</strong> ${appointment.date}</p>
-                  <p><strong>Time:</strong> ${appointment.time}</p>
+                  <p><strong>Date:</strong> {{appointment.appointment_date}}</p>
+                  <p><strong>Time:</strong> {{appointment.appointment_time}}</p>
                   <p>
-                    <strong>Payment:</strong> ${ appointment.paymentMethod }
+                    <strong>Payment Method:</strong>
+                    <span id="paymentMethod"></span>
+                    <a
+                      class="payment-auto-link"
+                      href="{{ url_for('payment_bp.find_payment', appointment_id=appointment.id) }}"
+                      style="pointer-events: none; color: #666; display: none"
+                    >
+                      Payment Loading...
+                    </a>
                   </p>
-                  ${ appointment.notes ? `
+                  <p>
+                    <strong>Payment Status:</strong>
+                    <span id="paymentStatus"></span>
+                  </p>
+                  <!-- ${ appointment.notes ? `
                   <p><strong>Notes:</strong> ${appointment.notes}</p>
-                  ` : "" }
+                  ` : "" } -->
                 </div>
                 <div class="appointment-actions">
-                  ${ appointment.status === "pending" ? `
+                  {% if appointment.status == "pending" %}
                   <button
                     class="btn btn-sm btn-success"
-                    onclick="updateAppointmentStatus(${appointment.id}, 'confirmed')"
+                    onclick="updateAppointmentStatus({ appointment.id }, 'confirmed')"
                   >
                     Confirm
                   </button>
                   <button
                     class="btn btn-sm btn-danger"
-                    onclick="updateAppointmentStatus(${appointment.id}, 'cancelled')"
+                    onclick="updateAppointmentStatus({{ appointment.id }}, 'cancelled')"
                   >
                     Cancel
                   </button>
-                  ` : "" } ${ appointment.status === "confirmed" ? `
+                  {% elif appointment.status == "confirmed" %}
                   <button
                     class="btn btn-sm btn-primary"
-                    onclick="updateAppointmentStatus(${appointment.id}, 'completed')"
+                    onclick="updateAppointmentStatus({{ appointment.id }}, 'completed')"
                   >
                     Mark Complete
                   </button>
                   <button
                     class="btn btn-sm btn-danger"
-                    onclick="updateAppointmentStatus(${appointment.id}, 'cancelled')"
+                    onclick="updateAppointmentStatus({{ appointment.id }}, 'cancelled')"
                   >
                     Cancel
                   </button>
-                  ` : "" }
+                  {% else %}
+                  <span class="text-muted">No actions available</span>
+                  {% endif %}
                 </div>
               </div>
+              {% endfor %}
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      const paymentMethod = document.getElementById("paymentMethod");
+      const paymentStatus = document.getElementById("paymentStatus");
+
+      window.addEventListener("DOMContentLoaded", function () {
+        // User data find and fill
+        document.querySelectorAll(".user-auto-link").forEach((link) => {
+          fetch(link.href)
+            .then((res) => res.json())
+            .then((userdata) => {
+              // Fill the <a> text with user first + last name
+              if (userdata[0]["firstname"] && userdata[0]["lastname"]) {
+                link.textContent =
+                  "Customer Name: " +
+                  userdata[0]["firstname"] +
+                  " " +
+                  userdata[0]["lastname"];
+              } else {
+                link.textContent = "Customer Name: " + "Unknown User";
+              }
+            });
+        });
+
+        // Service data find and fill
+        document.querySelectorAll(".service-auto-link").forEach((link) => {
+          fetch(link.href)
+            .then((res) => res.json())
+            .then((servicedata) => {
+              if (servicedata[0]["name"]) {
+                link.textContent = servicedata[0]["name"];
+              } else {
+                link.textContent = "Unknown Service";
+              }
+            });
+        });
+
+        // Payment data find and fill
+        document.querySelectorAll(".payment-auto-link").forEach((link) => {
+          fetch(link.href)
+            .then((res) => res.json())
+            .then((paymentdata) => {
+              if (
+                paymentdata[0] &&
+                paymentdata[0]["payment_method"] &&
+                paymentdata[0]["payment_status"]
+              ) {
+                paymentMethod.innerText = paymentdata[0]["payment_method"];
+                paymentStatus.innerText = paymentdata[0]["payment_status"];
+              } else {
+                link.textContent = "Unknown Service";
+              }
+            });
+        });
+      });
+    </script>
   </body>
 </html>

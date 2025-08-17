@@ -46,3 +46,12 @@ def delete_payment(appointment_id, id):
         return result
 
     return jsonify({"message": "Delete successful!"}), 200
+
+
+@payment_bp.route("/paymentFind/<int:appointment_id>", methods=["GET"])
+def find_payment(appointment_id):
+    result = get_payment_service(appointment_id)
+
+    print("res", result.data)
+
+    return result.data

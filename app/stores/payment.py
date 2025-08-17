@@ -10,14 +10,12 @@ def add_payment_store(data, appointment_id):
             "amount": data.get("amount"),
             "payment_method": data.get("payment_method"),
             "payment_status": data.get("payment_status"),
-            "payment_date": data.get("payment_date"),
-            "payment_time": data.get("payment_time")
         }).execute()
 
         if result:
             return result
     else:
-        return {"error": "Failed to create appointment, service_id and data.get('service_id') not match ."}, 400
+        return {"error": "Failed to create appointment, appointment_id and data.get('appointment_id') not match ."}, 400
 
 
 def get_payment_store(appointment_id):

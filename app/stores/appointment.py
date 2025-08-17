@@ -19,15 +19,14 @@ def add_appointment_store(data, service_id):
         return {"error": "Failed to create appointment, service_id and data.get('service_id') not match ."}, 400
 
 
-def get_appointment_store(service_id):
+def get_appointment_store():
     result = supabase.table("Appointment").select(
-        "*").eq("service_id", service_id).execute()
+        "*").execute()
 
     if result.data and len(result.data) > 0:
-        # print("result", result)
         return result
     else:
-        return {"error": f"No appointments found for service_id {service_id}."}, 404
+        return {"error": f"No appointments found."}, 404
 
 
 def update_appointment_store(data, service_id, appointment_id):
@@ -48,3 +47,13 @@ def delete_appointment_store(service_id, appointment_id):
         return result.data
     else:
         return {"error": f"Appointment with id {appointment_id} and service_id {service_id} not found or not delete."}, 404
+
+
+def find_user_byID(user_id):
+    result = supabase.table("User").select(
+        "*").eq("id", user_id).execute()
+
+    if result.data and len(result.data) > 0:
+        return result
+    else:
+        return {"error": f"user_id {user_id}, User not found."}, 404
