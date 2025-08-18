@@ -9,17 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def admin_generate_token(admin_id):
-    payload = {
-        'admin_id': admin_id,
-        'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
-    }
-    token = jwt.encode(payload, os.getenv(
-        "SUPABASE_APIKEY"), algorithm='HS256')
-    return token
-
-
-def user_generate_token(user_id):
+def generate_token(user_id):
     payload = {
         'user_id': user_id,
         'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)

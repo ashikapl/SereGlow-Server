@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- <meta http-equiv="refresh" content="5"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Dashboard</title>
     <link rel="stylesheet" href="../static/css/main.css" />
@@ -12,7 +11,7 @@
     />
   </head>
   <body>
-        <div class="notification notification-success" id="loginNotification">
+    <div class="notification notification-success" id="loginNotification">
       <span>Login successful!</span>
       <button onclick="this.parentElement.remove()">&times;</button>
     </div>
@@ -24,13 +23,15 @@
           <span>User Dashboard</span>
         </div>
         <div class="nav-actions">
-          <span id="userWelcome">Welcome, User!</span>
+          <span id="userWelcome">Welcome, {{user_name}}!</span>
           <form
             action="{{ url_for('user_bp.user_logout') }}"
             method="get"
             style="display: inline"
           >
-            <button type="submit" class="btn btn-outline">Logout</button>
+            <button type="submit" class="btn btn-outline" onclick="logout()">
+              Logout
+            </button>
           </form>
         </div>
       </nav>
@@ -39,27 +40,29 @@
         <div class="dashboard-sidebar">
           <ul class="sidebar-menu">
             <li>
-              <a href="#" onclick="showUserSection('services')" class="active"
+              <a
+                href="{{ url_for('user_bp.show_user_dashboard') }}"
+                class="active"
                 ><i class="fas fa-list"></i> View Services</a
               >
             </li>
             <li>
-              <a href="#" onclick="showUserSection('booking')"
+              <a href="{{ url_for('appointment_bp.show_bookAppointment') }}"
                 ><i class="fas fa-calendar-plus"></i> Book Appointment</a
               >
             </li>
             <li>
-              <a href="#" onclick="showUserSection('appointments')"
+              <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
                 ><i class="fas fa-calendar"></i> My Appointments</a
               >
             </li>
             <li>
-              <a href="#" onclick="showUserSection('feedback')"
+              <a href="{{ url_for('feedback_bp.show_addFeedback') }}"
                 ><i class="fas fa-comment"></i> Add Feedback</a
               >
             </li>
             <li>
-              <a href="#" onclick="showUserSection('profile')"
+              <a href="{{ url_for('user_bp.show_user_profile') }}"
                 ><i class="fas fa-user"></i> Profile</a
               >
             </li>
@@ -70,71 +73,26 @@
           <!-- Services Section -->
           <div id="userServicesSection" class="dashboard-section">
             <h2>Available Services</h2>
-            <div id="userServicesList" class="services-grid"></div>
-          </div>
-
-          <!-- Booking Section -->
-          <div
-            id="userBookingSection"
-            class="dashboard-section"
-            style="display: none"
-          >
-            <h2>Book Appointment</h2>
-            <form id="bookingForm" class="form-grid">
-              <div class="form-group">
-                <label>Select Service</label>
-                <select id="bookingService" required>
-                  <option value="">Choose a service</option>
-                </select>
+            <div id="userServicesList" class="services-grid">
+              {% for service in services %}
+              <div class="service-card">
+                <div class="service-details">
+                  <h3>{{service.name}}</h3>
+                  <span class="service-duration">{{service.duration}} min</span>
+                </div>
+                <p class="service-description">{{service.description}}</p>
+                <div class="service-details">
+                  <span class="service-price">{{service.price}}</span>
+                  <a
+                    href="{{ url_for('appointment_bp.show_bookAppointment', service_id=service.id) }}"
+                    class="btn btn-primary"
+                  >
+                    Book Appointment
+                  </a>
+                </div>
               </div>
-              <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="bookingDate" required />
-              </div>
-              <div class="form-group">
-                <label>Time</label>
-                <select id="bookingTime" required>
-                  <option value="">Select time</option>
-                  <option value="09:00">09:00 AM</option>
-                  <option value="10:00">10:00 AM</option>
-                  <option value="11:00">11:00 AM</option>
-                  <option value="12:00">12:00 PM</option>
-                  <option value="13:00">01:00 PM</option>
-                  <option value="14:00">02:00 PM</option>
-                  <option value="15:00">03:00 PM</option>
-                  <option value="16:00">04:00 PM</option>
-                  <option value="17:00">05:00 PM</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Payment Method</label>
-                <select id="paymentMethod" required>
-                  <option value="">Select payment method</option>
-                  <option value="online">Online Payment</option>
-                  <option value="cash">Cash Payment</option>
-                </select>
-              </div>
-              <div class="form-group full-width">
-                <label>Special Requirements</label>
-                <textarea
-                  id="bookingNotes"
-                  placeholder="Any special requirements or notes"
-                ></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">
-                Book Appointment
-              </button>
-            </form>
-          </div>
-
-          <!-- User Appointments Section -->
-          <div
-            id="userAppointmentsSection"
-            class="dashboard-section"
-            style="display: none"
-          >
-            <h2>My Appointments</h2>
-            <div id="userAppointmentsList" class="appointments-list"></div>
+              {% endfor %}
+            </div>
           </div>
 
           <!-- Feedback Section -->
@@ -210,7 +168,8 @@
         </div>
       </div>
     </div>
-        <script>
+
+    <script>
       // Listen for logout in other tabs
       window.addEventListener("storage", function (event) {
         if (event.key === "logout") {

@@ -20,7 +20,7 @@
           <span>Admin Dashboard</span>
         </div>
         <div class="nav-actions">
-          <span id="adminWelcome">Welcome, Admin!</span>
+          <span id="adminWelcome">Welcome, {{admin_name}}!</span>
           <form
             action="{{ url_for('admin_bp.admin_logout') }}"
             method="get"
@@ -45,6 +45,11 @@
             <li>
               <a href="{{ url_for('appointment_bp.show_appointment') }}"
                 ><i class="fas fa-calendar"></i> Appointments</a
+              >
+            </li>
+            <li>
+              <a href="{{ url_for('payment_bp.show_payment') }}"
+                ><i class="fas fa-calendar"></i> Payments</a
               >
             </li>
             <li>

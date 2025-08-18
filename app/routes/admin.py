@@ -3,7 +3,7 @@ from flask import (
     make_response, json, flash, session
 )
 from app.services.admin import admin_signup_service, admin_login_service
-from app.utils.user_validator import admin_generate_token
+from app.utils.user_validator import generate_token
 from app.utils.token_auth import admin_token_required
 from app.utils.helpers import total_count, average_rating, admin_info
 
@@ -12,6 +12,8 @@ admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 admin = None
 
 # ---------- SIGNUP (POST) ----------
+
+
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
     if request.is_json:
@@ -52,10 +54,12 @@ def admin_login():
     # print("res", data_dict)
     admin_id = data_dict.get('admin', {}).get('id')
 
-    admin = admin_info(admin_id) 
-    # print("ad", admin)
+    token = generate_token({"user_id": admin_id})
 
-    token = admin_generate_token({"user_id": admin_id})
+    admin_info = data_dict.get('admin', {})
+    # Convert list to JSON string
+    admin_info_str = json.dumps(admin_info)
+    # print("ad", admin)
 
     # appointment = total_count("Appointment")
     # service = total_count("Service")
@@ -71,7 +75,7 @@ def admin_login():
     )
     resp.set_cookie(
         "Admin_Info",
-        admin["firstname"],
+        admin_info_str,
         httponly=True,
         secure=False,   # Change to True for HTTPS
         samesite="Strict"
@@ -86,12 +90,21 @@ def admin_login():
 #     resp.delete_cookie("authToken", samesite="Strict")
 #     return resp
 
-
+# ---------- LOGOUT ----------
 @admin_bp.route("/logout")
 def admin_logout():
     resp = make_response(redirect(url_for("admin_bp.show_admin_login")))
     resp.set_cookie(
         "AdminToken",
+        "",
+        expires=0,
+        httponly=True,
+        secure=False,
+        samesite="Strict",
+        path="/"
+    )
+    resp.set_cookie(
+        "Admin_Info",
         "",
         expires=0,
         httponly=True,
@@ -124,7 +137,11 @@ def show_admin_dashboard():
     service = total_count("Service")
     user = total_count("User")
     rating = average_rating("Feedback")
-    # admin_name = session.get("admin_name", "")
+    admin_info = request.cookies.get("Admin_Info")
+    if admin_info:
+        admin_name = json.loads(admin_info)["firstname"]
+        # print("ad", admin_name)
+    # return render_template("admin/dashboard.html", admin_name=admin_name)
 
     return render_template(
         "admin/dashboard.html",
@@ -132,7 +149,7 @@ def show_admin_dashboard():
         total_services=service,
         total_users=user,
         avg_rating=rating,
-        admin_name=admin["firstname"]
+        admin_name=admin_name
     )
 
 # @admin_bp.route("/", methods=["GET"])
@@ -145,4 +162,7 @@ def show_admin_dashboard():
 @admin_bp.route("/profile", methods=["GET"])
 @admin_token_required
 def show_admin_profile():
-    return render_template("admin/adminProfile.html")
+    admin_info = request.cookies.get("Admin_Info")
+    if admin_info:
+        admin_name = json.loads(admin_info)["firstname"]
+    return render_template("admin/adminProfile.html", admin_name=admin_name)

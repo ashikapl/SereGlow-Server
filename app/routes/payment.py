@@ -1,4 +1,4 @@
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, render_template, json
 from app.services.payment import add_payment_service, get_payment_service, update_payment_service, delete_payment_service
 
 payment_bp = Blueprint("payment_bp", __name__)
@@ -46,3 +46,19 @@ def delete_payment(appointment_id, id):
         return result
 
     return jsonify({"message": "Delete successful!"}), 200
+
+
+@payment_bp.route('/', methods=['GET'])
+def show_payment():
+    admin_info = request.cookies.get("Admin_Info")
+    if admin_info:
+        admin_name = json.loads(admin_info)["firstname"]
+
+    return render_template("admin/payment.html", admin_name=admin_name)
+
+
+@payment_bp.route("/paymentFind/<int:appointment_id>", methods=["GET"])
+def find_payment(appointment_id):
+    result = get_payment_service(appointment_id)
+
+    return result.data

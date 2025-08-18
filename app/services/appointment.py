@@ -19,9 +19,9 @@ def add_appointment_service(data, service_id):
         return {"error": error_message}, 500
 
 
-def get_appointment_service(service_id):
+def get_appointment_service():
     try:
-        result = get_appointment_store(service_id)
+        result = get_appointment_store()
 
         if result:
             return result

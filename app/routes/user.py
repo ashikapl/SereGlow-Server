@@ -3,8 +3,9 @@ from flask import (
     make_response, json
 )
 from app.services.user import user_signup_service, user_login_service
-from app.utils.user_validator import user_generate_token
+from app.utils.user_validator import generate_token
 from app.utils.token_auth import user_token_required
+from app.stores.service import get_service_store
 
 user_bp = Blueprint("user_bp", __name__, template_folder="../../templates")
 
@@ -18,7 +19,6 @@ def user_signUp():
         data = request.form.to_dict()
 
     result = user_signup_service(data)
-    print("routers result: ", result)
 
     if isinstance(result, tuple):
         return result
@@ -39,7 +39,6 @@ def user_login():
         data = request.form.to_dict()
 
     result = user_login_service(data)
-    print("res", result[0])
 
     data_dict = json.loads(result[0].data.decode('utf-8'))
 
@@ -47,10 +46,13 @@ def user_login():
         return jsonify({"message": "Login Failed!", "error": data_dict["error"]}), 401
         # return redirect(url_for("user_bp.show_user_login"))
 
-    # user_id = data_dict['user']['id']
     user_id = data_dict.get('user', {}).get('id')
 
-    token = user_generate_token({"user_id": user_id})
+    token = generate_token({"user_id": user_id})
+
+    user_info = data_dict.get('user', {})
+    # Convert list to JSON string
+    user_info_str = json.dumps(user_info)
 
     resp = make_response(redirect(url_for("user_bp.show_user_dashboard")))
     resp.set_cookie(
@@ -60,6 +62,13 @@ def user_login():
         secure=False,
         samesite="Lax",  # less restrictive for testing
         path="/"
+    )
+    resp.set_cookie(
+        "User_Info",
+        user_info_str,
+        httponly=True,
+        secure=False,   # Change to True for HTTPS
+        samesite="Strict"
     )
     return resp
 
@@ -75,6 +84,15 @@ def user_logout():
     resp = make_response(redirect(url_for("user_bp.show_user_login")))
     resp.set_cookie(
         "UserToken",
+        "",
+        expires=0,
+        httponly=True,
+        secure=False,
+        samesite="Strict",
+        path="/"
+    )
+    resp.set_cookie(
+        "User_Info",
         "",
         expires=0,
         httponly=True,
@@ -103,4 +121,22 @@ def show_user_login():
 @user_bp.route("/", methods=["GET"])
 @user_token_required
 def show_user_dashboard():
-    return render_template("user/dashboard.html")
+    user_info = request.cookies.get("User_Info")
+    print("res", user_info)
+    if user_info:
+        user_name = json.loads(user_info)["firstname"]
+
+    else:
+        user_name = "Guest"
+
+    result = get_service_store()
+    services = result.data
+
+    return render_template("user/dashboard.html", user_name=user_name, services=services)
+
+
+# ---------- PROFILE ----------
+@user_bp.route("/profile", methods=["GET"])
+@user_token_required
+def show_user_profile():
+    return render_template("user/userProfile.html")

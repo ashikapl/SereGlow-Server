@@ -43,14 +43,12 @@
               </a>
             </li>
             <li>
-              <a
-                href="{{ url_for('appointment_bp.show_appointment') }}"
-                class="active"
+              <a href="{{ url_for('appointment_bp.show_appointment') }}"
                 ><i class="fas fa-calendar"></i> Appointments</a
               >
             </li>
             <li>
-              <a href="{{ url_for('payment_bp.show_payment') }}"
+              <a href="{{ url_for('payment_bp.show_payment') }}" class="active"
                 ><i class="fas fa-calendar"></i> Payments</a
               >
             </li>
@@ -75,7 +73,7 @@
         <div class="dashboard-main">
           <!-- Appointments Management -->
           <div id="adminAppointmentsSection" class="dashboard-section">
-            <h2>Appointments</h2>
+            <h2>Payments</h2>
             <div class="appointments-filters">
               <select id="appointmentFilter">
                 <option value="all">All Appointments</option>
@@ -136,9 +134,9 @@
                 </div>
                 <div class="appointment-actions">
                   <a
-                    href="{{ url_for('payment_bp.show_payment') }}"
+                    href="#"
                     class="btn btn-sm btn-primary"
-                    style="margin-right: 540px"
+                    style="margin-right: 500px"
                   >
                     Payment Details
                   </a>

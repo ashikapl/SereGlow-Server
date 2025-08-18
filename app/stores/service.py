@@ -38,3 +38,10 @@ def delete_service_store(service_id):
         return result
     else:
         return {"error": f"Service with id {service_id} not found"}, 404
+    
+def get_service_byId(service_id):
+    result = supabase.table("Service").select(
+        "*").eq("id", service_id).execute()
+
+    if result:
+        return result
