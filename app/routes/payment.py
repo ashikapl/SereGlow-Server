@@ -52,6 +52,4 @@ def delete_payment(appointment_id, id):
 def find_payment(appointment_id):
     result = get_payment_service(appointment_id)
 
-    print("res", result.data)
-
     return result.data
