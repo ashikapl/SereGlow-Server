@@ -51,7 +51,7 @@
             </li>
             <li>
               <a href="{{ url_for('payment_bp.show_payment') }}"
-                ><i class="fas fa-calendar"></i> Payments</a
+                ><i class="fas fa-wallet"></i> Payments</a
               >
             </li>
             <li>
@@ -230,6 +230,31 @@
                 paymentStatus.innerText = paymentdata[0]["payment_status"];
               } else {
                 link.textContent = "Unknown Service";
+              }
+            });
+        });
+        document.querySelectorAll(".payment-auto-link").forEach((link) => {
+          fetch(link.href)
+            .then((res) => res.json())
+            .then((paymentdata) => {
+              let id = link.dataset.id; // appointment id
+              let paymentMethod = document.querySelector(
+                `.payment-method[data-id="${id}"]`
+              );
+              let paymentStatus = document.querySelector(
+                `.payment-status[data-id="${id}"]`
+              );
+
+              if (
+                paymentdata[0] &&
+                paymentdata[0]["payment_method"] &&
+                paymentdata[0]["payment_status"]
+              ) {
+                paymentMethod.innerText = paymentdata[0]["payment_method"];
+                paymentStatus.innerText = paymentdata[0]["payment_status"];
+              } else {
+                paymentMethod.innerText = "N/A";
+                paymentStatus.innerText = "N/A";
               }
             });
         });

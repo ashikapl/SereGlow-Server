@@ -819,6 +819,92 @@ a {
     font-size: 1rem;
 }
 
+/* Payment */
+.payments-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.payment-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.payment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.payment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.payment-header h4 {
+    color: #333;
+    margin: 0;
+}
+
+.status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-paid {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-unpaid {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+/* .status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-cancelled {
+    background: #f8d7da;
+    color: #721c24;
+} */
+
+.payment-details {
+    margin-bottom: 1rem;
+}
+
+.payment-details p {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.payment-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Filters */
+.payments-filters {
+    margin-bottom: 2rem;
+}
+
+.payments-filters select {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
 /* Schedule Form */
 .schedule-form {
     max-width: 800px;

@@ -49,7 +49,7 @@
             </li>
             <li>
               <a href="{{ url_for('payment_bp.show_payment') }}" class="active"
-                ><i class="fas fa-calendar"></i> Payments</a
+                ><i class="fas fa-wallet"></i> Payments</a
               >
             </li>
             <li>
@@ -72,53 +72,53 @@
 
         <div class="dashboard-main">
           <!-- Appointments Management -->
-          <div id="adminAppointmentsSection" class="dashboard-section">
+          <div id="adminPaymentsSection" class="dashboard-section">
             <h2>Payments</h2>
-            <div class="appointments-filters">
-              <select id="appointmentFilter">
-                <option value="all">All Appointments</option>
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
+            <div class="payments-filters">
+              <select id="paymentFilter">
+                <option value="all">All Payments</option>
+                <option value="paid">Paid</option>
+                <option value="unpaid">Unpaid</option>
+                <!-- <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option> -->
               </select>
             </div>
-            <div id="adminAppointmentsList" class="appointments-list">
-              {% for appointment in appointments %}
-              <div class="appointment-card">
-                <div class="appointment-header">
+            <div id="adminPaymentsSection" class="payments-list">
+              {% for payment in payments %}
+              <div class="payment-card">
+                <div class="payment-header">
                   <h4 id="user_data">
                     <a
                       class="user-auto-link"
-                      href="{{ url_for('appointment_bp.find_user', user_id=appointment.user_id) }}"
+                      href="{{ url_for('payment_bp.find_user', user_id=payment.user_id) }}"
                       style="pointer-events: none; color: #666"
                     >
                       Loading...
                     </a>
                   </h4>
-                  <span class="status status-{{appointment.status}}"
-                    >{{ appointment.status }}</span
+                  <span class="status status-${payment.status}"
+                    >{{ payment.status }}</span
                   >
                 </div>
-                <div class="appointment-details">
+                <div class="payment-details">
                   <p id="service_data">
                     <strong>Service:</strong>
                     <a
                       class="service-auto-link"
-                      href="{{ url_for('appointment_bp.find_service', service_id=appointment.service_id) }}"
+                      href="{{ url_for('payment_bp.find_service', service_id=payment.service_id) }}"
                       style="pointer-events: none; color: #666"
                     >
                       Loading...
                     </a>
                   </p>
-                  <p><strong>Date:</strong> {{appointment.appointment_date}}</p>
-                  <p><strong>Time:</strong> {{appointment.appointment_time}}</p>
+                  <p><strong>Amount:</strong> ₹{{payment.amount}}</p>
+                  <!-- <p><strong>Date:</strong> {{payment.appointment_date}}</p> -->
                   <p>
                     <strong>Payment Method:</strong>
                     <span id="paymentMethod"></span>
                     <a
                       class="payment-auto-link"
-                      href="{{ url_for('payment_bp.find_payment', appointment_id=appointment.id) }}"
+                      href="{{ url_for('payment_bp.find_payment', appointment_id=payment.id) }}"
                       style="pointer-events: none; color: #666; display: none"
                     >
                       Payment Loading...
@@ -132,42 +132,42 @@
                   <p><strong>Notes:</strong> ${appointment.notes}</p>
                   ` : "" } -->
                 </div>
-                <div class="appointment-actions">
-                  <a
+                <div class="payment-actions">
+                  <!-- <a
                     href="#"
                     class="btn btn-sm btn-primary"
                     style="margin-right: 500px"
                   >
-                    Payment Details
+                    Payment Details -->
                   </a>
-                  {% if appointment.status == "pending" %}
+                  {% if payment.status == "pending" %}
                   <button
                     class="btn btn-sm btn-success"
-                    onclick="updateAppointmentStatus({ appointment.id }, 'confirmed')"
+                    onclick="updatePaymentStatus({ payment.id }, 'confirmed')"
                   >
-                    Confirm
+                    Paid
                   </button>
-                  <button
+                  <!-- <button
                     class="btn btn-sm btn-danger"
                     onclick="updateAppointmentStatus({{ appointment.id }}, 'cancelled')"
                   >
                     Cancel
-                  </button>
-                  {% elif appointment.status == "confirmed" %}
+                  </button> -->
+                  {% elif payment.status == "completed" %}
                   <button
                     class="btn btn-sm btn-primary"
-                    onclick="updateAppointmentStatus({{ appointment.id }}, 'completed')"
+                    onclick="updatePaymentStatus({{ payment.id }}, 'completed')"
                   >
-                    Mark Complete
+                    unpaid
                   </button>
-                  <button
+                  <!-- <button
                     class="btn btn-sm btn-danger"
                     onclick="updateAppointmentStatus({{ appointment.id }}, 'cancelled')"
                   >
                     Cancel
-                  </button>
+                  </button> -->
                   {% else %}
-                  <span class="text-muted">No actions available</span>
+                  <!-- <span class="text-muted">No actions available</span> -->
                   {% endif %}
                 </div>
               </div>
