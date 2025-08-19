@@ -19,9 +19,9 @@ def add_payment_service(data, appointment_id):
         return {"error": error_message}, 500
 
 
-def get_payment_service(appointment_id):
+def get_payment_service():
     try:
-        result = get_payment_store(appointment_id)
+        result = get_payment_store()
 
         if result:
             return result

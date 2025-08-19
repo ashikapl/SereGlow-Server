@@ -1,5 +1,7 @@
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, render_template, json
 from app.services.payment import add_payment_service, get_payment_service, update_payment_service, delete_payment_service
+from app.stores.service import get_service_byId
+from app.stores.payment import find_user_byID
 
 payment_bp = Blueprint("payment_bp", __name__)
 
@@ -16,14 +18,18 @@ def add_payment(appointment_id):
     return jsonify(result.data), 201
 
 
-@payment_bp.route("/<int:appointment_id>", methods=["GET"])
-def get_payment(appointment_id):
-    result = get_payment_service(appointment_id)
+@payment_bp.route("/", methods=["GET"])
+def get_payment():
+    result = get_payment_service()
 
     if isinstance(result, tuple):
         return result
 
-    return jsonify(result.data), 201
+    payments = result.data
+    print("Res", payments)
+
+    # return jsonify(result.data), 201
+    return render_template("admin/payment.html", payments=payments)
 
 
 @payment_bp.route("/<int:appointment_id>/<int:id>", methods=["PUT"])
@@ -48,8 +54,31 @@ def delete_payment(appointment_id, id):
     return jsonify({"message": "Delete successful!"}), 200
 
 
-@payment_bp.route("/paymentFind/<int:appointment_id>", methods=["GET"])
-def find_payment(appointment_id):
-    result = get_payment_service(appointment_id)
+@payment_bp.route('/', methods=['GET'])
+def show_payment():
+    admin_info = request.cookies.get("Admin_Info")
+    if admin_info:
+        admin_name = json.loads(admin_info)["firstname"]
+
+    return render_template("admin/payment.html", admin_name=admin_name)
+
+
+@payment_bp.route("/paymentFind>", methods=["GET"])
+def find_payment():
+    result = get_payment_service()
+
+    return result.data
+
+
+@payment_bp.route("/userFind/<int:user_id>", methods=["GET"])
+def find_user(user_id):
+    result = find_user_byID(user_id)
+
+    return result.data
+
+
+@payment_bp.route("/serviceFind/<int:service_id>", methods=["GET"])
+def find_service(service_id):
+    result = get_service_byId(service_id)
 
     return result.data

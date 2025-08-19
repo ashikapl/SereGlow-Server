@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- <meta http-equiv="refresh" content="5"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../static/css/main.css" />
@@ -15,7 +16,6 @@
       <span>Login successful!</span>
       <button onclick="this.parentElement.remove()">&times;</button>
     </div>
-
     <!-- Admin Dashboard (Hidden by default) -->
     <div id="adminDashboard" class="dashboard-container">
       <nav class="dashboard-nav">
@@ -54,6 +54,11 @@
               >
             </li>
             <li>
+              <a href="{{ url_for('payment_bp.show_payment') }}"
+                ><i class="fas fa-wallet"></i> Payments</a
+              >
+            </li>
+            <li>
               <a href="{{ url_for('schedule_bp.show_schedule') }}"
                 ><i class="fas fa-clock"></i> Shop Schedule</a
               >
@@ -78,22 +83,22 @@
             <div class="stats-grid">
               <div class="stat-card">
                 <i class="fas fa-calendar-check"></i>
-                <h3 id="totalAppointments">0</h3>
+                <h3 id="totalAppointments">{{total_appointment}}</h3>
                 <p>Total Appointments</p>
               </div>
               <div class="stat-card">
                 <i class="fas fa-list"></i>
-                <h3 id="totalServices">0</h3>
+                <h3 id="totalServices">{{total_services}}</h3>
                 <p>Active Services</p>
               </div>
               <div class="stat-card">
                 <i class="fas fa-users"></i>
-                <h3 id="totalUsers">0</h3>
+                <h3 id="totalUsers">{{total_users}}</h3>
                 <p>Registered Users</p>
               </div>
               <div class="stat-card">
                 <i class="fas fa-star"></i>
-                <h3 id="avgRating">0</h3>
+                <h3 id="avgRating">{{avg_rating}}</h3>
                 <p>Average Rating</p>
               </div>
             </div>
@@ -101,7 +106,6 @@
         </div>
       </div>
     </div>
-
     <script>
       // Listen for logout in other tabs
       window.addEventListener("storage", function (event) {

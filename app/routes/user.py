@@ -122,8 +122,12 @@ def show_user_login():
 @user_token_required
 def show_user_dashboard():
     user_info = request.cookies.get("User_Info")
+    print("res", user_info)
     if user_info:
         user_name = json.loads(user_info)["firstname"]
+
+    else:
+        user_name = "Guest"
 
     result = get_service_store()
     services = result.data

@@ -1,15 +1,19 @@
 from flask import (
     jsonify, request, Blueprint, redirect, url_for, render_template,
-    make_response, json, flash
+    make_response, json, flash, session
 )
 from app.services.admin import admin_signup_service, admin_login_service
 from app.utils.user_validator import generate_token
 from app.utils.token_auth import admin_token_required
+from app.utils.helpers import total_count, average_rating, admin_info
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
+admin = None
 
 # ---------- SIGNUP (POST) ----------
+
+
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
     if request.is_json:
@@ -33,6 +37,7 @@ def admin_signUp():
 # ---------- LOGIN (POST) ----------
 @admin_bp.route("/login", methods=["POST"])
 def admin_login():
+    global admin
     if request.is_json:
         data = request.get_json()
     else:
@@ -46,6 +51,7 @@ def admin_login():
         return jsonify({"message": "Login Failed!", "error": data_dict["error"]}), 401
         # return redirect(url_for("admin_bp.show_admin_login"))
 
+    # print("res", data_dict)
     admin_id = data_dict.get('admin', {}).get('id')
 
     token = generate_token({"user_id": admin_id})
@@ -53,6 +59,11 @@ def admin_login():
     admin_info = data_dict.get('admin', {})
     # Convert list to JSON string
     admin_info_str = json.dumps(admin_info)
+    # print("ad", admin)
+
+    # appointment = total_count("Appointment")
+    # service = total_count("Service")
+    # user = total_count("User")
 
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
@@ -79,7 +90,7 @@ def admin_login():
 #     resp.delete_cookie("authToken", samesite="Strict")
 #     return resp
 
-
+# ---------- LOGOUT ----------
 @admin_bp.route("/logout")
 def admin_logout():
     resp = make_response(redirect(url_for("admin_bp.show_admin_login")))
@@ -122,15 +133,36 @@ def show_admin_login():
 @admin_bp.route("/", methods=["GET"])
 @admin_token_required
 def show_admin_dashboard():
+    appointment = total_count("Appointment")
+    service = total_count("Service")
+    user = total_count("User")
+    rating = average_rating("Feedback")
     admin_info = request.cookies.get("Admin_Info")
     if admin_info:
         admin_name = json.loads(admin_info)["firstname"]
         # print("ad", admin_name)
-    return render_template("admin/dashboard.html", admin_name=admin_name)
+    # return render_template("admin/dashboard.html", admin_name=admin_name)
+
+    return render_template(
+        "admin/dashboard.html",
+        total_appointment=appointment,
+        total_services=service,
+        total_users=user,
+        avg_rating=rating,
+        admin_name=admin_name
+    )
+
+# @admin_bp.route("/", methods=["GET"])
+# @admin_token_required
+# def show_admin_services():
+#     return render_template("admin/service.html")
 
 
 # ---------- PROFILE ----------
 @admin_bp.route("/profile", methods=["GET"])
 @admin_token_required
 def show_admin_profile():
-    return render_template("admin/adminProfile.html")
+    admin_info = request.cookies.get("Admin_Info")
+    if admin_info:
+        admin_name = json.loads(admin_info)["firstname"]
+    return render_template("admin/adminProfile.html", admin_name=admin_name)

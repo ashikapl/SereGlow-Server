@@ -32,14 +32,34 @@ def generate_username(first_name, last_name):
 def total_count(table_name):
     try:
         response = supabase.table(table_name).select(
-            "*", count="exact").head(True).execute()
-
-        content_range = response.headers.get('Content-Range')
-        if content_range:
-
-            total_count = int(content_range.split('/')[1])
-            return total_count
-        return 0
+            "*", count="exact").execute()
+        # print("res", response)
+        return response.count if response.count is not None else 0
     except Exception as e:
         print(f"Error getting count for table {table_name}: {e}")
+        return -1  # Indicate an error
+
+
+def average_rating(table_name):
+    try:
+        response = supabase.table(table_name).select(
+            "rating", count="exact").execute()
+        # print("res", response.data[0]["rating"])
+        count = 0
+        for i in range(response.count):
+            count += response.data[i]["rating"]
+        return round(count/response.count, 1)
+    except Exception as e:
+        print(f"Error getting count for table {table_name}: {e}")
+        return -1  # Indicate an error
+
+
+def admin_info(id):
+    try:
+        response = supabase.table("Admin").select(
+            "*", count="exact").eq("id", id).execute()
+        # print("res", response)
+        return response.data[0]
+    except Exception as e:
+        print(f"Error getting count for table Admin: {e}")
         return -1  # Indicate an error

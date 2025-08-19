@@ -18,14 +18,14 @@ def add_payment_store(data, appointment_id):
         return {"error": "Failed to create appointment, appointment_id and data.get('appointment_id') not match ."}, 400
 
 
-def get_payment_store(appointment_id):
+def get_payment_store():
     result = supabase.table("Payment").select(
-        "*").eq("appointment_id", appointment_id).execute()
+        "*").execute()
 
     if result.data and len(result.data) > 0:
         return result
     else:
-        return {"error": f"No payment found for appointment_id {appointment_id}."}, 404
+        return {"error": f"No payment found!."}, 404
 
 
 def update_payment_store(data, appointment_id, payment_id):
@@ -46,3 +46,13 @@ def delete_payment_store(appointment_id, payment_id):
         return result
     else:
         return {"error": f"Payment with id {appointment_id} and payment_id {payment_id} not found or not delete."}, 404
+
+
+def find_user_byID(user_id):
+    result = supabase.table("User").select(
+        "*").eq("id", user_id).execute()
+
+    if result.data and len(result.data) > 0:
+        return result
+    else:
+        return {"error": f"user_id {user_id}, User not found."}, 404

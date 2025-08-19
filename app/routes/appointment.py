@@ -1,6 +1,7 @@
 from flask import jsonify, request, Blueprint, render_template, json
 from app.services.appointment import add_appointment_service, get_appointment_service, update_appointment_service, delete_appointment_service
 from app.utils.supabase_client import supabase
+from app.utils.token_auth import admin_token_required
 from app.stores.service import get_service_store
 from app.stores.appointment import find_user_byID
 from app.stores.service import get_service_byId
@@ -28,7 +29,7 @@ def get_appointment():
         return result
 
     appointments = result.data
-
+    print(appointments)
     # return jsonify(result.data), 200
     return render_template("admin/appointment.html", appointments=appointments)
 
@@ -55,19 +56,24 @@ def delete_appointment(service_id, id):
     return jsonify({"message": "Delete successful!"}), 200
 
 
-@appointment_bp.route("/", methods=["GET"])
-def show_appointment():
-    result = supabase.table("Appointment").select("*").execute()
+# @appointment_bp.route("/", methods=["GET"])
+# def show_appointment():
+#     result = supabase.table("Appointment").select("*").execute()
 
+#     if isinstance(result, tuple):
+#         return result
+
+#     # return jsonify(result.data), 200
+#     return render_template("admin/appointment.html")
+
+@appointment_bp.route('/', methods=['GET'])
+@admin_token_required
+def show_appointment():
     admin_info = request.cookies.get("Admin_Info")
     if admin_info:
         admin_name = json.loads(admin_info)["firstname"]
 
-    if isinstance(result, tuple):
-        return result
-
-    # return jsonify(result.data), 200
-    return render_template("admin/appointment.html")
+    return render_template("admin/appointment.html", admin_name=admin_name)
 
 
 @appointment_bp.route("/booking", methods=["GET"])

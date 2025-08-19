@@ -1,6 +1,8 @@
-from flask import jsonify, request, Blueprint, render_template, redirect, url_for
+from flask import jsonify, request, Blueprint, render_template, json, redirect, url_for
+# import requests
 from app.services.service import add_service_services, get_service_services, update_service_services, delete_service_services
-# from app.utils.token_auth import token_required
+from app.utils.token_auth import admin_token_required
+from app.routes.admin import admin
 from app.stores.service import get_service_byId
 
 service_bp = Blueprint("service_bp", __name__)
@@ -24,16 +26,20 @@ def add_service():
 
 
 @service_bp.route('/', methods=['GET'])
-# @token_required
+# @admin_token_required
 def get_services():
     result = get_service_services()
+    
+    admin_info = request.cookies.get("Admin_Info")
+    if admin_info:
+        admin_name = json.loads(admin_info)["firstname"]
 
-    if not result.data:
+    if not result:
         return jsonify({"Massage": "Empty"}), 204
 
     services = result.data
     # return jsonify(result.data), 200
-    return render_template("admin/service.html", services=services)
+    return render_template("admin/service.html", admin_name=admin_name, services=services)
 
 
 @service_bp.route('/<int:service_id>', methods=['POST', "PUT"])
@@ -65,8 +71,9 @@ def delete_service(service_id):
     return redirect(url_for("service_bp.get_services"))
 
 
+
 @service_bp.route('/add', methods=['GET'])
-# @token_required
+# @admin_token_required
 def show_add_service():
     return render_template("admin/addService.html")
 

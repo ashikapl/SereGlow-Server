@@ -22,10 +22,8 @@ def get_service_store():
 
 
 def update_service_store(data, service_id):
-    result = supabase.from_("Service").update(
+    result = supabase.table("Service").update(
         data).eq("id", service_id).execute()
-
-    # print("res", result)
 
     if result.data:
         return result
