@@ -52,9 +52,14 @@ def show_feedback():
     admin_info = request.cookies.get("Admin_Info")
     if admin_info:
         admin_name = json.loads(admin_info)["firstname"]
+
     return render_template("admin/feedback.html", admin_name=admin_name)
 
 
 @feedback_bp.route("/addFeedback", methods=["GET"])
 def show_addFeedback():
-    return render_template("user/addFeedback.html")
+    user_info = request.cookies.get("User_Info")
+    if user_info:
+        user_name = json.loads(user_info)["username"]
+
+    return render_template("user/addFeedback.html", user_name=user_name)

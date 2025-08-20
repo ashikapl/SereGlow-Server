@@ -117,18 +117,21 @@
                   <p><strong>Time:</strong> {{appointment.appointment_time}}</p>
                   <p>
                     <strong>Payment Method:</strong>
-                    <span id="paymentMethod"></span>
+                    <span
+                      id="paymentMethod_{{appointment.id}}"
+                      data-appointment-id="{{appointment.id}}"
+                    ></span>
                     <a
                       class="payment-auto-link"
                       href="{{ url_for('payment_bp.find_payment', appointment_id=appointment.id) }}"
-                      style="pointer-events: none; color: #666; display: none"
+                      style="color: #666; display: none"
                     >
                       Payment Loading...
                     </a>
                   </p>
                   <p>
                     <strong>Payment Status:</strong>
-                    <span id="paymentStatus"></span>
+                    <span id="paymentStatus_{{appointment.id}}"></span>
                   </p>
                   <!-- ${ appointment.notes ? `
                   <p><strong>Notes:</strong> ${appointment.notes}</p>
@@ -181,9 +184,6 @@
     </div>
 
     <script>
-      const paymentMethod = document.getElementById("paymentMethod");
-      const paymentStatus = document.getElementById("paymentStatus");
-
       window.addEventListener("DOMContentLoaded", function () {
         // User data find and fill
         document.querySelectorAll(".user-auto-link").forEach((link) => {
@@ -200,6 +200,10 @@
               } else {
                 link.textContent = "Customer Name: " + "Unknown User";
               }
+            })
+            .catch((error) => {
+              console.error("Error fetching user data:", error);
+              link.textContent = "Customer Name: Error Loading";
             });
         });
 
@@ -213,6 +217,10 @@
               } else {
                 link.textContent = "Unknown Service";
               }
+            })
+            .catch((error) => {
+              console.error("Error fetching service data:", error);
+              link.textContent = "Error Loading Service";
             });
         });
 
@@ -221,41 +229,67 @@
           fetch(link.href)
             .then((res) => res.json())
             .then((paymentdata) => {
-              if (
-                paymentdata[0] &&
-                paymentdata[0]["payment_method"] &&
-                paymentdata[0]["payment_status"]
-              ) {
-                paymentMethod.innerText = paymentdata[0]["payment_method"];
-                paymentStatus.innerText = paymentdata[0]["payment_status"];
-              } else {
-                link.textContent = "Unknown Service";
-              }
-            });
-        });
-        document.querySelectorAll(".payment-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((paymentdata) => {
-              let id = link.dataset.id; // appointment id
-              let paymentMethod = document.querySelector(
-                `.payment-method[data-id="${id}"]`
+              console.log("Payment data received:", paymentdata);
+
+              // Extract appointment ID from URL
+              const url = new URL(link.href, window.location.origin);
+              const appointmentId = url.searchParams.get("appointment_id");
+              console.log("Processing appointment ID:", appointmentId);
+
+              // Get the payment elements for this specific appointment
+              const paymentMethodElement = document.getElementById(
+                `paymentMethod_${appointmentId}`
               );
-              let paymentStatus = document.querySelector(
-                `.payment-status[data-id="${id}"]`
+              const paymentStatusElement = document.getElementById(
+                `paymentStatus_${appointmentId}`
               );
 
-              if (
-                paymentdata[0] &&
-                paymentdata[0]["payment_method"] &&
-                paymentdata[0]["payment_status"]
-              ) {
-                paymentMethod.innerText = paymentdata[0]["payment_method"];
-                paymentStatus.innerText = paymentdata[0]["payment_status"];
-              } else {
-                paymentMethod.innerText = "N/A";
-                paymentStatus.innerText = "N/A";
+              if (!paymentMethodElement || !paymentStatusElement) {
+                console.error(
+                  `Payment elements not found for appointment ${appointmentId}`
+                );
+                return;
               }
+
+              // Find payment record for this appointment_id
+              const paymentInfo = paymentdata.find(
+                (p) => p.appointment_id == appointmentId
+              );
+
+              if (paymentInfo) {
+                paymentMethodElement.innerText = paymentInfo.payment_method;
+                paymentStatusElement.innerText = paymentInfo.payment_status;
+
+                // Update payment link text
+                // link.textContent = `${paymentInfo.payment_method} - ${paymentInfo.payment_status}`;
+                // link.style.color = "#28a745"; // Green for success
+              } else {
+                paymentMethodElement.innerText = "N/A";
+                paymentStatusElement.innerText = "N/A";
+                // link.textContent = "No Payment Found";
+                // link.style.color = "#dc3545"; // Red for error
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching payment data:", error);
+
+              const url = new URL(link.href, window.location.origin);
+              const appointmentId = url.searchParams.get("appointment_id");
+
+              const paymentMethodElement = document.getElementById(
+                `paymentMethod_${appointmentId}`
+              );
+              const paymentStatusElement = document.getElementById(
+                `paymentStatus_${appointmentId}`
+              );
+
+              if (paymentMethodElement)
+                paymentMethodElement.innerText = "Error";
+              if (paymentStatusElement)
+                paymentStatusElement.innerText = "Error";
+
+              // link.textContent = "Payment Error";
+              // link.style.color = "#dc3545"; // Red for error
             });
         });
       });

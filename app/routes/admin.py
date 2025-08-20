@@ -5,7 +5,7 @@ from flask import (
 from app.services.admin import admin_signup_service, admin_login_service
 from app.utils.user_validator import generate_token
 from app.utils.token_auth import admin_token_required
-from app.utils.helpers import total_count, average_rating, admin_info
+from app.utils.helpers import total_count, average_rating, admin_info_cookie
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
@@ -137,11 +137,7 @@ def show_admin_dashboard():
     service = total_count("Service")
     user = total_count("User")
     rating = average_rating("Feedback")
-    admin_info = request.cookies.get("Admin_Info")
-    if admin_info:
-        admin_name = json.loads(admin_info)["firstname"]
-        # print("ad", admin_name)
-    # return render_template("admin/dashboard.html", admin_name=admin_name)
+    admin_name = admin_info_cookie("firstname")
 
     return render_template(
         "admin/dashboard.html",
@@ -162,7 +158,5 @@ def show_admin_dashboard():
 @admin_bp.route("/profile", methods=["GET"])
 @admin_token_required
 def show_admin_profile():
-    admin_info = request.cookies.get("Admin_Info")
-    if admin_info:
-        admin_name = json.loads(admin_info)["firstname"]
+    admin_name = admin_info_cookie("firstname")
     return render_template("admin/adminProfile.html", admin_name=admin_name)

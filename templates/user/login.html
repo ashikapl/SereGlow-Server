@@ -11,7 +11,7 @@
     />
   </head>
   <body>
-        <!-- Login Notification -->
+    <!-- Login Notification -->
     <div class="notification notification-error" id="loginNotification">
       <span>Invalid credentials!</span>
       <button onclick="this.parentElement.remove()">&times;</button>
@@ -34,12 +34,32 @@
                 ></a>
               </div>
               <span>or use your account</span>
-              <input type="email" name="email" id="email" value="{{ email }}", 
-                pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?",
-                placeholder="Email", required>
-              <input type="password" name="password" id="password" value="{{ password }}", pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
-                title="At least 8 characters with uppercase, lowercase, number, and special character",
-                placeholder="Password", required>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value="{{ email }}"
+                ,
+                pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
+                ,
+                placeholder="Email"
+                ,
+                required
+              />
+              <input
+                type="password"
+                name="password"
+                id="password"
+                value="{{ password }}"
+                ,
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                ,
+                title="At least 8 characters with uppercase, lowercase, number, and special character"
+                ,
+                placeholder="Password"
+                ,
+                required
+              />
               <a href="#">Forgot your password?</a>
               <button>Sign In</button>
             </form>
@@ -47,7 +67,7 @@
           <div class="overlay-container">
             <div class="overlay">
               <div class="overlay-panel overlay-right">
-                <h1>Hello, Admin!</h1>
+                <h1>Hello, User!</h1>
                 <p>Enter your personal details and start journey with us</p>
                 <a
                   href="{{ url_for('user_bp.show_user_signup') }}"
@@ -62,7 +82,7 @@
     </div>
 
     <script src="../static/js/main.js"></script>
-        <script>
+    <script>
       // Login Notification
       // Auto remove after 5 seconds (5000 ms)
       const notif = document.getElementById("loginNotification");

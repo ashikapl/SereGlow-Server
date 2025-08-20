@@ -82,7 +82,7 @@
                 </div>
                 <p class="service-description">{{service.description}}</p>
                 <div class="service-details">
-                  <span class="service-price">{{service.price}}</span>
+                  <span class="service-price">₹{{service.price}}</span>
                   <a
                     href="{{ url_for('appointment_bp.show_bookAppointment', service_id=service.id) }}"
                     class="btn btn-primary"

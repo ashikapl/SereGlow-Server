@@ -59,7 +59,6 @@ def show_payment():
     admin_info = request.cookies.get("Admin_Info")
     if admin_info:
         admin_name = json.loads(admin_info)["firstname"]
-
     return render_template("admin/payment.html", admin_name=admin_name)
 
 

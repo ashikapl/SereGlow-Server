@@ -5,6 +5,7 @@ from app.utils.token_auth import admin_token_required
 from app.stores.service import get_service_store
 from app.stores.appointment import find_user_byID
 from app.stores.service import get_service_byId
+from app.stores.appointment import get_appointment_store
 
 appointment_bp = Blueprint("appointment_bp", __name__)
 
@@ -67,26 +68,42 @@ def delete_appointment(service_id, id):
 #     return render_template("admin/appointment.html")
 
 @appointment_bp.route('/', methods=['GET'])
-@admin_token_required
+# @admin_token_required
 def show_appointment():
     admin_info = request.cookies.get("Admin_Info")
+    print("Admin", admin_info)
     if admin_info:
         admin_name = json.loads(admin_info)["firstname"]
-
     return render_template("admin/appointment.html", admin_name=admin_name)
 
 
 @appointment_bp.route("/booking", methods=["GET"])
 def show_bookAppointment():
+    service_id = request.args.get("service_id", type=int)
+    print("Service_id", service_id)
+    user_info = request.cookies.get("User_Info")
+    if user_info:
+        user_name = json.loads(user_info)["username"]
+
     result = get_service_store()
     services = result.data
 
-    return render_template("user/bookAppointment.html", services=services)
+    return render_template("user/bookAppointment.html", user_name=user_name, services=services, service_id=service_id)
 
 
 @appointment_bp.route("/appointment", methods=["GET"])
 def show_myAppointment():
-    return render_template("user/myAppointment.html")
+    appointment_id = request.args.get("appointment_id", type=int)
+    print(appointment_id)
+    user_info = request.cookies.get("User_Info")
+    if user_info:
+        user_name = json.loads(user_info)["username"]
+
+    result = get_appointment_store()
+    appointments = result.data
+    # print(appointments)
+
+    return render_template("user/myAppointment.html", user_name=user_name, appointment_id=appointment_id, appointments=appointments)
 
 
 @appointment_bp.route("/userFind/<int:user_id>", methods=["GET"])
