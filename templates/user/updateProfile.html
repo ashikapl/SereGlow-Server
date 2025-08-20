@@ -39,9 +39,7 @@
               >
             </li>
             <li>
-              <a
-                href="{{ url_for('appointment_bp.show_bookAppointment') }}"
-                class="active"
+              <a href="{{ url_for('appointment_bp.show_bookAppointment') }}"
                 ><i class="fas fa-calendar-plus"></i> Book Appointment</a
               >
             </li>
@@ -56,7 +54,9 @@
               >
             </li>
             <li>
-              <a href="{{ url_for('user_bp.show_user_profile') }}"
+              <a
+                href="{{ url_for('user_bp.show_user_profile') }}"
+                class="active"
                 ><i class="fas fa-user"></i> Profile</a
               >
             </li>
@@ -64,65 +64,36 @@
         </div>
 
         <div class="dashboard-main">
-          <!-- Booking Section -->
+          <!-- User Profile Section -->
           <div
-            id="userBookingSection"
+            id="userProfileSection"
             class="dashboard-section"
             style="display: block"
           >
-            <h2>Book Appointment</h2>
-            <form id="bookingForm" class="form-grid">
+            <h2>My Profile</h2>
+            <form id="userProfileForm" class="form-grid">
               <div class="form-group">
-                <label>Select Service</label>
-                <select id="bookingService" required>
-                  <option value="">Choose a service</option>
-                  {% if service_id %}
-                  <option value="{{service_id}}" selected>
-                    {% for service in services %}{% if service_id == service.id
-                    %}{{service.name}}{% endif %}{% endfor %}
-                  </option>
-                  {% else %} {% for service in services %}
-                  <option value="{{service.id}}">{{service.name}}</option>
-                  {% endfor %} {% endif %}
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="bookingDate" required />
+                <label>First Name</label>
+                <input type="text" id="userFirstName" required />
               </div>
               <div class="form-group">
-                <label>Time</label>
-                <select id="bookingTime" required>
-                  <option value="">Select time</option>
-                  <option value="09:00">09:00 AM</option>
-                  <option value="10:00">10:00 AM</option>
-                  <option value="11:00">11:00 AM</option>
-                  <option value="12:00">12:00 PM</option>
-                  <option value="13:00">01:00 PM</option>
-                  <option value="14:00">02:00 PM</option>
-                  <option value="15:00">03:00 PM</option>
-                  <option value="16:00">04:00 PM</option>
-                  <option value="17:00">05:00 PM</option>
-                </select>
+                <label>Last Name</label>
+                <input type="text" id="userLastName" required />
               </div>
               <div class="form-group">
-                <label>Payment Method</label>
-                <select id="paymentMethod" required>
-                  <option value="">Select payment method</option>
-                  <option value="online">Online Payment</option>
-                  <option value="cash">Cash Payment</option>
-                </select>
+                <label>Email</label>
+                <input type="email" id="userEmail" required />
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="userPhone" required />
               </div>
               <div class="form-group full-width">
-                <label>Special Requirements</label>
-                <textarea
-                  id="bookingNotes"
-                  placeholder="Any special requirements or notes"
-                ></textarea>
+                <label>Address</label>
+                <textarea id="userAddress" required></textarea>
               </div>
               <button type="submit" class="btn btn-primary">
-                Book Appointment
+                Update Profile
               </button>
             </form>
           </div>

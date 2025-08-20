@@ -4,11 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Dashboard</title>
-    <link rel="stylesheet" href="../static/css/main.css" />
+    <link rel="stylesheet" href="../../static/css/main.css" />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="../../static/css/addFeedback.css" />
   </head>
   <body>
     <!-- User Dashboard (Hidden by default) -->
@@ -19,7 +20,7 @@
           <span>User Dashboard</span>
         </div>
         <div class="nav-actions">
-          <span id="userWelcome">Welcome, User!</span>
+          <span id="userWelcome">Welcome, {{user_name}}!</span>
           <form
             action="{{ url_for('user_bp.user_logout') }}"
             method="get"
@@ -71,7 +72,8 @@
             style="display: block"
           >
             <h2>Add Feedback</h2>
-            <form id="feedbackForm" class="form-grid">
+
+            <!-- <form id="feedbackForm" class="form-grid">
               <div class="form-group">
                 <label>Rating</label>
                 <div class="rating">
@@ -98,10 +100,262 @@
               <button type="submit" class="btn btn-primary">
                 Submit Feedback
               </button>
+            </form> -->
+            <form id="feedbackForm" class="form-grid">
+              <div class="form-group">
+                <label>How would you rate us?</label>
+                <div class="rating">
+                  <input type="radio" name="rating" value="5" id="star5" />
+                  <label for="star5">★</label>
+                  <input type="radio" name="rating" value="4" id="star4" />
+                  <label for="star4">★</label>
+                  <input type="radio" name="rating" value="3" id="star3" />
+                  <label for="star3">★</label>
+                  <input type="radio" name="rating" value="2" id="star2" />
+                  <label for="star2">★</label>
+                  <input type="radio" name="rating" value="1" id="star1" />
+                  <label for="star1">★</label>
+                </div>
+                <div class="rating-feedback">
+                  <div class="rating-text" id="ratingText"></div>
+                  <div class="rating-description" id="ratingDescription"></div>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label>Tell us about your experience</label>
+                <textarea
+                  id="feedbackText"
+                  required
+                  placeholder="We'd love to hear your thoughts, suggestions, or any details about your experience..."
+                  maxlength="500"
+                ></textarea>
+                <div class="char-counter" id="charCounter">
+                  0/500 characters
+                </div>
+                <div class="error-message" id="textareaError"></div>
+              </div>
+
+              <button type="submit" class="btn btn-primary">
+                Submit Feedback
+              </button>
             </form>
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      // Rating functionality
+      const ratingInputs = document.querySelectorAll('input[name="rating"]');
+      const ratingText = document.getElementById("ratingText");
+      const ratingDescription = document.getElementById("ratingDescription");
+
+      const ratingData = {
+        5: {
+          text: "Excellent!",
+          description: "We're thrilled you had an amazing experience!",
+          class: "excellent",
+        },
+        4: {
+          text: "Very Good",
+          description: "Thank you for your positive feedback!",
+          class: "good",
+        },
+        3: {
+          text: "Good",
+          description:
+            "We appreciate your feedback and will continue to improve.",
+          class: "average",
+        },
+        2: {
+          text: "Needs Improvement",
+          description:
+            "We're sorry to hear this. We'll work harder to serve you better.",
+          class: "poor",
+        },
+        1: {
+          text: "Poor",
+          description:
+            "We sincerely apologize. Your feedback helps us improve significantly.",
+          class: "terrible",
+        },
+      };
+
+      ratingInputs.forEach((input) => {
+        input.addEventListener("change", function () {
+          const value = this.value;
+          const data = ratingData[value];
+
+          ratingText.className = `rating-text ${data.class} show`;
+          ratingDescription.className = "rating-description show";
+          ratingText.textContent = data.text;
+          ratingDescription.textContent = data.description;
+
+          // Haptic feedback
+          if (navigator.vibrate) {
+            navigator.vibrate(50);
+          }
+        });
+      });
+
+      // Character counter
+      const textarea = document.getElementById("feedbackText");
+      const charCounter = document.getElementById("charCounter");
+
+      textarea.addEventListener("input", function () {
+        const count = this.value.length;
+        const max = this.maxLength;
+        charCounter.textContent = `${count}/${max} characters`;
+
+        if (count > 0) {
+          charCounter.classList.add("show");
+        } else {
+          charCounter.classList.remove("show");
+        }
+
+        // Color coding for character limit
+        if (count > max * 0.9) {
+          charCounter.style.color = "#dc3545";
+        } else if (count > max * 0.7) {
+          charCounter.style.color = "#ffc107";
+        } else {
+          charCounter.style.color = "#6c757d";
+        }
+      });
+
+      // Form submission
+      const form = document.getElementById("feedbackForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const textareaError = document.getElementById("textareaError");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Validation
+        const rating = document.querySelector('input[name="rating"]:checked');
+        const feedback = textarea.value.trim();
+
+        // Clear previous errors
+        document
+          .querySelector(".form-group.full-width")
+          .classList.remove("error");
+        textareaError.classList.remove("show");
+
+        let isValid = true;
+
+        if (!feedback) {
+          document
+            .querySelector(".form-group.full-width")
+            .classList.add("error");
+          textareaError.textContent = "Please share your feedback with us.";
+          textareaError.classList.add("show");
+          isValid = false;
+        } else if (feedback.length < 10) {
+          document
+            .querySelector(".form-group.full-width")
+            .classList.add("error");
+          textareaError.textContent =
+            "Please provide more detailed feedback (at least 10 characters).";
+          textareaError.classList.add("show");
+          isValid = false;
+        }
+
+        if (!rating) {
+          // Focus on rating section
+          document
+            .querySelector(".rating")
+            .scrollIntoView({ behavior: "smooth", block: "center" });
+          document.querySelector(".rating").style.borderColor = "#dc3545";
+          setTimeout(() => {
+            document.querySelector(".rating").style.borderColor = "";
+          }, 3000);
+          isValid = false;
+        }
+
+        if (!isValid) return;
+
+        // Show loading state
+        submitBtn.classList.add("loading");
+
+        // Simulate form submission
+        setTimeout(() => {
+          submitBtn.classList.remove("loading");
+          submitBtn.classList.add("success");
+          submitBtn.textContent = "✓ Feedback Submitted";
+
+          // Show success message
+          setTimeout(() => {
+            alert(
+              "Thank you for your feedback! We appreciate you taking the time to share your experience."
+            );
+
+            // Reset form
+            form.reset();
+            ratingText.className = "rating-text";
+            ratingDescription.className = "rating-description";
+            charCounter.classList.remove("show");
+            charCounter.textContent = "0/500 characters";
+            charCounter.style.color = "#6c757d";
+
+            // Reset button
+            setTimeout(() => {
+              submitBtn.classList.remove("success");
+              submitBtn.textContent = "Submit Feedback";
+            }, 2000);
+          }, 500);
+        }, 2000);
+      });
+
+      // Enhanced hover effects for stars
+      document.querySelectorAll(".rating label").forEach((label, index) => {
+        label.addEventListener("mouseenter", function () {
+          const allLabels = document.querySelectorAll(".rating label");
+          for (let i = index; i < allLabels.length; i++) {
+            allLabels[i].style.color = "#ffd700";
+            allLabels[i].style.transform = "scale(1.1)";
+          }
+        });
+
+        label.addEventListener("mouseleave", function () {
+          const allLabels = document.querySelectorAll(".rating label");
+          const checkedInput = document.querySelector(
+            'input[name="rating"]:checked'
+          );
+
+          allLabels.forEach((lbl, idx) => {
+            lbl.style.color = "";
+            lbl.style.transform = "";
+
+            if (checkedInput) {
+              const checkedValue = parseInt(checkedInput.value);
+              if (idx >= 5 - checkedValue) {
+                lbl.style.color = "#ffd700";
+              }
+            }
+          });
+        });
+      });
+
+      // Keyboard navigation for accessibility
+      document.querySelectorAll(".rating label").forEach((label) => {
+        label.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            const associatedInput = document.getElementById(
+              this.getAttribute("for")
+            );
+            associatedInput.checked = true;
+            associatedInput.dispatchEvent(new Event("change"));
+          }
+        });
+      });
+
+      // Auto-resize textarea
+      textarea.addEventListener("input", function () {
+        this.style.height = "auto";
+        this.style.height = Math.max(140, this.scrollHeight) + "px";
+      });
+    </script>
   </body>
 </html>

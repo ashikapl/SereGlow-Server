@@ -50,6 +50,17 @@ def delete_appointment_store(service_id, appointment_id):
         return {"error": f"Appointment with id {appointment_id} and service_id {service_id} not found or not delete."}, 404
 
 
+def get_appointment_byUserID(user_id):
+    result = supabase.table("Appointment").select(
+        "*").eq("user_id", user_id).execute()
+
+    if result.data and len(result.data) > 0:
+        # print("result", result)
+        return result
+    else:
+        return {"error": f"No appointments found!."}, 404
+
+
 def find_user_byID(user_id):
     result = supabase.table("User").select(
         "*").eq("id", user_id).execute()

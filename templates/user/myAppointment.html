@@ -19,7 +19,7 @@
           <span>User Dashboard</span>
         </div>
         <div class="nav-actions">
-          <span id="userWelcome">Welcome, User!</span>
+          <span id="userWelcome">Welcome, {{user_name}}!</span>
           <form
             action="{{ url_for('user_bp.user_logout') }}"
             method="get"
@@ -72,21 +72,38 @@
           >
             <h2>My Appointments</h2>
             <div id="userAppointmentsList" class="appointments-list">
+              {% for appointment in appointments %}
               <div class="appointment-card">
                 <div class="appointment-header">
-                  <h4>${ service ? service.name : "Unknown Service" }</h4>
+                  <h4>
+                    <a
+                      class="service-auto-link"
+                      href="{{ url_for('appointment_bp.find_service', service_id=appointment.service_id) }}"
+                      style="pointer-events: none; color: #666"
+                    >
+                      Loading...
+                    </a>
+                  </h4>
                   <span class="status status-${appointment.status}"
-                    >${ appointment.status }</span
+                    >{{ appointment.status }}</span
                   >
                 </div>
                 <div class="appointment-details">
-                  <p><strong>Date:</strong> ${appointment.date}</p>
-                  <p><strong>Time:</strong> ${appointment.time}</p>
+                  <p><strong>Date:</strong> {{appointment.appointment_date}}</p>
+                  <p><strong>Time:</strong> {{appointment.appointment_time}}</p>
                   <p>
-                    <strong>Price:</strong> ${ service ? service.price : 0 }
+                    <strong>Price:</strong>
+                    <span id="ser_price_{{appointment.service_id}}"></span>
                   </p>
                   <p>
-                    <strong>Payment:</strong> ${ appointment.paymentMethod }
+                    <strong>Payment:</strong>
+                    <a
+                      class="payment-auto-link"
+                      href="{{ url_for('payment_bp.find_payment', appointment_id=appointment.id) }}"
+                      style="pointer-events: none; color: #666"
+                    >
+                      Payment Loading...
+                    </a>
                   </p>
                   <p><strong>Notes:</strong> ${appointment.notes}</p>
                 </div>
@@ -99,10 +116,71 @@
                   </button>
                 </div>
               </div>
+              {% endfor %}
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        // Service data find and fill
+        document.querySelectorAll(".service-auto-link").forEach((link) => {
+          fetch(link.href)
+            .then((res) => res.json())
+            .then((servicedata) => {
+              const url = new URL(link.href, window.location.origin);
+              const parts = url.pathname.split("/");
+              const serviceId = parts[parts.length - 1];
+
+              const servicePrice = document.getElementById(
+                `ser_price_${serviceId}`
+              );
+
+              if (servicedata[0]["name"]) {
+                link.textContent = servicedata[0]["name"];
+                servicePrice.innerText = servicedata[0]["price"];
+              } else {
+                link.textContent = "Unknown Service";
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching service data:", error);
+              link.textContent = "Error Loading Service";
+            });
+        });
+
+        // Payment data find and fill
+        document.querySelectorAll(".payment-auto-link").forEach((link) => {
+          fetch(link.href)
+            .then((res) => res.json())
+            .then((paymentdata) => {
+              // console.log("Payment data received:", paymentdata);
+
+              // Extract appointment ID from URL
+              const url = new URL(link.href, window.location.origin);
+              const appointmentId = url.searchParams.get("appointment_id");
+              // console.log("Processing appointment ID:", appointmentId);
+
+              // Find payment record for this appointment_id
+              const paymentInfo = paymentdata.find(
+                (p) => p.appointment_id == appointmentId
+              );
+
+              if (paymentInfo) {
+                // Update payment link text
+                link.textContent = `${paymentInfo.payment_method}`;
+              } else {
+                link.textContent = "No Payment Found";
+              }
+            })
+            .catch((error) => {
+              // console.error("Error fetching payment data:", error);
+              link.textContent = "Payment Error";
+            });
+        });
+      });
+    </script>
   </body>
 </html>

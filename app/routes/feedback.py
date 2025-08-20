@@ -57,4 +57,8 @@ def show_feedback():
 
 @feedback_bp.route("/addFeedback", methods=["GET"])
 def show_addFeedback():
-    return render_template("user/addFeedback.html")
+    user_info = request.cookies.get("User_Info")
+    if user_info:
+        user_name = json.loads(user_info)["username"]
+
+    return render_template("user/addFeedback.html", user_name=user_name)

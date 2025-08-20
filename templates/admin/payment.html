@@ -115,18 +115,11 @@
                   <!-- <p><strong>Date:</strong> {{payment.appointment_date}}</p> -->
                   <p>
                     <strong>Payment Method:</strong>
-                    <span id="paymentMethod"></span>
-                    <a
-                      class="payment-auto-link"
-                      href="{{ url_for('payment_bp.find_payment', appointment_id=payment.id) }}"
-                      style="pointer-events: none; color: #666; display: none"
-                    >
-                      Payment Loading...
-                    </a>
+                    <span id="paymentMethod">{{payment.payment_method}}</span>
                   </p>
                   <p>
                     <strong>Payment Status:</strong>
-                    <span id="paymentStatus"></span>
+                    <span id="paymentStatus">{{payment.payment_status}}</span>
                   </p>
                   <!-- ${ appointment.notes ? `
                   <p><strong>Notes:</strong> ${appointment.notes}</p>
@@ -138,37 +131,24 @@
                     class="btn btn-sm btn-primary"
                     style="margin-right: 500px"
                   >
-                    Payment Details -->
-                  </a>
-                  {% if payment.status == "pending" %}
+                    Payment Details 
+                  </a> -->
+                  {% if payment.payment_method == "cash" %} {% if
+                  payment.payment_status == "pending" %}
                   <button
                     class="btn btn-sm btn-success"
                     onclick="updatePaymentStatus({ payment.id }, 'confirmed')"
                   >
                     Paid
                   </button>
-                  <!-- <button
-                    class="btn btn-sm btn-danger"
-                    onclick="updateAppointmentStatus({{ appointment.id }}, 'cancelled')"
-                  >
-                    Cancel
-                  </button> -->
-                  {% elif payment.status == "completed" %}
+                  {% elif payment.payment_status == "failed" %}
                   <button
                     class="btn btn-sm btn-primary"
                     onclick="updatePaymentStatus({{ payment.id }}, 'completed')"
                   >
                     unpaid
                   </button>
-                  <!-- <button
-                    class="btn btn-sm btn-danger"
-                    onclick="updateAppointmentStatus({{ appointment.id }}, 'cancelled')"
-                  >
-                    Cancel
-                  </button> -->
-                  {% else %}
-                  <!-- <span class="text-muted">No actions available</span> -->
-                  {% endif %}
+                  {% endif %} {% endif %}
                 </div>
               </div>
               {% endfor %}

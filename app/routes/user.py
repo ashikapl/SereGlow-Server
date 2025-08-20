@@ -6,6 +6,7 @@ from app.services.user import user_signup_service, user_login_service
 from app.utils.user_validator import generate_token
 from app.utils.token_auth import user_token_required
 from app.stores.service import get_service_store
+from app.stores.appointment import find_user_byID
 
 user_bp = Blueprint("user_bp", __name__, template_folder="../../templates")
 
@@ -124,10 +125,7 @@ def show_user_dashboard():
     user_info = request.cookies.get("User_Info")
     print("res", user_info)
     if user_info:
-        user_name = json.loads(user_info)["firstname"]
-
-    else:
-        user_name = "Guest"
+        user_name = json.loads(user_info)["username"]
 
     result = get_service_store()
     services = result.data
@@ -139,4 +137,12 @@ def show_user_dashboard():
 @user_bp.route("/profile", methods=["GET"])
 @user_token_required
 def show_user_profile():
-    return render_template("user/userProfile.html")
+    user_info = request.cookies.get("User_Info")
+    if user_info:
+        user_name = json.loads(user_info)["username"]
+        user_id = json.loads(user_info)["id"]
+
+    user = find_user_byID(user_id).data
+    print("user", user[0])
+
+    return render_template("user/userProfile.html", user_name=user_name, user=user[0])

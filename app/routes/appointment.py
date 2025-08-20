@@ -3,7 +3,7 @@ from app.services.appointment import add_appointment_service, get_appointment_se
 from app.utils.supabase_client import supabase
 from app.utils.token_auth import admin_token_required
 from app.stores.service import get_service_store
-from app.stores.appointment import find_user_byID
+from app.stores.appointment import find_user_byID, get_appointment_byUserID
 from app.stores.service import get_service_byId
 
 appointment_bp = Blueprint("appointment_bp", __name__)
@@ -29,7 +29,7 @@ def get_appointment():
         return result
 
     appointments = result.data
-    print(appointments)
+
     # return jsonify(result.data), 200
     return render_template("admin/appointment.html", appointments=appointments)
 
@@ -56,37 +56,43 @@ def delete_appointment(service_id, id):
     return jsonify({"message": "Delete successful!"}), 200
 
 
-# @appointment_bp.route("/", methods=["GET"])
-# def show_appointment():
-#     result = supabase.table("Appointment").select("*").execute()
-
-#     if isinstance(result, tuple):
-#         return result
-
-#     # return jsonify(result.data), 200
-#     return render_template("admin/appointment.html")
-
 @appointment_bp.route('/', methods=['GET'])
 @admin_token_required
 def show_appointment():
     admin_info = request.cookies.get("Admin_Info")
     if admin_info:
         admin_name = json.loads(admin_info)["firstname"]
+    else:
+        admin_name = "Guest"
+    print("admin", admin_name)
 
     return render_template("admin/appointment.html", admin_name=admin_name)
 
 
 @appointment_bp.route("/booking", methods=["GET"])
 def show_bookAppointment():
+    service_id = request.args.get("service_id", type=int)
+    user_info = request.cookies.get("User_Info")
+    if user_info:
+        user_name = json.loads(user_info)["username"]
+
     result = get_service_store()
     services = result.data
 
-    return render_template("user/bookAppointment.html", services=services)
+    return render_template("user/bookAppointment.html", user_name=user_name, services=services, service_id=service_id)
 
 
-@appointment_bp.route("/appointment", methods=["GET"])
+@appointment_bp.route("/myappointment", methods=["GET"])
 def show_myAppointment():
-    return render_template("user/myAppointment.html")
+    user_info = request.cookies.get("User_Info")
+    if user_info:
+        user_name = json.loads(user_info)["username"]
+        user_id = json.loads(user_info)["id"]
+
+    result = get_appointment_byUserID(user_id)
+    appointments = result.data
+
+    return render_template("user/myAppointment.html", user_name=user_name, appointments=appointments)
 
 
 @appointment_bp.route("/userFind/<int:user_id>", methods=["GET"])
