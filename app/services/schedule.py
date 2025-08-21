@@ -2,9 +2,9 @@ from flask import jsonify
 from app.stores.schedule import add_schedule_store, get_schedule_store, update_schedule_store, delete_schedule_store
 
 
-def add_schedule_service(data, service_id):
+def add_schedule_service(data):
     try:
-        result = add_schedule_store(data, service_id)
+        result = add_schedule_store(data)
 
         if result:
             return result
@@ -22,6 +22,7 @@ def add_schedule_service(data, service_id):
 def get_schedule_service():
     try:
         result = get_schedule_store()
+        # print("sche", result)
 
         if result:
             return result
@@ -31,7 +32,7 @@ def get_schedule_service():
         return jsonify({"error": error_message}), 500
 
 
-def update_schedule_service(data, service_id, id):
+def update_schedule_service(data, id):
     try:
         result = update_schedule_store(data, id)
 
@@ -43,7 +44,7 @@ def update_schedule_service(data, service_id, id):
         return {"error": error_message}, 500
 
 
-def delete_schedule_service(service_id, id):
+def delete_schedule_service(id):
     try:
         result = delete_schedule_store(id)
 

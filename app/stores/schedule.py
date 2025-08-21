@@ -16,12 +16,13 @@ def add_schedule_store(data):
 
 
 def get_schedule_store():
-    result = supabase.table("Schedule").select(
+    Schedule_days = supabase.table("Schedule_days").select(
+        "*").execute()
+    Schedule_time_slot = supabase.table("Schedule_time_slot").select(
         "*").execute()
 
-    if result.data and len(result.data) > 0:
-        # print("result", result)
-        return result
+    if (Schedule_days.data and len(Schedule_days.data) > 0) and (Schedule_time_slot.data and len(Schedule_time_slot.data) > 0):
+        return [Schedule_days, Schedule_time_slot]
     else:
         return {"error": f"No schedule found!."}, 404
 

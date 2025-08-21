@@ -6,10 +6,10 @@ schedule_bp = Blueprint("schedule_bp", __name__)
 
 
 @schedule_bp.route("/", methods=["POST"])
-def add_schedule(service_id):
+def add_schedule():
     data = request.get_json()
 
-    result = add_schedule_service(data, service_id)
+    result = add_schedule_service(data)
 
     if isinstance(result, tuple):
         return result
@@ -27,10 +27,10 @@ def get_schedule():
     # return jsonify(result.data), 200
     admin_name = admin_info_cookie('firstname')
 
-    schedules = result.data
-    # print("sch", schedules)
+    Schedule_days = result[0].data
+    Schedule_time_slot = result[1].data
 
-    return render_template("admin/schedule.html", admin_name=admin_name, schedules=schedules)
+    return render_template("admin/schedule.html", admin_name=admin_name, schedule_days=Schedule_days, schedule_time_slot=Schedule_time_slot)
 
 
 @schedule_bp.route("/<int:id>", methods=["PUT"])

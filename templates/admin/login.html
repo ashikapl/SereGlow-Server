@@ -34,32 +34,37 @@
                 ></a>
               </div>
               <span>or use your account</span>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                value="{{ email }}"
-                ,
-                pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
-                ,
-                placeholder="Email"
-                ,
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                id="password"
-                value="{{ password }}"
-                ,
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                ,
-                title="At least 8 characters with uppercase, lowercase, number, and special character"
-                ,
-                placeholder="Password"
-                ,
-                required
-              />
+              <div class="form-group">
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  value="{{ email }}"
+                  ,
+                  pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
+                  ,
+                  placeholder="Email"
+                  ,
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  value="{{ password }}"
+                  ,
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                  ,
+                  title="At least 8 characters with uppercase, lowercase, number, and special character"
+                  ,
+                  placeholder="Password"
+                  ,
+                  required
+                />
+                <i class="fa fa-eye" id="togglePassword"></i>
+              </div>
               <a href="#">Forgot your password?</a>
               <button>Sign In</button>
             </form>
@@ -113,6 +118,19 @@
           notif.remove();
         }
       }, 4000);
+    </script>
+    <script>
+      const togglePassword = document.getElementById("togglePassword");
+      const passwordInput = document.getElementById("password");
+
+      togglePassword.addEventListener("click", function () {
+        const type = passwordInput.type === "password" ? "text" : "password";
+        passwordInput.type = type;
+
+        // Toggle eye / eye-slash icon
+        this.classList.toggle("fa-eye");
+        this.classList.toggle("fa-eye-slash");
+      });
     </script>
   </body>
 </html>

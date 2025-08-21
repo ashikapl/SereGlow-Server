@@ -906,9 +906,9 @@ a {
 }
 
 /* Schedule Form */
-.schedule-form {
+/* .schedule-form {
   max-width: 800px;
-}
+} */
 
 .schedule-grid {
   display: grid;
@@ -1353,12 +1353,24 @@ html {
   text-align: center;
 }
 
+.adminModel .form-group{
+  position: relative;
+}
+
 .adminModel input {
   background-color: #eee;
   border: none;
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
+}
+
+.adminModel .form-group i{
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 .adminModel textarea {
