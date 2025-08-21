@@ -1,0 +1,55 @@
+from flask import jsonify
+from app.stores.schedule import add_schedule_store, get_schedule_store, update_schedule_store, delete_schedule_store
+
+
+def add_schedule_service(data, service_id):
+    try:
+        result = add_schedule_store(data, service_id)
+
+        if result:
+            return result
+
+    except Exception as e:
+        error_message = str(e)
+
+        # Detect UNIQUE constraint violation (appointment already exists)
+        if 'duplicate key value violates unique constraint' in error_message and 'schedule_name_key' in error_message:
+            return {"error": "Schedule Already Added!"}, 409
+
+        return {"error": error_message}, 500
+
+
+def get_schedule_service():
+    try:
+        result = get_schedule_store()
+
+        if result:
+            return result
+
+    except Exception as e:
+        error_message = str(e)
+        return jsonify({"error": error_message}), 500
+
+
+def update_schedule_service(data, service_id, id):
+    try:
+        result = update_schedule_store(data, id)
+
+        if result:
+            return result
+
+    except Exception as e:
+        error_message = str(e)
+        return {"error": error_message}, 500
+
+
+def delete_schedule_service(service_id, id):
+    try:
+        result = delete_schedule_store(id)
+
+        if result:
+            return result
+
+    except Exception as e:
+        error_message = str(e)
+        return {"error": error_message}, 500

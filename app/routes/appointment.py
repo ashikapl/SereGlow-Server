@@ -5,6 +5,7 @@ from app.utils.token_auth import admin_token_required
 from app.stores.service import get_service_store
 from app.stores.appointment import find_user_byID, get_appointment_byUserID
 from app.stores.service import get_service_byId
+from app.utils.helpers import admin_info_cookie, user_info_cookie
 
 appointment_bp = Blueprint("appointment_bp", __name__)
 
@@ -28,10 +29,11 @@ def get_appointment():
     if isinstance(result, tuple):
         return result
 
+    admin_name = admin_info_cookie('firstname')
     appointments = result.data
 
     # return jsonify(result.data), 200
-    return render_template("admin/appointment.html", appointments=appointments)
+    return render_template("admin/appointment.html", admin_name=admin_name, appointments=appointments)
 
 
 @appointment_bp.route("/<int:service_id>/<int:id>", methods=["PUT"])
@@ -59,12 +61,7 @@ def delete_appointment(service_id, id):
 @appointment_bp.route('/', methods=['GET'])
 @admin_token_required
 def show_appointment():
-    admin_info = request.cookies.get("Admin_Info")
-    if admin_info:
-        admin_name = json.loads(admin_info)["firstname"]
-    else:
-        admin_name = "Guest"
-    print("admin", admin_name)
+    admin_name = admin_info_cookie('firstname')
 
     return render_template("admin/appointment.html", admin_name=admin_name)
 
@@ -72,9 +69,7 @@ def show_appointment():
 @appointment_bp.route("/booking", methods=["GET"])
 def show_bookAppointment():
     service_id = request.args.get("service_id", type=int)
-    user_info = request.cookies.get("User_Info")
-    if user_info:
-        user_name = json.loads(user_info)["username"]
+    user_name = user_info_cookie('username')
 
     result = get_service_store()
     services = result.data
@@ -84,10 +79,8 @@ def show_bookAppointment():
 
 @appointment_bp.route("/myappointment", methods=["GET"])
 def show_myAppointment():
-    user_info = request.cookies.get("User_Info")
-    if user_info:
-        user_name = json.loads(user_info)["username"]
-        user_id = json.loads(user_info)["id"]
+    user_name = user_info_cookie('username')
+    user_id = user_info_cookie('id')
 
     result = get_appointment_byUserID(user_id)
     appointments = result.data

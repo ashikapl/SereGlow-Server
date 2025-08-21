@@ -4,6 +4,7 @@ from app.services.service import add_service_services, get_service_services, upd
 from app.utils.token_auth import admin_token_required
 from app.routes.admin import admin
 from app.stores.service import get_service_byId
+from app.utils.helpers import admin_info_cookie
 
 service_bp = Blueprint("service_bp", __name__)
 
@@ -29,10 +30,8 @@ def add_service():
 # @admin_token_required
 def get_services():
     result = get_service_services()
-    
-    admin_info = request.cookies.get("Admin_Info")
-    if admin_info:
-        admin_name = json.loads(admin_info)["firstname"]
+
+    admin_name = admin_info_cookie('firstname')
 
     if not result:
         return jsonify({"Massage": "Empty"}), 204
@@ -69,7 +68,6 @@ def delete_service(service_id):
 
     # return jsonify({"message": "Delete Successfull!"}), 200
     return redirect(url_for("service_bp.get_services"))
-
 
 
 @service_bp.route('/add', methods=['GET'])

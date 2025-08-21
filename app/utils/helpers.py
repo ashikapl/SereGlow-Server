@@ -1,6 +1,7 @@
 import re
 import random
 from app.utils.supabase_client import supabase
+from flask import request, json
 
 existing_usernames = []
 
@@ -63,3 +64,19 @@ def admin_info(id):
     except Exception as e:
         print(f"Error getting count for table Admin: {e}")
         return -1  # Indicate an error
+
+
+def admin_info_cookie(variableName):
+    admin_info = request.cookies.get("Admin_Info")
+    if admin_info:
+        _admin = json.loads(admin_info)[variableName]
+
+    return _admin
+
+
+def user_info_cookie(variableName):
+    user_info = request.cookies.get("User_Info")
+    if user_info:
+        _user = json.loads(user_info)[variableName]
+
+    return _user

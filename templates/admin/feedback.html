@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="5" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Feedback</title>
     <link rel="stylesheet" href="../static/css/main.css" />
@@ -76,10 +75,56 @@
           <!-- Feedback Management -->
           <div id="adminFeedbackSection" class="dashboard-section">
             <h2>Customer Feedback</h2>
-            <div id="adminFeedbackList" class="feedback-list"></div>
+            <div id="adminFeedbackList" class="feedback-list">
+              {% for feedback in feedbacks %}
+              <div class="feedback-card">
+                <div class="feedback-header">
+                  <h4>
+                    <a
+                      class="user-auto-link"
+                      href="{{ url_for('payment_bp.find_user', user_id=feedback.user_id) }}"
+                      style="pointer-events: none; color: #666"
+                    >
+                      Loading...
+                    </a>
+                  </h4>
+                  <div class="rating">
+                    {{"★"*(feedback.rating)}}{{"☆"*( 5 - feedback.rating )}}
+                  </div>
+                </div>
+                <p class="feedback-text">{{feedback.comment}}</p>
+                <span class="feedback-date"
+                  >{% set date = feedback.created_at.split('T')[0].split('-') %}
+                  {{ date[2] }}-{{ date[1] }}-{{ date[0] }}
+                </span>
+              </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        // User data find and fill
+        document.querySelectorAll(".user-auto-link").forEach((link) => {
+          fetch(link.href)
+            .then((res) => res.json())
+            .then((userdata) => {
+              // Fill the <a> text with user first + last name
+              if (userdata[0]["firstname"] && userdata[0]["lastname"]) {
+                link.textContent =
+                  "Customer Name: " +
+                  userdata[0]["firstname"] +
+                  " " +
+                  userdata[0]["lastname"];
+              } else {
+                link.textContent = "Customer Name: " + "Unknown User";
+              }
+            });
+        });
+      });
+    </script>
   </body>
 </html>
