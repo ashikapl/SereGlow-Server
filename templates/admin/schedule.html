@@ -85,7 +85,7 @@
               </div>
 
               <div class="schedule-grid">
-                {% for schedule_day in schedule_days %}
+                {% for schedule_day in schedule_data %}
                 <div
                   class="schedule-day"
                   style="
@@ -101,44 +101,136 @@
                         <input
                           type="checkbox"
                           data-day="{{schedule_day.day_of_week.lower()}}"
+                          {%
+                          if
+                          schedule_day.is_open
+                          and
+                          schedule_day.slots|count
+                          %}checked{%
+                          endif
+                          %}
                         />
                         <span class="slider"></span>
                       </label>
                       <span class="day-name">{{schedule_day.day_of_week}}</span>
                     </div>
+
                     <div
                       class="unavailable"
-                      style="display: block"
+                      {%
+                      if
+                      schedule_day.slots|count
+                      %}
+                      style="display: none"
+                      {%
+                      else
+                      %}
+                      stye="display:block;"
+                      {%
+                      endif
+                      %}
                       data-day="{{schedule_day.day_of_week.lower()}}"
                     >
                       Not available
                     </div>
-                    <span class="day-info" style="display: none">1 slot</span>
+
+                    <span
+                      class="day-info"
+                      {%
+                      if
+                      schedule_day.slots|count
+                      %}
+                      style="display: inline"
+                      {%
+                      else
+                      %}
+                      stye="display:none;"
+                      {%
+                      endif
+                      %}
+                    >
+                      {{ schedule_day.slots|length }} slot{{ 's' if
+                      schedule_day.slots|length > 1 }}
+                    </span>
                   </div>
+
                   <div
                     class="time-slots-container"
-                    style="display: none"
+                    {%
+                    if
+                    schedule_day.slots|count
+                    %}
+                    style="display: flex"
+                    {%
+                    else
+                    %}
+                    stye="display:none;"
+                    {%
+                    endif
+                    %}
                     data-day="{{schedule_day.day_of_week.lower()}}"
                   >
+                    {% if schedule_day.slots %} {% for slot in
+                    schedule_day.slots %}
                     <div class="time-slot" style="margin-bottom: 25px">
                       <input
                         type="time"
-                        id="{{schedule_day.day_of_week.lower()}}Start"
+                        id="{{schedule_day.day_of_week.lower()}}Start{{loop.index}}"
                         class="time-input"
                         name="start_time"
-                        value="10:00"
+                        value="{{ slot.start_time[:5] }}"
                       />
                       <span class="time-separator">to</span>
                       <input
                         type="time"
-                        id="{{schedule_day.day_of_week.lower()}}End"
+                        id="{{schedule_day.day_of_week.lower()}}End{{loop.index}}"
+                        class="time-input"
+                        name="end_time"
+                        value="{{ slot.end_time[:5] }}"
+                      />
+
+                      {% if not loop.first %}
+                      <button type="button" class="delete-btn">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                      {% endif %}
+                    </div>
+                    {% endfor %} {% else %}
+                    <div class="time-slot" style="margin-bottom: 25px">
+                      <input
+                        type="time"
+                        id="{{schedule_day.day_of_week.lower()}}Start{{loop.index}}"
+                        class="time-input"
+                        name="start_time"
+                        value="00:00"
+                      />
+                      <span class="time-separator">to</span>
+                      <input
+                        type="time"
+                        id="{{schedule_day.day_of_week.lower()}}End{{loop.index}}"
                         class="time-input"
                         name="end_time"
                         value="12:00"
                       />
                     </div>
+                    {% endif %}
                   </div>
-                  <div class="btn-container" style="display: none">
+
+                  <div
+                    class="btn-container"
+                    {%
+                    if
+                    schedule_day.slots|count
+                    %}
+                    style="display: flex"
+                    {%
+                    else
+                    %}
+                    stye="display:none;"
+                    {%
+                    endif
+                    %}
+                  >
                     <button
                       type="button"
                       class="btn add-slot-btn"
@@ -149,6 +241,7 @@
                   </div>
                 </div>
                 {% endfor %}
+
                 <!-- <div
                   class="schedule-day"
                   style="
@@ -554,7 +647,8 @@
                         name="start_time"
                         value=""
                       />
-                      <button class="delete-btn">
+                      
+                      <button type="button" class="delete-btn">
                         <i class="fa fa-trash"></i>
                       </button>
                 `;
@@ -641,8 +735,9 @@
                                   name="start_time"
                                   value=""
                                 />
-                                <button class="delete-btn">
-                                  <i class="fa fa-trash-o"></i>
+                                
+                                <button type="button" class="delete-btn">
+                                  <i class="fa fa-trash"></i>
                                 </button>
                             `;
 

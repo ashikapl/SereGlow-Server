@@ -161,12 +161,13 @@ input:checked + .slider:before {
 }
 
 .day-info {
+  display: none;
   color: #667eea;
   font-size: 14px;
 }
 
 .time-slots-container {
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   width: 760px;
@@ -203,7 +204,7 @@ input:checked + .slider:before {
 }
 
 .btn-container{
-  display: flex;
+  display: none;
   flex-direction: row;
   align-items: center;
   justify-content: center;

@@ -17,6 +17,22 @@ def add_schedule():
     return jsonify(result.data), 201
 
 
+# @schedule_bp.route("/", methods=["GET"])
+# def get_schedule():
+#     result = get_schedule_service()
+
+#     if isinstance(result, tuple):
+#         return result
+
+#     # return jsonify(result.data), 200
+#     admin_name = admin_info_cookie('firstname')
+
+#     Schedule_days = result[0].data
+#     Schedule_time_slot = result[1].data
+
+#     return render_template("admin/schedule.html", admin_name=admin_name, schedule_days=Schedule_days, schedule_time_slot=Schedule_time_slot)
+
+
 @schedule_bp.route("/", methods=["GET"])
 def get_schedule():
     result = get_schedule_service()
@@ -24,13 +40,32 @@ def get_schedule():
     if isinstance(result, tuple):
         return result
 
-    # return jsonify(result.data), 200
     admin_name = admin_info_cookie('firstname')
 
-    Schedule_days = result[0].data
+    Schedule_days = result[0].data  # list of dicts: id, day_of_week, is_open
+    # list of dicts: id, schedule_day_id, start_time, end_time
     Schedule_time_slot = result[1].data
 
-    return render_template("admin/schedule.html", admin_name=admin_name, schedule_days=Schedule_days, schedule_time_slot=Schedule_time_slot)
+    # Build dictionary: day -> slots
+    schedule_data = []
+    for day in Schedule_days:
+        day_slots = [
+            slot for slot in Schedule_time_slot if slot["schedule_day_id"] == day["id"]]
+        schedule_data.append({
+            "id": day["id"],
+            "day_of_week": day["day_of_week"],
+            "is_open": day["is_open"],
+            "slots": day_slots
+        })
+
+    # print("sche", schedule_data)
+
+    return render_template(
+        "admin/schedule.html",
+        admin_name=admin_name,
+        schedule_data=schedule_data,
+        schedule_days=Schedule_days, schedule_time_slot=Schedule_time_slot
+    )
 
 
 @schedule_bp.route("/<int:id>", methods=["PUT"])
