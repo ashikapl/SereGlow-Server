@@ -6,6 +6,7 @@ from app.services.admin import admin_signup_service, admin_login_service
 from app.utils.user_validator import generate_token
 from app.utils.token_auth import admin_token_required
 from app.utils.helpers import total_count, average_rating, admin_info_cookie
+from app.stores.admin import find_admin_byID
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
@@ -59,11 +60,7 @@ def admin_login():
     admin_info = data_dict.get('admin', {})
     # Convert list to JSON string
     admin_info_str = json.dumps(admin_info)
-    # print("ad", admin)
-
-    # appointment = total_count("Appointment")
-    # service = total_count("Service")
-    # user = total_count("User")
+    print("Admin info cookie:", admin_info)
 
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
@@ -158,5 +155,9 @@ def show_admin_dashboard():
 @admin_bp.route("/profile", methods=["GET"])
 @admin_token_required
 def show_admin_profile():
-    admin_name = admin_info_cookie("firstname")
-    return render_template("admin/adminProfile.html", admin_name=admin_name)
+    admin_name = admin_info_cookie('firstname')
+    admin_id = admin_info_cookie('id')
+
+    admin = find_admin_byID(admin_id).data
+
+    return render_template("admin/adminProfile.html", admin_name=admin_name, admin=admin[0])

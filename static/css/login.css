@@ -9,7 +9,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -30,7 +31,8 @@ body {
 
 .card {
   background: var(--card);
-  border: 2px solid #fda5d1; /* Pink border */
+  border: 2px solid #fda5d1;
+  /* Pink border */
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
   padding: 28px;
@@ -46,7 +48,8 @@ body {
   display: flex;
   flex-direction: column;
   margin-bottom: 12px;
-  position: relative; /* for eye icon positioning */
+  position: relative;
+  /* for eye icon positioning */
 }
 
 .field label {
@@ -56,29 +59,32 @@ body {
 }
 
 .field input {
-  padding: 10px 40px 10px 12px; /* space for eye icon */
+  padding: 10px 40px 10px 12px;
+  /* space for eye icon */
   border: 1px solid #e6e9ee;
   border-radius: 8px;
   font-size: 15px;
 }
 
-.field input:focus, 
-.field textarea:focus{
-  outline:none;
-  border-color:var(--accent);
-  box-shadow:0 0 0 4px rgba(79,70,229,0.06);
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.06);
 }
 
 .password-field input {
   /* Keep right padding for eye icon */
-  padding-right: 40px; /* same as .field input */
+  padding-right: 40px;
+  /* same as .field input */
 }
 
 /* Eye icon styling */
 .password-field i {
   position: absolute;
   right: 12px;
-  top: 65%; /* center vertically */
+  top: 65%;
+  /* center vertically */
   transform: translateY(-50%);
   cursor: pointer;
   color: var(--muted);
@@ -127,6 +133,7 @@ body {
   .form .row {
     flex-direction: column;
   }
+
   .page {
     padding: 8px;
   }

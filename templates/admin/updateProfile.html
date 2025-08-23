@@ -2,8 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="5" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Feedback</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../static/css/main.css" />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -57,14 +58,14 @@
               >
             </li>
             <li>
-              <a
-                href="{{ url_for('feedback_bp.show_feedback') }}"
-                class="active"
+              <a href="{{ url_for('feedback_bp.show_feedback') }}"
                 ><i class="fas fa-comments"></i> Feedback</a
               >
             </li>
             <li>
-              <a href="{{ url_for('admin_bp.show_admin_profile') }}"
+              <a
+                href="{{ url_for('admin_bp.show_admin_profile') }}"
+                class="active"
                 ><i class="fas fa-user"></i> Profile</a
               >
             </li>
@@ -72,59 +73,37 @@
         </div>
 
         <div class="dashboard-main">
-          <!-- Feedback Management -->
-          <div id="adminFeedbackSection" class="dashboard-section">
-            <h2>Customer Feedback</h2>
-            <div id="adminFeedbackList" class="feedback-list">
-              {% for feedback in feedbacks %}
-              <div class="feedback-card">
-                <div class="feedback-header">
-                  <h4>
-                    <a
-                      class="user-auto-link"
-                      href="{{ url_for('payment_bp.find_user', user_id=feedback.user_id) }}"
-                      style="pointer-events: none; color: #666"
-                    >
-                      Loading...
-                    </a>
-                  </h4>
-                  <div class="rating">
-                    {{"★"*(feedback.rating)}}{{"☆"*( 5 - feedback.rating )}}
-                  </div>
-                </div>
-                <p class="feedback-text">{{feedback.comment}}</p>
-                <span class="feedback-date"
-                  >{% set date = feedback.created_at.split('T')[0].split('-') %}
-                  {{ date[2] }}-{{ date[1] }}-{{ date[0] }}
-                </span>
+          <!-- Admin Profile Section -->
+          <div id="adminProfileSection" class="dashboard-section">
+            <h2>Admin Profile</h2>
+            <form id="adminProfileForm" class="form-grid">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="adminFirstName" required />
               </div>
-              {% endfor %}
-            </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="adminLastName" required />
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="adminEmail" required />
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" id="adminPhone" required />
+              </div>
+              <div class="form-group full-width">
+                <label>Salon Address</label>
+                <textarea id="adminAddress" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Update Profile
+              </button>
+            </form>
           </div>
         </div>
       </div>
     </div>
-
-    <script>
-      window.addEventListener("DOMContentLoaded", function () {
-        // User data find and fill
-        document.querySelectorAll(".user-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((userdata) => {
-              // Fill the <a> text with user first + last name
-              if (userdata[0]["firstname"] && userdata[0]["lastname"]) {
-                link.textContent =
-                  "Customer Name: " +
-                  userdata[0]["firstname"] +
-                  " " +
-                  userdata[0]["lastname"];
-              } else {
-                link.textContent = "Customer Name: " + "Unknown User";
-              }
-            });
-        });
-      });
-    </script>
   </body>
 </html>

@@ -60,9 +60,12 @@ def average_rating(table_name):
 def admin_info_cookie(variableName):
     admin_info = request.cookies.get("Admin_Info")
     if admin_info:
-        _admin = json.loads(admin_info)[variableName]
-
-    return _admin
+        try:
+            data = json.loads(admin_info)
+            return data.get(variableName)   # use .get() for safety
+        except (json.JSONDecodeError, KeyError):
+            return None
+    return None
 
 
 def user_info_cookie(variableName):

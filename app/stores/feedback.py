@@ -44,3 +44,13 @@ def delete_feedback_store(service_id, feedback_id):
         return result
     else:
         return {"error": f"Feedback with id {feedback_id} and service_id {service_id} not found or not delete."}, 404
+
+
+def get_all_feedback_store():
+    result = supabase.table("Feedback").select(
+        "*").execute()
+
+    if result.data and len(result.data) > 0:
+        return result
+    else:
+        return {"error": f"No feedback found."}, 404
