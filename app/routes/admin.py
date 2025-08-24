@@ -12,9 +12,8 @@ admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
 admin = None
 
+
 # ---------- SIGNUP (POST) ----------
-
-
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
     if request.is_json:
@@ -62,10 +61,6 @@ def admin_login():
     admin_info_str = json.dumps(admin_info)
     # print("ad", admin)
 
-    # appointment = total_count("Appointment")
-    # service = total_count("Service")
-    # user = total_count("User")
-
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
         "AdminToken",
@@ -83,13 +78,6 @@ def admin_login():
     )
     return resp
 
-
-# ---------- LOGOUT ----------
-# @admin_bp.route("/logout", methods=["GET"])
-# def admin_logout():
-#     resp = make_response(render_template("main.html"))
-#     resp.delete_cookie("authToken", samesite="Strict")
-#     return resp
 
 # ---------- LOGOUT ----------
 @admin_bp.route("/logout")
@@ -140,19 +128,12 @@ def show_admin_dashboard():
     rating = average_rating("Feedback")
     admin_name = admin_info_cookie('firstname')
 
-    return render_template(
-        "admin/dashboard.html",
-        total_appointment=appointment,
-        total_services=service,
-        total_users=user,
-        avg_rating=rating,
-        admin_name=admin_name
-    )
-
-# @admin_bp.route("/", methods=["GET"])
-# @admin_token_required
-# def show_admin_services():
-#     return render_template("admin/service.html")
+    return render_template("admin/dashboard.html",
+                           total_appointment=appointment,
+                           total_services=service,
+                           total_users=user,
+                           avg_rating=rating,
+                           admin_name=admin_name)
 
 
 # ---------- PROFILE ----------

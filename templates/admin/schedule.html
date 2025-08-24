@@ -5,80 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Schedule</title>
     <link rel="stylesheet" href="../../static/css/main.css" />
+    <link rel="stylesheet" href="../../static/css/schedule.css" />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../../static/css/schedule.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
   </head>
   <body>
     <!-- Admin Dashboard (Hidden by default) -->
     <div id="adminDashboard" class="dashboard-container">
-      <nav class="dashboard-nav">
-        <div class="nav-brand">
-          <i class="fas fa-cog"></i>
-          <span>Admin Dashboard</span>
-        </div>
-        <div class="nav-actions">
-          <span id="adminWelcome">Welcome, {{admin_name}}!</span>
-          <form
-            action="{{ url_for('admin_bp.admin_logout') }}"
-            method="get"
-            style="display: inline"
-          >
-            <button type="submit" class="btn btn-outline">Logout</button>
-          </form>
-        </div>
-      </nav>
-
       <div class="dashboard-content">
-        <div class="dashboard-sidebar">
-          <ul class="sidebar-menu">
-            <li>
-              <a href="/admin/"><i class="fas fa-chart-bar"></i> Overview</a>
-            </li>
-            <li>
-              <a href="{{ url_for('service_bp.get_services') }}">
-                <i class="fas fa-list"></i> Manage Services
+        <nav id="sidebar" class="active">
+          <div class="custom-menu">
+            <button type="button" id="sidebarCollapse" class="toggleBtn">
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+          </div>
+          <div class="p-3">
+            <h2>
+              <a href="/admin" class="logo"
+                >Admin Dashboard <span>Welcome, {{admin_name}}!</span>
               </a>
-            </li>
-            <li>
-              <a href="{{ url_for('appointment_bp.show_appointment') }}"
-                ><i class="fas fa-calendar"></i> Appointments</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('payment_bp.show_payment') }}"
-                ><i class="fas fa-wallet"></i> Payments</a
-              >
-            </li>
-            <li>
-              <a
-                href="{{ url_for('schedule_bp.show_schedule') }}"
-                class="active"
-                ><i class="fas fa-clock"></i> Shop Schedule</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('feedback_bp.show_feedback') }}"
-                ><i class="fas fa-comments"></i> Feedback</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('admin_bp.show_admin_profile') }}"
-                ><i class="fas fa-user"></i> Profile</a
-              >
-            </li>
-          </ul>
-        </div>
+            </h2>
+            <ul class="list-unstyled components mb-5">
+              <li>
+                <a href="/admin/"
+                  ><i class="fas fa-chart-bar mr-3"></i> Overview</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('service_bp.get_services') }}">
+                  <i class="fas fa-list mr-3"></i> Manage Services
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('appointment_bp.show_appointment') }}"
+                  ><i class="fas fa-calendar mr-3"></i> Appointments</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('payment_bp.show_payment') }}"
+                  ><i class="fas fa-wallet mr-3"></i> Payments</a
+                >
+              </li>
+              <li class="active">
+                <a href="{{ url_for('schedule_bp.show_schedule') }}"
+                  ><i class="fas fa-clock mr-3"></i> Shop Schedule</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('feedback_bp.show_feedback') }}"
+                  ><i class="fas fa-comments mr-3"></i> Feedback</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('admin_bp.show_admin_profile') }}"
+                  ><i class="fas fa-user mr-3"></i> Profile</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('admin_bp.admin_logout') }}"
+                  ><i class="fas fa-sign-out mr-3"></i> Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
 
         <div class="dashboard-main">
           <!-- Schedule Management -->
           <div id="adminScheduleSection" class="dashboard-section">
             <form id="scheduleForm" class="schedule-form">
               <div class="content-header">
-                <h2 style="margin-bottom: 0">Shop Schedule</h2>
-
+                <h2>Shop Schedule</h2>
                 <div class="header-buttons">
                   <button type="submit" class="btn btn-primary">Save</button>
                 </div>
@@ -88,12 +102,7 @@
                 {% for schedule_day in schedule_data %}
                 <div
                   class="schedule-day"
-                  style="
-                    display: flex;
-                    grid-template-columns: none;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                  "
+                  data-day="{{schedule_day.day_of_week.lower()}}"
                 >
                   <div class="day-header">
                     <div class="day-toggle">
@@ -104,8 +113,6 @@
                           {%
                           if
                           schedule_day.is_open
-                          and
-                          schedule_day.slots|count
                           %}checked{%
                           endif
                           %}
@@ -114,18 +121,17 @@
                       </label>
                       <span class="day-name">{{schedule_day.day_of_week}}</span>
                     </div>
-
                     <div
                       class="unavailable"
                       {%
                       if
-                      schedule_day.slots|count
+                      schedule_day.is_open
                       %}
                       style="display: none"
                       {%
                       else
                       %}
-                      stye="display:block;"
+                      style="display: block"
                       {%
                       endif
                       %}
@@ -133,38 +139,33 @@
                     >
                       Not available
                     </div>
-
                     <span
                       class="day-info"
                       {%
                       if
-                      schedule_day.slots|count
+                      schedule_day.is_open
                       %}
                       style="display: inline"
                       {%
                       else
                       %}
-                      stye="display:none;"
+                      style="display: none"
                       {%
                       endif
                       %}
-                    >
-                      {{ schedule_day.slots|length }} slot{{ 's' if
-                      schedule_day.slots|length > 1 }}
-                    </span>
+                    ></span>
                   </div>
-
                   <div
                     class="time-slots-container"
                     {%
                     if
-                    schedule_day.slots|count
+                    schedule_day.is_open
                     %}
                     style="display: flex"
                     {%
                     else
                     %}
-                    stye="display:none;"
+                    style="display: none"
                     {%
                     endif
                     %}
@@ -176,7 +177,7 @@
                       <input
                         type="time"
                         id="{{schedule_day.day_of_week.lower()}}Start{{loop.index}}"
-                        class="time-input"
+                        class="time-input start-time"
                         name="start_time"
                         value="{{ slot.start_time[:5] }}"
                       />
@@ -184,7 +185,7 @@
                       <input
                         type="time"
                         id="{{schedule_day.day_of_week.lower()}}End{{loop.index}}"
-                        class="time-input"
+                        class="time-input end-time"
                         name="end_time"
                         value="{{ slot.end_time[:5] }}"
                       />
@@ -215,363 +216,28 @@
                     </div>
                     {% endif %}
                   </div>
-
                   <div
                     class="btn-container"
+                    data-day="{{schedule_day.day_of_week.lower()}}"
                     {%
                     if
-                    schedule_day.slots|count
+                    schedule_day.is_open
                     %}
-                    style="display: flex"
+                    style="display: block"
                     {%
                     else
                     %}
-                    stye="display:none;"
+                    style="display: none"
                     {%
                     endif
                     %}
                   >
-                    <button
-                      type="button"
-                      class="btn add-slot-btn"
-                      data-day="{{schedule_day.day_of_week.lower()}}"
-                    >
-                      + Add
+                    <button type="button" class="btn add-slot-btn">
+                      + Add Slot
                     </button>
                   </div>
                 </div>
                 {% endfor %}
-
-                <!-- <div
-                  class="schedule-day"
-                  style="
-                    display: flex;
-                    grid-template-columns: none;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                  "
-                >
-                  <div class="day-header">
-                    <div class="day-toggle">
-                      <label class="toggle-switch">
-                        <input type="checkbox" data-day="tuesday" />
-                        <span class="slider"></span>
-                      </label>
-                      <span class="day-name">Tuesday</span>
-                    </div>
-                    <span class="day-info">1 slot</span>
-                  </div>
-                  <div
-                    class="unavailable"
-                    style="display: none"
-                    data-day="tuesday"
-                  >
-                    Not available
-                  </div>
-                  <div class="time-slots-container" data-day="tuesday">
-                    <div class="time-slot" style="margin-bottom: 25px">
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="10:00"
-                      />
-                      <span class="time-separator">to</span>
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="12:00"
-                      />
-                    </div>
-                  </div>
-                  <div class="btn-container">
-                    <button
-                      type="button"
-                      class="btn add-slot-btn"
-                      data-day="tuesday"
-                    >
-                      + Add
-                    </button>
-                  </div>
-                </div> -->
-                <!-- <div
-                  class="schedule-day"
-                  style="
-                    display: flex;
-                    grid-template-columns: none;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                  "
-                >
-                  <div class="day-header">
-                    <div class="day-toggle">
-                      <label class="toggle-switch">
-                        <input type="checkbox" data-day="wednesday" />
-                        <span class="slider"></span>
-                      </label>
-                      <span class="day-name">Wednesday</span>
-                    </div>
-                    <span class="day-info">1 slot</span>
-                  </div>
-                  <div
-                    class="unavailable"
-                    style="display: none"
-                    data-day="wednesday"
-                  >
-                    Not available
-                  </div>
-                  <div class="time-slots-container" data-day="wednesday">
-                    <div class="time-slot" style="margin-bottom: 25px">
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="10:00"
-                      />
-                      <span class="time-separator">to</span>
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="12:00"
-                      />
-                    </div>
-                  </div>
-                  <div class="btn-container">
-                    <button
-                      type="button"
-                      class="btn add-slot-btn"
-                      data-day="wednesday"
-                    >
-                      + Add
-                    </button>
-                  </div>
-                </div> -->
-                <!-- <div
-                  class="schedule-day"
-                  style="
-                    display: flex;
-                    grid-template-columns: none;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                  "
-                >
-                  <div class="day-header">
-                    <div class="day-toggle">
-                      <label class="toggle-switch">
-                        <input type="checkbox" data-day="thursday" />
-                        <span class="slider"></span>
-                      </label>
-                      <span class="day-name">Thursday</span>
-                    </div>
-                    <span class="day-info">1 slot</span>
-                  </div>
-                  <div
-                    class="unavailable"
-                    style="display: none"
-                    data-day="thursday"
-                  >
-                    Not available
-                  </div>
-                  <div class="time-slots-container" data-day="thursday">
-                    <div class="time-slot" style="margin-bottom: 25px">
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="10:00"
-                      />
-                      <span class="time-separator">to</span>
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="12:00"
-                      />
-                    </div>
-                  </div>
-                  <div class="btn-container">
-                    <button
-                      type="button"
-                      class="btn add-slot-btn"
-                      data-day="thursday"
-                    >
-                      + Add
-                    </button>
-                  </div>
-                </div> -->
-                <!-- <div
-                  class="schedule-day"
-                  style="
-                    display: flex;
-                    grid-template-columns: none;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                  "
-                >
-                  <div class="day-header">
-                    <div class="day-toggle">
-                      <label class="toggle-switch">
-                        <input type="checkbox" data-day="friday" />
-                        <span class="slider"></span>
-                      </label>
-                      <span class="day-name">Friday</span>
-                    </div>
-                    <span class="day-info">1 slot</span>
-                  </div>
-                  <div
-                    class="unavailable"
-                    style="display: none"
-                    data-day="friday"
-                  >
-                    Not available
-                  </div>
-                  <div class="time-slots-container" data-day="friday">
-                    <div class="time-slot" style="margin-bottom: 25px">
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="10:00"
-                      />
-                      <span class="time-separator">to</span>
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="12:00"
-                      />
-                    </div>
-                  </div>
-                  <div class="btn-container">
-                    <button
-                      type="button"
-                      class="btn add-slot-btn"
-                      data-day="friday"
-                    >
-                      + Add
-                    </button>
-                  </div>
-                </div> -->
-                <!-- <div
-                  class="schedule-day"
-                  style="
-                    display: flex;
-                    grid-template-columns: none;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                  "
-                >
-                  <div class="day-header">
-                    <div class="day-toggle">
-                      <label class="toggle-switch">
-                        <input type="checkbox" data-day="saturday" />
-                        <span class="slider"></span>
-                      </label>
-                      <span class="day-name">Saturday</span>
-                    </div>
-                    <span class="day-info">1 slot</span>
-                  </div>
-                  <div
-                    class="unavailable"
-                    style="display: none"
-                    data-day="saturday"
-                  >
-                    Not available
-                  </div>
-                  <div class="time-slots-container" data-day="saturday">
-                    <div class="time-slot" style="margin-bottom: 25px">
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="10:00"
-                      />
-                      <span class="time-separator">to</span>
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="12:00"
-                      />
-                    </div>
-                  </div>
-                  <div class="btn-container">
-                    <button
-                      type="button"
-                      class="btn add-slot-btn"
-                      data-day="saturday"
-                    >
-                      + Add
-                    </button>
-                  </div>
-                </div> -->
-                <!-- <div
-                  class="schedule-day"
-                  style="
-                    display: flex;
-                    grid-template-columns: none;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                  "
-                >
-                  <div class="day-header">
-                    <div class="day-toggle">
-                      <label class="toggle-switch">
-                        <input type="checkbox" data-day="sunday" />
-                        <span class="slider"></span>
-                      </label>
-                      <span class="day-name">Sunday</span>
-                    </div>
-                    <span class="day-info">1 slot</span>
-                  </div>
-                  <div
-                    class="unavailable"
-                    style="display: none"
-                    data-day="sunday"
-                  >
-                    Not available
-                  </div>
-                  <div class="time-slots-container" data-day="sunday">
-                    <div class="time-slot" style="margin-bottom: 25px">
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="10:00"
-                      />
-                      <span class="time-separator">to</span>
-                      <input
-                        type="time"
-                        id="mondayStart"
-                        class="time-input"
-                        name="start_time"
-                        value="12:00"
-                      />
-                    </div>
-                  </div>
-                  <div class="btn-container">
-                    <button
-                      type="button"
-                      class="btn add-slot-btn"
-                      data-day="sunday"
-                    >
-                      + Add
-                    </button>
-                  </div>
-                </div> -->
               </div>
             </form>
           </div>
@@ -580,201 +246,280 @@
     </div>
 
     <script>
-      function updateSlotCount(day) {
-        const scheduleDay = document
-          .querySelector(`[data-day="${day}"]`)
-          .closest(".schedule-day");
-        const slots = scheduleDay.querySelectorAll(".time-slot");
-        const dayInfo = scheduleDay.querySelector(".day-info");
-
-        if (slots.length > 0) {
-          dayInfo.textContent = `${slots.length} slot${
-            slots.length > 1 ? "s" : ""
-          }`;
-          // dayInfo.style.display = "inline";
-        } else {
-          dayInfo.style.display = "none";
+      class ScheduleManager {
+        constructor() {
+          this.initializeEventListeners();
+          this.updateAllSlotCounts();
         }
-      }
 
-      // Toggle switch functionality
-      document.querySelectorAll(".toggle-switch input").forEach((toggle) => {
-        toggle.addEventListener("change", function () {
-          const day = this.dataset.day;
-          const scheduleDay = this.closest(".schedule-day");
-          const timeSlots = scheduleDay.querySelector(".time-slots-container");
-          const unavailable = scheduleDay.querySelector(".unavailable");
-          const addBtn = scheduleDay.querySelector(".add-slot-btn");
-          const btnContainer = scheduleDay.querySelector(".btn-container");
-          const dayInfo = scheduleDay.querySelector(".day-info");
-
-          if (this.checked) {
-            if (unavailable) unavailable.style.display = "none";
-            if (btnContainer) btnContainer.style.display = "flex";
-            if (timeSlots) timeSlots.style.display = "flex";
-            if (dayInfo) dayInfo.style.display = "inline";
-
-            updateSlotCount(day);
-          } else {
-            if (timeSlots) timeSlots.style.display = "none";
-            if (unavailable) unavailable.style.display = "block";
-            if (btnContainer) btnContainer.style.display = "none";
-            if (dayInfo) dayInfo.style.display = "none";
-          }
-        });
-      });
-
-      // Add slot functionality
-      document.querySelectorAll(".add-slot-btn").forEach((btn) => {
-        btn.addEventListener("click", function () {
-          const day = this.dataset.day;
-          const scheduleDay = this.closest(".schedule-day");
-          let timeSlots = scheduleDay.querySelector(".time-slots-container");
-
-          const newSlot = document.createElement("div");
-          newSlot.className = "time-slot";
-          newSlot.innerHTML = `
-                    <input
-                        type="time"
-                        class="time-input"
-                        name="start_time"
-                        value=""
-                      />
-                      <span class="time-separator">to</span>
-                      <input
-                        type="time"
-                        class="time-input"
-                        name="start_time"
-                        value=""
-                      />
-                      
-                      <button type="button" class="delete-btn">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                `;
-
-          timeSlots.appendChild(newSlot);
-
-          // Add delete functionality to new slot
-          newSlot
-            .querySelector(".delete-btn")
-            .addEventListener("click", function () {
-              newSlot.remove();
-              updateSlotCount(day);
-            });
-
-          updateSlotCount(day);
-        });
-      });
-
-      // Delete slot functionality
-      document.querySelectorAll(".delete-btn").forEach((btn) => {
-        btn.addEventListener("click", function () {
-          const slot = this.closest(".time-slot");
-          const day = slot.closest(".time-slots-container").dataset.day;
-          slot.remove();
-          updateSlotCount(day);
-        });
-      });
-
-      // Apply to all functionality
-      document.querySelectorAll(".apply-all-btn").forEach((btn) => {
-        btn.addEventListener("click", function () {
-          const sourceDay = this.closest(".schedule-day");
-          const sourceToggle = sourceDay.querySelector(".toggle-switch input");
-          const sourceSlots = sourceDay.querySelectorAll(".time-slot");
-          const isSourceEnabled = sourceToggle.checked;
-
-          // Get the time values from source day if it has slots
-          const timeData = Array.from(sourceSlots).map((slot) => {
-            const startTime = slot.querySelector(".time-input").value;
-            const endTime = slot.querySelector(
-              ".time-input:last-of-type"
-            ).value;
-            return { startTime, endTime };
-          });
-
-          // Apply to all other days
+        initializeEventListeners() {
+          // Toggle switches
           document
             .querySelectorAll(".toggle-switch input")
             .forEach((toggle) => {
-              if (toggle.closest(".schedule-day") === sourceDay) return;
+              toggle.addEventListener("change", (e) =>
+                this.handleToggleChange(e)
+              );
+            });
 
-              const day = toggle.dataset.day;
-              const targetRow = toggle.closest(".schedule-day");
-              let timeSlots = targetRow.querySelector(".time-slots-container");
-              const unavailable = targetRow.querySelector(".unavailable");
-              const addBtn = targetRow.querySelector(".add-slot-btn");
-              const dayInfo = targetRow.querySelector(".day-info");
+          // Add slot buttons
+          document.querySelectorAll(".add-slot-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => this.addTimeSlot(e));
+          });
 
-              // Set the same checkbox state
-              toggle.checked = isSourceEnabled;
+          // Delete buttons for existing slots
+          document.querySelectorAll(".delete-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => this.deleteTimeSlot(e));
+          });
 
-              if (isSourceEnabled) {
-                // Enable the day and show add button
-                if (unavailable) unavailable.style.display = "none";
-                if (btnContainer) btnContainer.style.display = "flex";
-                // if (timeSlots) timeSlots.style.display = "flex";
-                // if (dayInfo) dayInfo.style.display = "inline";
+          // Form submission
+          document
+            .getElementById("scheduleForm")
+            .addEventListener("submit", (e) => this.handleFormSubmit(e));
 
-                // Add slots with same times if source has slots
-                timeData.forEach(({ startTime, endTime }) => {
-                  const newSlot = document.createElement("div");
-                  newSlot.className = "time-slot";
-                  newSlot.innerHTML = `
-                                <input
-                                  type="time"
-                                  class="time-input"
-                                  name="start_time"
-                                  value=""
-                                />
-                                <span class="time-separator">to</span>
-                                <input
-                                  type="time"
-                                  class="time-input"
-                                  name="start_time"
-                                  value=""
-                                />
-                                
-                                <button type="button" class="delete-btn">
-                                  <i class="fa fa-trash"></i>
-                                </button>
-                            `;
+          // Real-time form data preview
+          document.addEventListener("change", () => this.updateFormPreview());
+        }
 
-                  // Set the selected times
-                  newSlot.querySelector(".time-input").value = startTime;
-                  newSlot.querySelector(".time-input:last-of-type").value =
-                    endTime;
+        handleToggleChange(event) {
+          const day = event.target.dataset.day;
+          const scheduleDay = event.target.closest(".schedule-day");
+          const isChecked = event.target.checked;
 
-                  timeSlots.appendChild(newSlot);
+          const timeSlots = scheduleDay.querySelector(".time-slots-container");
+          const unavailable = scheduleDay.querySelector(".unavailable");
+          const btnContainer = scheduleDay.querySelector(".btn-container");
+          const dayInfo = scheduleDay.querySelector(".day-info");
 
-                  // Add delete functionality
-                  newSlot
-                    .querySelector(".delete-btn")
-                    .addEventListener("click", function () {
-                      newSlot.remove();
-                      updateSlotCount(day);
-                    });
+          if (isChecked) {
+            // Enable day
+            timeSlots.style.display = "flex";
+            unavailable.style.display = "none";
+            btnContainer.style.display = "block";
+            dayInfo.style.display = "inline";
+
+            // Add a default slot if none exist
+            if (timeSlots.children.length === 0) {
+              this.createTimeSlot(day, "09:00", "17:00");
+            }
+          } else {
+            // Disable day
+            timeSlots.style.display = "none";
+            unavailable.style.display = "block";
+            btnContainer.style.display = "none";
+            dayInfo.style.display = "none";
+          }
+
+          this.updateSlotCount(day);
+          this.updateFormPreview();
+        }
+
+        addTimeSlot(event) {
+          const day = event.target.closest(".schedule-day").dataset.day;
+          this.createTimeSlot(day, "09:00", "17:00");
+          this.updateSlotCount(day);
+          this.updateFormPreview();
+        }
+
+        createTimeSlot(day, startTime = "", endTime = "") {
+          const scheduleDay = document.querySelector(`[data-day="${day}"]`);
+          const timeSlotsContainer = scheduleDay.querySelector(
+            ".time-slots-container"
+          );
+
+          const timeSlot = document.createElement("div");
+          timeSlot.className = "time-slot";
+          timeSlot.innerHTML = `
+                    <input type="time" class="time-input start-time" value="${startTime}">
+                    <span class="time-separator">to</span>
+                    <input type="time" class="time-input end-time" value="${endTime}">
+                    <button type="button" class="delete-btn">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                `;
+
+          // Add event listener for the delete button
+          timeSlot
+            .querySelector(".delete-btn")
+            .addEventListener("click", (e) => this.deleteTimeSlot(e));
+
+          // Add change listeners for real-time preview
+          timeSlot.querySelectorAll(".time-input").forEach((input) => {
+            input.addEventListener("change", () => this.updateFormPreview());
+          });
+
+          timeSlotsContainer.appendChild(timeSlot);
+        }
+
+        deleteTimeSlot(event) {
+          const timeSlot = event.target.closest(".time-slot");
+          const day = event.target.closest(".schedule-day").dataset.day;
+
+          timeSlot.remove();
+          this.updateSlotCount(day);
+          this.updateFormPreview();
+        }
+
+        updateSlotCount(day) {
+          const scheduleDay = document.querySelector(`[data-day="${day}"]`);
+          const slots = scheduleDay.querySelectorAll(".time-slot");
+          const dayInfo = scheduleDay.querySelector(".day-info");
+
+          const slotCount = slots.length;
+          dayInfo.textContent = `${slotCount} slot${
+            slotCount !== 1 ? "s" : ""
+          }`;
+        }
+
+        updateAllSlotCounts() {
+          document.querySelectorAll(".schedule-day").forEach((day) => {
+            const dayName = day.dataset.day;
+            this.updateSlotCount(dayName);
+          });
+        }
+
+        collectFormData() {
+          const scheduleData = [];
+
+          document.querySelectorAll(".schedule-day").forEach((dayElement) => {
+            const day = dayElement.dataset.day;
+            const checkbox = dayElement.querySelector(".toggle-switch input");
+            const isOpen = checkbox.checked;
+
+            const dayData = {
+              day: day,
+              is_open: isOpen,
+              time_slots: [],
+            };
+
+            if (isOpen) {
+              const timeSlots = dayElement.querySelectorAll(".time-slot");
+              timeSlots.forEach((slot) => {
+                const startTime = slot.querySelector(".start-time").value;
+                const endTime = slot.querySelector(".end-time").value;
+
+                if (startTime && endTime) {
+                  dayData.time_slots.push({
+                    start_time: startTime,
+                    end_time: endTime,
+                  });
+                }
+              });
+            }
+
+            scheduleData.push(dayData);
+          });
+
+          return scheduleData;
+        }
+
+        updateFormPreview() {
+          const data = this.collectFormData();
+          const preview = document.getElementById("formDataPreview");
+
+          let previewText = "";
+          data.forEach((day) => {
+            if (day.is_open && day.time_slots.length > 0) {
+              previewText += `${day.day}: ${day.time_slots.length} slots\n`;
+              day.time_slots.forEach((slot) => {
+                previewText += `  ${slot.start_time} - ${slot.end_time}\n`;
+              });
+            } else {
+              previewText += `${day.day}: closed\n`;
+            }
+          });
+
+          preview.innerHTML = `<pre>${previewText}</pre>`;
+        }
+
+        handleFormSubmit(event) {
+          event.preventDefault();
+
+          const scheduleData = this.collectFormData();
+
+          console.log("Complete Schedule Data:", scheduleData);
+
+          // Show the data in a nice format
+          alert(
+            `Form Data Collected!\n\nTotal Days: ${
+              scheduleData.length
+            }\nOpen Days: ${
+              scheduleData.filter((d) => d.is_open).length
+            }\n\nCheck console for full data.`
+          );
+
+          // Here you would normally send the data to your server
+          fetch("/schedule/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ schedule: scheduleData }),
+          });
+        }
+      }
+
+      // Initialize the schedule manager when DOM is loaded
+      document.addEventListener("DOMContentLoaded", () => {
+        new ScheduleManager();
+      });
+    </script>
+    <script>
+      document
+        .getElementById("scheduleForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const scheduleData = [];
+
+          document.querySelectorAll(".schedule-day").forEach((dayEl) => {
+            const dayName = dayEl.querySelector(".day-name").textContent.trim();
+            const isOpen = dayEl.querySelector(".toggle-switch input").checked;
+
+            const slots = [];
+            dayEl.querySelectorAll(".time-slot").forEach((slotEl) => {
+              const inputs = slotEl.querySelectorAll(".time-input");
+              if (inputs.length === 2) {
+                slots.push({
+                  start_time: inputs[0].value,
+                  end_time: inputs[1].value,
                 });
-
-                updateSlotCount(day);
-              } else {
-                // Disable the day
-                if (timeSlots) timeSlots.style.display = "none";
-                if (unavailable) unavailable.style.display = "block";
-                if (btnContainer) btnContainer.style.display = "none";
-                if (dayInfo) dayInfo.style.display = "none";
               }
             });
-        });
-      });
 
-      // Initialize slot counts
-      document.querySelectorAll("[data-day]").forEach((element) => {
-        if (element.tagName === "INPUT") {
-          updateSlotCount(element.dataset.day);
-        }
-      });
+            scheduleData.push({
+              day_of_week: dayName,
+              is_open: isOpen,
+              slots: slots,
+            });
+          });
+
+          console.log("Posting schedule:", scheduleData);
+
+          // Send JSON to backend
+          const res = await fetch("{{ url_for('schedule_bp.add_schedule') }}", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(scheduleData[0]), // 👈 sends one day at a time (you can loop if you want all days)
+          });
+
+          const result = await res.json();
+          console.log("Response:", result);
+
+          if (res.ok) {
+            alert("Schedule saved successfully!");
+            location.reload();
+          } else {
+            alert("Error: " + (result.error || "Something went wrong"));
+          }
+        });
+    </script>
+    <script>
+      document
+        .getElementById("sidebarCollapse")
+        .addEventListener("click", function () {
+          document.getElementById("sidebar").classList.toggle("active");
+        });
     </script>
   </body>
 </html>

@@ -1,122 +1,365 @@
-/* Simple responsive form styles shared by both pages */
-:root{
-  --bg:#f3f6fb;
-  --card:#ffffff;
-  --accent:#4f46e5;
-  --muted:#000000;
+/* Admin Modal Styles */
+.userModel {
+  width: 100%;
+  margin: 0 auto;
 }
 
-* {
-  box-sizing: border-box;
+.userModel h1 {
+  font-weight: bold;
+  margin: 0 0 20px 0;
+  font-size: clamp(24px, 4vw, 32px);
 }
 
-html, body {
-  height: 100%;
-  margin: 0;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background: linear-gradient(180deg, var(--bg), #eef2ff);
+.userModel h2 {
+  text-align: center;
+  font-size: clamp(20px, 3vw, 24px);
+}
+
+.userModel p {
+  font-size: clamp(14px, 2.5vw, 16px);
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+.userModel span {
+  font-size: clamp(12px, 2vw, 14px);
+}
+
+.userModel a {
+  color: #333;
+  font-size: clamp(12px, 2vw, 14px);
+  text-decoration: none;
+  margin: 15px 0;
+  display: inline-block;
+}
+
+.userModel button {
+  border-radius: 25px;
+  border: 1px solid #667eea;
+  background-color: #667eea;
+  color: #ffffff;
+  font-size: clamp(11px, 2vw, 13px);
+  font-weight: bold;
+  padding: 15px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 100%;
+  max-width: 200px;
+}
+
+.userModel button:hover {
+  background-color: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.userModel button:active {
+  transform: scale(0.95);
+}
+
+.userModel button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.userModel .ghost {
+  border-radius: 25px;
+  border: 2px solid #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+  font-size: clamp(11px, 2vw, 13px);
+  font-weight: bold;
+  padding: 15px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  max-width: 200px;
+}
+
+.userModel .ghost:hover {
+  background-color: white;
+  color: #667eea;
+  transform: translateY(-2px);
+}
+
+.userModel form {
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-}
-
-.page {
-  width: 100%;
-  max-width: 520px;
-}
-
-.card {
-  background: var(--card);
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(15,23,42,0.08);
-  padding: 28px;
-}
-
-.title {
-  margin: 0 0 18px;
-  font-size: 20px;
-  color: #0f172a;
-}
-
-.form .row {
-  display: flex;
-  gap: 12px;
-}
-
-.field {
-  display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
-  position: relative; /* For icon positioning */
+  padding: 40px;
+  height: 100%;
+  text-align: center;
+  min-height: 500px;
 }
 
-.field label {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 6px;
+.userModel .form-group {
+  position: relative;
+  width: 100%;
+  margin: 8px 0;
 }
 
-.field input,
-.field textarea {
-  padding: 10px 12px;
-  border: 1px solid #e6e9ee;
+.userModel input {
+  background-color: #f5f5f5;
+  border: 2px solid transparent;
   border-radius: 8px;
-  font-size: 15px;
+  padding: 15px;
+  width: 100%;
+  font-size: clamp(14px, 2vw, 16px);
+  transition: all 0.3s ease;
 }
 
-.field input:focus,
-.field textarea:focus {
+.userModel input:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(79,70,229,0.06);
+  border-color: #667eea;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/* Password field icon styles */
-.password-field input {
-  padding-right: 40px; /* Space for eye icon */
-}
-
-.toggle-password {
+.userModel .form-group i {
   position: absolute;
-  right: 12px;
-  top: 65%;
+  right: 15px;
+  top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: var(--muted);
+  color: #666;
   font-size: 16px;
+  transition: color 0.3s ease;
 }
 
-.toggle-password:hover {
-  color: var(--accent);
+.userModel .form-group i:hover {
+  color: #667eea;
 }
 
-.actions {
+.userModel .container {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 600px;
   display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
 }
 
-.btn {
-  background: var(--accent);
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
+.userModel .userclose {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  font-size: 2rem;
   cursor: pointer;
+  color: #999;
+  transition: color 0.3s ease;
 }
 
-.btn:hover {
-  opacity: 0.95;
+.userModel .userclose:hover {
+  color: #333;
 }
 
-/* Small screens */
-@media (max-width: 520px) {
-  .form .row {
+.userModel .form-container {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.userModel .sign-in-container {
+  z-index: 2;
+}
+
+.userModel .sign-up-container {
+  z-index: 2;
+}
+
+.userModel .overlay-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+  padding: 10px;
+}
+
+.userModel .overlay {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-size: cover;
+  background-position: 0 0;
+  color: #ffffff;
+  position: relative;
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userModel .overlay-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 40px;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
+
+.userModel .social-container {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.userModel .social-container a {
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  width: 45px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.userModel .social-container a:hover {
+  border-color: #667eea;
+  background-color: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .userModel {
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .userModel .container {
     flex-direction: column;
+    min-height: auto;
   }
-  .page {
-    padding: 8px;
+
+  .userModel .form-container {
+    width: 100%;
+    position: relative;
   }
+
+  .userModel .overlay-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+    order: -1;
+  }
+
+  .userModel .overlay {
+    position: static;
+    height: 300px;
+  }
+
+  .userModel .overlay-panel {
+    padding: 30px 20px;
+  }
+
+  .userModel form {
+    padding: 30px 20px;
+    min-height: auto;
+  }
+
+  .userModel .adminclose {
+    top: 15px;
+    left: 15px;
+    font-size: 24px;
+  }
+
+  .userModel h1 {
+    margin-bottom: 15px;
+  }
+
+  .userModel p {
+    margin: 15px 0 25px;
+  }
+
+  .notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .userModel form {
+    padding: 25px 15px;
+  }
+
+  .userModel .overlay-panel {
+    padding: 25px 15px;
+  }
+
+  .userModel .form-group {
+    max-width: 100%;
+  }
+
+  .userModel button,
+  .userModel .ghost {
+    padding: 12px 30px;
+    max-width: 100%;
+  }
+
+  .userModel .social-container a {
+    height: 40px;
+    width: 40px;
+  }
+}
+
+/* Animation for mobile transition */
+@media (max-width: 768px) {
+  .userModel .overlay-container {
+    animation: slideDown 0.6s ease-in-out;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Loading state */
+.userModel button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.userModel button:disabled:hover {
+  transform: none;
+  box-shadow: none;
 }

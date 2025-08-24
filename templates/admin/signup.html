@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Signup</title>
     <link rel="stylesheet" href="../../static/css/main.css" />
+    <link rel="stylesheet" href="../../static/css/login.css" />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
@@ -12,7 +13,7 @@
   </head>
   <body>
     <div id="adminModel" class="adminModel modal" style="display: block">
-      <div class="modal-content">
+      <div class="modal-content" style="margin: 1% auto">
         <div class="container right-panel-active" id="container">
           <div class="form-container sign-up-container">
             <form action="{{ url_for('admin_bp.admin_signUp') }}" method="POST">
@@ -28,47 +29,59 @@
                 ></a>
               </div>
               <span>or use your email for registration</span>
-              <input
-                type="text"
-                name="firstname"
-                placeholder="Firstname"
-                required
-              />
-              <input
-                type="text"
-                name="lastname"
-                placeholder="Lastname"
-                required
-              />
-              <input
-                type="email"
-                name="email"
-                pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
-                placeholder="Email"
-                required
-              />
-              <input
-                type="password"
-                name="password"
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                title="At least 8 characters with uppercase, lowercase, number, and special character"
-                placeholder="Password"
-                required
-              />
-              <textarea
-                type="text"
-                name="address"
-                placeholder="Salon Address"
-                rows="3"
-                required
-              ></textarea>
-              <input
-                type="tel"
-                name="phone"
-                pattern="^[0-9]{10}$"
-                placeholder="Mobile Number"
-                required
-              />
+              <div class="form-group">
+                <input
+                  type="text"
+                  name="firstname"
+                  placeholder="Firstname"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="text"
+                  name="lastname"
+                  placeholder="Lastname"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="email"
+                  name="email"
+                  pattern="[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+(\.[\-a-zA-Z0-9~!$%^&amp;*_=+\}\{'?]+)*@gmail\.[c][o][m](:[0-9]{1,5})?"
+                  placeholder="Email"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="password"
+                  name="password"
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                  title="At least 8 characters with uppercase, lowercase, number, and special character"
+                  placeholder="Password"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <textarea
+                  type="text"
+                  name="address"
+                  placeholder="Salon Address"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <input
+                  type="tel"
+                  name="phone"
+                  pattern="^[0-9]{10}$"
+                  placeholder="Mobile Number"
+                  required
+                />
+              </div>
               <button>Sign Up</button>
             </form>
           </div>

@@ -1,133 +1,372 @@
-:root {
-  --bg: #f3f6fb;
-  --card: #fbfbfb;
-  --accent: #4f46e5;
-  --muted: #000000;
+/* Admin Modal Styles */
+.adminModel {
+  width: 100%;
+  margin: 0 auto;
 }
 
-* {
-  box-sizing: border-box;
+.adminModel h1 {
+  font-weight: bold;
+  margin: 0 0 20px 0;
+  font-size: clamp(24px, 4vw, 32px);
 }
 
-html, body {
-  height: 100%;
+.adminModel h2 {
+  text-align: center;
+  font-size: clamp(20px, 3vw, 24px);
 }
 
-body {
-  margin: 0;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg, var(--bg), #eef2ff);
+.adminModel p {
+  font-size: clamp(14px, 2.5vw, 16px);
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+.adminModel span {
+  font-size: clamp(12px, 2vw, 14px);
+}
+
+.adminModel a {
+  color: #333;
+  font-size: clamp(12px, 2vw, 14px);
+  text-decoration: none;
+  margin: 15px 0;
+  display: inline-block;
+}
+
+.adminModel button {
+  border-radius: 25px;
+  border: 1px solid #667eea;
+  background-color: #667eea;
+  color: #ffffff;
+  font-size: clamp(11px, 2vw, 13px);
+  font-weight: bold;
+  padding: 15px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 100%;
+  max-width: 200px;
+}
+
+.adminModel button:hover {
+  background-color: #5a67d8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.adminModel button:active {
+  transform: scale(0.95);
+}
+
+.adminModel button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.adminModel .ghost {
+  border-radius: 25px;
+  border: 2px solid #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+  font-size: clamp(11px, 2vw, 13px);
+  font-weight: bold;
+  padding: 15px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  max-width: 200px;
+}
+
+.adminModel .ghost:hover {
+  background-color: white;
+  color: #667eea;
+  transform: translateY(-2px);
+}
+
+.adminModel form {
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-}
-
-.page {
-  width: 100%;
-  max-width: 520px;
-}
-
-.card {
-  background: var(--card);
-  border: 2px solid #fda5d1; /* Pink border */
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
-  padding: 28px;
-}
-
-.title {
-  margin: 0 0 18px;
-  font-size: 20px;
-  color: #0f172a;
-}
-
-.field {
-  display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
-  position: relative; /* for eye icon positioning */
+  padding: 40px;
+  height: 100%;
+  text-align: center;
+  min-height: 500px;
 }
 
-.field label {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 6px;
+.adminModel .form-group {
+  position: relative;
+  width: 100%;
+  margin: 8px 0;
 }
 
-.field input {
-  padding: 10px 40px 10px 12px; /* space for eye icon */
-  border: 1px solid #e6e9ee;
+.adminModel input {
+  background-color: #f5f5f5;
+  border: 2px solid transparent;
   border-radius: 8px;
-  font-size: 15px;
+  padding: 15px;
+  width: 100%;
+  font-size: clamp(14px, 2vw, 16px);
+  transition: all 0.3s ease;
 }
 
-.field input:focus, 
-.field textarea:focus{
-  outline:none;
-  border-color:var(--accent);
-  box-shadow:0 0 0 4px rgba(79,70,229,0.06);
+.adminModel input:focus {
+  outline: none;
+  border-color: #667eea;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.password-field input {
-  /* Keep right padding for eye icon */
-  padding-right: 40px; /* same as .field input */
-}
-
-/* Eye icon styling */
-.password-field i {
+.adminModel .form-group i {
   position: absolute;
-  right: 12px;
-  top: 65%; /* center vertically */
+  right: 15px;
+  top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: var(--muted);
-  font-size: 15px;
+  color: #666;
+  font-size: 16px;
+  transition: color 0.3s ease;
 }
 
-.password-field i:hover {
-  color: var(--accent);
+.adminModel .form-group i:hover {
+  color: #667eea;
 }
 
-.actions {
+.adminModel .container {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 600px;
   display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
 }
 
-.btn {
-  background: var(--accent);
-  color: white;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
+.adminModel .adminclose {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  font-size: 28px;
   cursor: pointer;
+  color: #999;
+  transition: all 0.3s ease;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
-.btn:hover {
-  opacity: 0.95;
+.adminModel .adminclose:hover {
+  color: #333;
 }
 
-.error {
-  color: red;
-  font-size: 12px;
-  margin-top: 4px;
+.adminModel .form-container {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
 }
 
-/* Responsive */
-/* @media (max-width: 520px) {
-  .page {
-    padding: 8px;
+.adminModel .sign-in-container {
+  z-index: 2;
+}
+
+.adminModel .sign-up-container {
+  z-index: 2;
+}
+
+.adminModel .overlay-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+  padding: 10px;
+}
+
+.adminModel .overlay {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-size: cover;
+  background-position: 0 0;
+  color: #ffffff;
+  position: relative;
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adminModel .overlay-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 40px;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
+
+.adminModel .social-container {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.adminModel .social-container a {
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 45px;
+  width: 45px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.adminModel .social-container a:hover {
+  border-color: #667eea;
+  background-color: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
   }
-} */
 
-/* Small screens */
-@media (max-width: 520px) {
-  .form .row {
+  .adminModel {
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .adminModel .container {
     flex-direction: column;
+    min-height: auto;
   }
-  .page {
-    padding: 8px;
+
+  .adminModel .form-container {
+    width: 100%;
+    position: relative;
   }
+
+  .adminModel .overlay-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+    order: -1;
+  }
+
+  .adminModel .overlay {
+    position: static;
+    height: 300px;
+  }
+
+  .adminModel .overlay-panel {
+    padding: 30px 20px;
+  }
+
+  .adminModel form {
+    padding: 30px 20px;
+    min-height: auto;
+  }
+
+  .adminModel .adminclose {
+    top: 15px;
+    left: 15px;
+    font-size: 24px;
+  }
+
+  .adminModel h1 {
+    margin-bottom: 15px;
+  }
+
+  .adminModel p {
+    margin: 15px 0 25px;
+  }
+
+  .notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    padding: 12px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .adminModel form {
+    padding: 25px 15px;
+  }
+
+  .adminModel .overlay-panel {
+    padding: 25px 15px;
+  }
+
+  .adminModel .form-group {
+    max-width: 100%;
+  }
+
+  .adminModel button,
+  .adminModel .ghost {
+    padding: 12px 30px;
+    max-width: 100%;
+  }
+
+  .adminModel .social-container a {
+    height: 40px;
+    width: 40px;
+  }
+}
+
+/* Animation for mobile transition */
+@media (max-width: 768px) {
+  .adminModel .overlay-container {
+    animation: slideDown 0.6s ease-in-out;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Loading state */
+.adminModel button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.adminModel button:disabled:hover {
+  transform: none;
+  box-shadow: none;
 }

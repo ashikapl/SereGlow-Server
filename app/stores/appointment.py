@@ -1,22 +1,21 @@
 from app.utils.supabase_client import supabase
 
 
-def add_appointment_store(data, service_id):
-    if service_id == data.get("service_id"):
-        result = supabase.table("Appointment").insert({
-            "user_id": data.get("user_id"),
-            "service_id": data.get("service_id"),
-            "appointment_date": data.get("appointment_date"),
-            "appointment_time": data.get("appointment_time"),
-            "status": data.get("status")
-        }).execute()
+def add_appointment_store(data):
+    # print("user_id", data.get("user_id"))
+    print("data", data)
+    result = supabase.table("Appointment").insert({
+        "user_id": data.get("user_id"),
+        "service_id": data.get("service_id"),
+        "appointment_date": data.get("appointment_date"),
+        "appointment_time": data.get("appointment_time"),
+        "status": data.get("status")
+    }).execute()
 
-        if result.data and len(result.data) > 0:
-            return result
-        else:
-            return {"error": "Failed to create appointment."}, 400
+    if result.data and len(result.data) > 0:
+        return result
     else:
-        return {"error": "Failed to create appointment, service_id and data.get('service_id') not match ."}, 400
+        return {"error": "Failed to create appointment."}, 400
 
 
 def get_appointment_store():
