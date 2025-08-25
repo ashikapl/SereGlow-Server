@@ -1,18 +1,20 @@
 from app.utils.supabase_client import supabase
 
 
-def add_schedule_store(data):
+def add_schedule_store(data, id):
     day_of_week = data.get("day_of_week")
     is_open = data.get("is_open")
 
-    # Check if day already exists
+    # --- Step 1: Find or create schedule day ---
     existing_day = supabase.table("Schedule_days").select(
-        "*").eq("day_of_week", day_of_week).execute()
+        "*"
+    ).eq("day_of_week", day_of_week).execute()
 
     if existing_day.data:
         day_id = existing_day.data[0]["id"]
         supabase.table("Schedule_days").update(
-            {"is_open": is_open}).eq("id", day_id).execute()
+            {"is_open": is_open}
+        ).eq("id", day_id).execute()
     else:
         schedule_day = supabase.table("Schedule_days").insert({
             "day_of_week": day_of_week,
@@ -24,20 +26,26 @@ def add_schedule_store(data):
 
         day_id = schedule_day.data[0]["id"]
 
-    # Insert multiple time slots
+    # --- Step 2: Replace slots for this day ---
+    supabase.table("Schedule_time_slot").delete().eq(
+        "schedule_day_id", day_id).execute()
+
     slots = data.get("slots", [])
-    print("slots", slots)
     inserted_slots = []
-    for slot in slots:
-        schedule_time_slot = supabase.table("Schedule_time_slot").insert({
-            "schedule_day_id": day_id,
-            "start_time": slot.get("start_time"),
-            "end_time": slot.get("end_time")
-        }).execute()
 
-        if schedule_time_slot.data:
-            inserted_slots.append(schedule_time_slot.data[0])
+    if is_open:
+        for slot in slots:
+            schedule_time_slot = supabase.table("Schedule_time_slot").insert({
+                "id": id,
+                "schedule_day_id": day_id,
+                "start_time": slot.get("start_time"),
+                "end_time": slot.get("end_time")
+            }).execute()
 
+            if schedule_time_slot.data:
+                inserted_slots.append(schedule_time_slot.data[0])
+
+    # --- Step 3: Always return JSON-compatible dict ---
     return {
         "day_id": day_id,
         "day_of_week": day_of_week,
@@ -102,3 +110,9 @@ def delete_schedule_store(slot_id):
             "id", schedule_day_id).execute()
 
     return {"deleted_slot": deleted_slot}
+
+
+def reset_time_slot_sequence():
+    supabase.rpc("exec_sql", {
+        "sql": 'ALTER SEQUENCE Schedule_time_slot_id_seq RESTART WITH 1;'
+    }).execute()

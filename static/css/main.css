@@ -542,8 +542,8 @@ a {
 #sidebar {
   min-width: 270px;
   max-width: 270px;
-  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
-  background-color: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* background-color: #667eea; */
   color: #fff;
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
@@ -669,9 +669,11 @@ a {
   content: "";
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background: #667eea;
+  transform: rotate(-45deg);
+  /* background: #764ba2; */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 10px;
+  box-shadow: none;
 }
 
 #sidebar .custom-menu .toggleBtn:hover {

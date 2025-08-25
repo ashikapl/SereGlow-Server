@@ -2,9 +2,9 @@ from flask import jsonify
 from app.stores.schedule import add_schedule_store, get_schedule_store, update_schedule_store, delete_schedule_store
 
 
-def add_schedule_service(data):
+def add_schedule_service(data, id):
     try:
-        result = add_schedule_store(data)
+        result = add_schedule_store(data, id)
         if result:  # (error_dict, status_code)
             return result
         return {"data": result}, 201

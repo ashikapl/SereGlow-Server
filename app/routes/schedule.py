@@ -5,15 +5,15 @@ from app.utils.helpers import admin_info_cookie
 schedule_bp = Blueprint("schedule_bp", __name__)
 
 
-@schedule_bp.route("/", methods=["POST"])
-def add_schedule():
+@schedule_bp.route("/<int:id>", methods=["POST"])
+def add_schedule(id):
     if request.is_json:
         data = request.get_json()
     else:
         data = request.form.to_dict()
 
-    print("Data", data)
-    result = add_schedule_service(data)
+    # print("Data", data)
+    result = add_schedule_service(data, id)
     # print("Result", result)
 
     if isinstance(result, tuple):

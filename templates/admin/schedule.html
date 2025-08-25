@@ -272,11 +272,6 @@
             btn.addEventListener("click", (e) => this.deleteTimeSlot(e));
           });
 
-          // Form submission
-          document
-            .getElementById("scheduleForm")
-            .addEventListener("submit", (e) => this.handleFormSubmit(e));
-
           // Real-time form data preview
           document.addEventListener("change", () => this.updateFormPreview());
         }
@@ -431,32 +426,6 @@
 
           preview.innerHTML = `<pre>${previewText}</pre>`;
         }
-
-        handleFormSubmit(event) {
-          event.preventDefault();
-
-          const scheduleData = this.collectFormData();
-
-          console.log("Complete Schedule Data:", scheduleData);
-
-          // Show the data in a nice format
-          alert(
-            `Form Data Collected!\n\nTotal Days: ${
-              scheduleData.length
-            }\nOpen Days: ${
-              scheduleData.filter((d) => d.is_open).length
-            }\n\nCheck console for full data.`
-          );
-
-          // Here you would normally send the data to your server
-          fetch("/schedule/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ schedule: scheduleData }),
-          });
-        }
       }
 
       // Initialize the schedule manager when DOM is loaded
@@ -496,19 +465,43 @@
 
           console.log("Posting schedule:", scheduleData);
 
-          // Send JSON to backend
-          const res = await fetch("{{ url_for('schedule_bp.add_schedule') }}", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(scheduleData[0]), // 👈 sends one day at a time (you can loop if you want all days)
-          });
+          // Send data to backend
+          let allOk = true; // check all res is ok
 
-          const result = await res.json();
-          console.log("Response:", result);
+          for (let i = 0; i < scheduleData.length; i++) {
+            console.log("curr day", scheduleData[i]);
 
-          if (res.ok) {
-            alert("Schedule saved successfully!");
-            location.reload();
+            // Base URL from Jinja2
+            const baseUrl = "{{ url_for('schedule_bp.add_schedule', id=0) }}";
+            // Replace 0 with actual k
+            const url = baseUrl.replace("0", i + 1);
+
+            const res = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(scheduleData[i]),
+            });
+
+            if (!res.ok) allOk = false;
+
+            const result = await res.text();
+            // console.log(
+            //   "Response for",
+            //   scheduleData[i].day_of_week,
+            //   ":",
+            //   result
+            // );
+          }
+
+          // Show the data in a nice format
+          if (allOk) {
+            alert(
+              `Form Data Collected!\n\nTotal Days: ${
+                scheduleData.length
+              }\nOpen Days: ${
+                scheduleData.filter((d) => d.is_open).length
+              }\n\nCheck console for full data.`
+            );
           } else {
             alert("Error: " + (result.error || "Something went wrong"));
           }
