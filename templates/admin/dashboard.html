@@ -98,26 +98,35 @@
               <h2>Dashboard Overview</h2>
             </div>
             <div class="stats-grid">
-              <div class="stat-card">
+              <a
+                href="{{ url_for('appointment_bp.show_appointment') }}"
+                class="stat-card"
+              >
                 <i class="fas fa-calendar-check"></i>
                 <h3 id="totalAppointments">{{total_appointment}}</h3>
                 <p>Total Appointments</p>
-              </div>
-              <div class="stat-card">
+              </a>
+              <a
+                href="{{ url_for('service_bp.get_services') }}"
+                class="stat-card"
+              >
                 <i class="fas fa-list"></i>
                 <h3 id="totalServices">{{total_services}}</h3>
                 <p>Active Services</p>
-              </div>
+              </a>
               <div class="stat-card">
                 <i class="fas fa-users"></i>
                 <h3 id="totalUsers">{{total_users}}</h3>
                 <p>Registered Users</p>
               </div>
-              <div class="stat-card">
-                <i class="fas fa-star"></i>
+              <a
+                href="{{ url_for('feedback_bp.show_feedback') }}"
+                class="stat-card"
+              >
+                <i class="fas fa-comments"></i>
                 <h3 id="avgRating">{{avg_rating}}</h3>
-                <p>Average Rating</p>
-              </div>
+                <p>Feedback</p>
+              </a>
             </div>
           </div>
         </div>

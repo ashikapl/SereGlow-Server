@@ -101,7 +101,11 @@
                     <a
                       class="user-auto-link"
                       href="{{ url_for('payment_bp.find_user', user_id=feedback.user_id) }}"
-                      style="pointer-events: none; color: #666"
+                      style="
+                        pointer-events: none;
+                        color: #666;
+                        text-decoration: none;
+                      "
                     >
                       Loading...
                     </a>
@@ -114,7 +118,11 @@
                   <a
                     class="service-auto-link"
                     href="{{ url_for('appointment_bp.find_service', service_id=feedback.service_id) }}"
-                    style="pointer-events: none; color: #666"
+                    style="
+                      pointer-events: none;
+                      color: #666;
+                      text-decoration: none;
+                    "
                   >
                     Loading...
                   </a>

@@ -748,6 +748,14 @@ a[data-toggle="collapse"] {
   text-align: center;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 3ms ease-in-out;
+}
+
+.stat-card:hover {
+  transform: scale(1.05);
+  transition: 0.2s;
 }
 
 .stat-card::before {

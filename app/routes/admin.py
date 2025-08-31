@@ -2,7 +2,7 @@ from flask import (
     jsonify, request, Blueprint, redirect, url_for, render_template,
     make_response, json, flash, session
 )
-from app.services.admin import admin_signup_service, admin_login_service
+from app.services.admin import admin_signup_service, admin_login_service, update_admin_service
 from app.utils.user_validator import generate_token
 from app.utils.token_auth import admin_token_required
 from app.utils.helpers import total_count, average_rating, admin_info_cookie
@@ -104,6 +104,40 @@ def admin_logout():
     return resp
 
 
+# ---------- UPDATE (POST) ----------
+@admin_bp.route("/update/<int:id>", methods=["POST"])
+def update_admin(id):
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
+
+    result = update_admin_service(data, id)
+
+    # print(result)  # <-- Already a list of dicts
+
+    # If result is already a list/dict, no need for json.loads
+    if isinstance(result, tuple) and "error" in result[0]:
+        return jsonify({"message": "Update Failed!", "error": result[0]["error"]}), 401
+
+    # Extract admin info
+    admin_info = result[0] if isinstance(
+        result, list) and len(result) > 0 else {}
+
+    # Convert dict to JSON string for cookie
+    admin_info_str = json.dumps(admin_info)
+
+    resp = make_response(redirect(url_for("admin_bp.show_admin_profile")))
+    resp.set_cookie(
+        "Admin_Info",
+        admin_info_str,
+        httponly=True,
+        secure=False,   # change to True for HTTPS
+        samesite="Strict"
+    )
+    return resp
+
+
 # ---------- SIGNUP (GET) ----------
 @admin_bp.route("/signup", methods=["GET"])
 def show_admin_signup():
@@ -146,3 +180,17 @@ def show_admin_profile():
     admin = find_admin_byID(admin_id).data
 
     return render_template("admin/adminProfile.html", admin_name=admin_name, admin=admin[0])
+
+
+# ---------- UPDATE PROFILE ----------
+@admin_bp.route("/profile/update", methods=["GET"])
+@admin_token_required
+def show_update_profile():
+    admin_name = admin_info_cookie('firstname')
+    admin_id = admin_info_cookie('id')
+
+    admin = find_admin_byID(admin_id).data
+
+    print(admin[0])
+
+    return render_template("admin/updateProfile.html", admin_name=admin_name, admin=admin[0])

@@ -9,6 +9,7 @@ from app.stores.service import get_service_store
 from app.stores.appointment import find_user_byID, get_appointment_byUserID
 from app.stores.service import get_service_byId
 from app.utils.helpers import admin_info_cookie, user_info_cookie
+from app.services.payment import add_payment_service
 
 appointment_bp = Blueprint("appointment_bp", __name__)
 
@@ -22,6 +23,18 @@ def add_appointment():
         data = request.form.to_dict()
 
     result = add_appointment_service(data)
+
+    # print("appo", result)  # appointment_id
+    print("appo", data)  # payment_status
+
+    service = find_service(data.get('service_id'))
+    print("service", service)
+
+    if data.get('payment_method') == "cash":
+        data = {"user_id": data.get('user_id'), "service_id": data.get(
+            'service_id'), "appointment_id": result.data[0].get('id'), "amount": service[0].get('price'), "payment_method": 'cash', "payment_status": 'pending'}
+
+    payement_result = add_payment_service(data, result.data[0].get('id'))
 
     if isinstance(result, tuple):
         return result
@@ -58,6 +71,29 @@ def update_appointment(service_id, id):
         return jsonify(result[0]), result[1]
 
     return jsonify({"message": "Update successful!"}), 200
+
+
+# ---------------- UPDATE APPOINTMENT STATUS ----------------
+@appointment_bp.route("/update_status/<int:id>", methods=["POST"])
+def update_status(id):
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
+
+    new_status = data.get("status")
+
+    try:
+        response = supabase.table("Appointment").update(
+            {"status": new_status}
+        ).eq("id", id).execute()
+
+        if response.data:
+            return jsonify({"success": True, "message": "Status updated"})
+        else:
+            return jsonify({"success": False, "message": "No appointment found"})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)})
 
 
 # ---------------- DELETE APPOINTMENT ----------------
@@ -104,6 +140,7 @@ def show_myAppointment():
     user_id = user_info_cookie('id')
 
     result = get_appointment_byUserID(user_id)
+
     appointments = result.data
 
     return render_template("user/myAppointment.html",

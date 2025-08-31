@@ -36,7 +36,6 @@ def add_schedule_store(data, id):
     if is_open:
         for slot in slots:
             schedule_time_slot = supabase.table("Schedule_time_slot").insert({
-                "id": id,
                 "schedule_day_id": day_id,
                 "start_time": slot.get("start_time"),
                 "end_time": slot.get("end_time")

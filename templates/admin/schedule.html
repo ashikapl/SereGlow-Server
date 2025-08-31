@@ -475,6 +475,7 @@
             const baseUrl = "{{ url_for('schedule_bp.add_schedule', id=0) }}";
             // Replace 0 with actual k
             const url = baseUrl.replace("0", i + 1);
+            console.log("i", i + 1);
 
             const res = await fetch(url, {
               method: "POST",
@@ -483,6 +484,8 @@
             });
 
             if (!res.ok) allOk = false;
+
+            console.log("res", res);
 
             const result = await res.text();
             // console.log(
