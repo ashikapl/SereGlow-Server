@@ -206,10 +206,6 @@ input:checked + .slider:before {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  body {
-    padding: 10px;
-  }
-
   .time-slots-container {
     margin-left: 0;
   }
@@ -265,11 +261,6 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 425px) {
-  body{
-    padding-top: 0;
-    padding: 2px;
-  }
-
   .content-header h2 {
     font-size: 1.3rem;
   }
