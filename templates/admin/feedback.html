@@ -141,41 +141,44 @@
     </div>
 
     <script>
-      window.addEventListener("DOMContentLoaded", function () {
-        // User data find and fill
-        document.querySelectorAll(".user-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((userdata) => {
-              // Fill the <a> text with user first + last name
-              if (userdata[0]["firstname"] && userdata[0]["lastname"]) {
-                link.textContent =
-                  "Customer Name: " +
-                  userdata[0]["firstname"] +
-                  " " +
-                  userdata[0]["lastname"];
-              } else {
-                link.textContent = "Customer Name: " + "Unknown User";
-              }
-            });
-        });
+      window.addEventListener("DOMContentLoaded", async function () {
+        // --- User data find and fill ---
+        const userLinks = document.querySelectorAll(".user-auto-link");
+        for (const link of userLinks) {
+          try {
+            const res = await fetch(link.href);
+            const userdata = await res.json();
+            if (userdata[0]?.firstname && userdata[0]?.lastname) {
+              link.textContent =
+                "Customer Name: " +
+                userdata[0].firstname +
+                " " +
+                userdata[0].lastname;
+            } else {
+              link.textContent = "Customer Name: Unknown User";
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+            link.textContent = "Customer Name: Error Loading";
+          }
+        }
 
-        // Service data find and fill
-        document.querySelectorAll(".service-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((servicedata) => {
-              if (servicedata[0]["name"]) {
-                link.textContent = "Service: " + servicedata[0]["name"];
-              } else {
-                link.textContent = "Service: " + "Unknown Service";
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching service data:", error);
-              link.textContent = "Error Loading Service";
-            });
-        });
+        // --- Service data find and fill ---
+        const serviceLinks = document.querySelectorAll(".service-auto-link");
+        for (const link of serviceLinks) {
+          try {
+            const res = await fetch(link.href);
+            const servicedata = await res.json();
+            if (servicedata[0]?.name) {
+              link.textContent = "Service: " + servicedata[0].name;
+            } else {
+              link.textContent = "Service: Unknown Service";
+            }
+          } catch (error) {
+            console.error("Error fetching service data:", error);
+            link.textContent = "Error Loading Service";
+          }
+        }
       });
     </script>
     <script>

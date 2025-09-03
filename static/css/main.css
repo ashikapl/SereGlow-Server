@@ -975,6 +975,7 @@ a[data-toggle="collapse"] {
 }
 
 .feedback-header h4 {
+  font-weight: 600;
   color: #333;
   margin: 0;
 }
@@ -1316,6 +1317,31 @@ a[data-toggle="collapse"] {
 
   .payment-card{
     padding: 1.2rem;
+  }
+
+  /* feedback */
+  .feedback-header {
+    flex-direction: column-reverse;
+    align-items: start;
+    gap: 25px;
+  }
+
+  .feedback-header h4 {
+    font-size: 1.2rem;
+  }
+
+  .feedback-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 320px){
+  .feedback-header h4 {
+    font-size: 0.9rem;
+  }
+
+  .feedback-text {
+    font-size: 0.8rem;
   }
 }
 

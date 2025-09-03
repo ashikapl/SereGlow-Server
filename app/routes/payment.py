@@ -2,11 +2,12 @@ from flask import jsonify, request, Blueprint, render_template, json
 from app.services.payment import add_payment_service, get_payment_service, update_payment_service, delete_payment_service
 from app.stores.service import get_service_byId
 from app.stores.payment import find_user_byID
-from app.utils.helpers import admin_info_cookie
+from app.utils.helpers import admin_info_cookie, user_info_cookie
 
 payment_bp = Blueprint("payment_bp", __name__)
 
 
+# ---------------- Add Payment (User) ----------------
 @payment_bp.route("/<int:appointment_id>", methods=["POST"])
 def add_payment(appointment_id):
     data = request.get_json()
@@ -19,6 +20,7 @@ def add_payment(appointment_id):
     return jsonify(result.data), 201
 
 
+# ---------------- Get Payment ----------------
 @payment_bp.route("/", methods=["GET"])
 def get_payment():
     result = get_payment_service()
@@ -33,6 +35,7 @@ def get_payment():
     return render_template("admin/payment.html", admin_name=admin_name, payments=payments)
 
 
+# ---------------- Update Payment ----------------
 @payment_bp.route("/<int:appointment_id>/<int:id>", methods=["PUT"])
 def update_payment(appointment_id, id):
     data = request.get_json()
@@ -45,6 +48,7 @@ def update_payment(appointment_id, id):
     return jsonify({"message": "Update successful!"}), 200
 
 
+# ---------------- Delete Payment ----------------
 @payment_bp.route("/<int:appointment_id>/<int:id>", methods=["DELETE"])
 def delete_payment(appointment_id, id):
     result = delete_payment_service(appointment_id, id)
@@ -54,6 +58,8 @@ def delete_payment(appointment_id, id):
 
     return jsonify({"message": "Delete successful!"}), 200
 
+# ---------------- SHOW Payment ----------------
+
 
 @payment_bp.route('/', methods=['GET'])
 def show_payment():
@@ -62,6 +68,16 @@ def show_payment():
     return render_template("admin/payment.html", admin_name=admin_name)
 
 
+# ---------------- SHOW Make Payment (User) ----------------
+@payment_bp.route("/makePayment/<int:appointment_id>", methods=["GET"])
+def show_makePayment(appointment_id):
+    user_name = user_info_cookie('username')
+    user_id = user_info_cookie('id')
+
+    return render_template("user/MakePayment.html", appointment_id=appointment_id)
+
+
+# ---------------- Find Payment ----------------
 @payment_bp.route("/paymentFind>", methods=["GET"])
 def find_payment():
     result = get_payment_service()
@@ -69,6 +85,7 @@ def find_payment():
     return result.data
 
 
+# ---------------- Find User ----------------
 @payment_bp.route("/userFind/<int:user_id>", methods=["GET"])
 def find_user(user_id):
     result = find_user_byID(user_id)
@@ -76,6 +93,7 @@ def find_user(user_id):
     return result.data
 
 
+# ---------------- Find Service ----------------
 @payment_bp.route("/serviceFind/<int:service_id>", methods=["GET"])
 def find_service(service_id):
     result = get_service_byId(service_id)

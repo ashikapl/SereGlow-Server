@@ -219,114 +219,100 @@
     </div>
 
     <script>
-      window.addEventListener("DOMContentLoaded", function () {
-        // User data find and fill
-        document.querySelectorAll(".user-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((userdata) => {
-              // Fill the <a> text with user first + last name
-              if (userdata[0]["firstname"] && userdata[0]["lastname"]) {
-                link.textContent =
-                  "Customer Name: " +
-                  userdata[0]["firstname"] +
-                  " " +
-                  userdata[0]["lastname"];
-              } else {
-                link.textContent = "Customer Name: " + "Unknown User";
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching user data:", error);
-              link.textContent = "Customer Name: Error Loading";
-            });
-        });
+      window.addEventListener("DOMContentLoaded", async function () {
+        // --- User data find and fill ---
+        const userLinks = document.querySelectorAll(".user-auto-link");
+        for (const link of userLinks) {
+          try {
+            const res = await fetch(link.href);
+            const userdata = await res.json();
+            if (userdata[0]?.firstname && userdata[0]?.lastname) {
+              link.textContent =
+                "Customer Name: " +
+                userdata[0].firstname +
+                " " +
+                userdata[0].lastname;
+            } else {
+              link.textContent = "Customer Name: Unknown User";
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+            link.textContent = "Customer Name: Error Loading";
+          }
+        }
 
-        // Service data find and fill
-        document.querySelectorAll(".service-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((servicedata) => {
-              if (servicedata[0]["name"]) {
-                link.textContent = servicedata[0]["name"];
-              } else {
-                link.textContent = "Unknown Service";
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching service data:", error);
-              link.textContent = "Error Loading Service";
-            });
-        });
+        // --- Service data find and fill ---
+        const serviceLinks = document.querySelectorAll(".service-auto-link");
+        for (const link of serviceLinks) {
+          try {
+            const res = await fetch(link.href);
+            const servicedata = await res.json();
+            if (servicedata[0]?.name) {
+              link.textContent = "Service: " + servicedata[0].name;
+            } else {
+              link.textContent = "Service: Unknown Service";
+            }
+          } catch (error) {
+            console.error("Error fetching service data:", error);
+            link.textContent = "Error Loading Service";
+          }
+        }
 
-        // Payment data find and fill
-        document.querySelectorAll(".payment-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((paymentdata) => {
-              // console.log("Payment data received:", paymentdata);
+        // --- Payment data find and fill ---
+        const paymentLinks = document.querySelectorAll(".payment-auto-link");
+        for (const link of paymentLinks) {
+          try {
+            const res = await fetch(link.href);
+            const paymentdata = await res.json();
 
-              // Extract appointment ID from URL
-              const url = new URL(link.href, window.location.origin);
-              const appointmentId = url.searchParams.get("appointment_id");
-              // console.log("Processing appointment ID:", appointmentId);
+            // Extract appointment ID from URL
+            const url = new URL(link.href, window.location.origin);
+            const appointmentId = url.searchParams.get("appointment_id");
 
-              // Get the payment elements for this specific appointment
-              const paymentMethodElement = document.getElementById(
-                `paymentMethod_${appointmentId}`
+            // Get the payment elements for this specific appointment
+            const paymentMethodElement = document.getElementById(
+              `paymentMethod_${appointmentId}`
+            );
+            const paymentStatusElement = document.getElementById(
+              `paymentStatus_${appointmentId}`
+            );
+
+            if (!paymentMethodElement || !paymentStatusElement) {
+              console.error(
+                `Payment elements not found for appointment ${appointmentId}`
               );
-              const paymentStatusElement = document.getElementById(
-                `paymentStatus_${appointmentId}`
-              );
+              continue;
+            }
 
-              if (!paymentMethodElement || !paymentStatusElement) {
-                console.error(
-                  `Payment elements not found for appointment ${appointmentId}`
-                );
-                return;
-              }
+            // Find payment record for this appointment_id
+            const paymentInfo = paymentdata.find(
+              (p) => p.appointment_id == appointmentId
+            );
 
-              // Find payment record for this appointment_id
-              const paymentInfo = paymentdata.find(
-                (p) => p.appointment_id == appointmentId
-              );
+            if (paymentInfo) {
+              paymentMethodElement.innerText = paymentInfo.payment_method;
+              paymentStatusElement.innerText = paymentInfo.payment_status;
+            } else {
+              paymentMethodElement.innerText = "N/A";
+              paymentStatusElement.innerText = "N/A";
+            }
+          } catch (error) {
+            console.error("Error fetching payment data:", error);
 
-              if (paymentInfo) {
-                paymentMethodElement.innerText = paymentInfo.payment_method;
-                paymentStatusElement.innerText = paymentInfo.payment_status;
+            const url = new URL(link.href, window.location.origin);
+            const appointmentId = url.searchParams.get("appointment_id");
 
-                // Update payment link text
-                // link.textContent = `${paymentInfo.payment_method} - ${paymentInfo.payment_status}`;
-                // link.style.color = "#28a745"; // Green for success
-              } else {
-                paymentMethodElement.innerText = "N/A";
-                paymentStatusElement.innerText = "N/A";
-                // link.textContent = "No Payment Found";
-                // link.style.color = "#dc3545"; // Red for error
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching payment data:", error);
+            const paymentMethodElement = document.getElementById(
+              `paymentMethod_${appointmentId}`
+            );
+            const paymentStatusElement = document.getElementById(
+              `paymentStatus_${appointmentId}`
+            );
 
-              const url = new URL(link.href, window.location.origin);
-              const appointmentId = url.searchParams.get("appointment_id");
-
-              const paymentMethodElement = document.getElementById(
-                `paymentMethod_${appointmentId}`
-              );
-              const paymentStatusElement = document.getElementById(
-                `paymentStatus_${appointmentId}`
-              );
-
-              if (paymentMethodElement)
-                paymentMethodElement.innerText = "Error";
-              if (paymentStatusElement)
-                paymentStatusElement.innerText = "Error";
-
-              // link.textContent = "Payment Error";
-              // link.style.color = "#dc3545"; // Red for error
-            });
-        });
+            if (paymentMethodElement) paymentMethodElement.innerText = "Error";
+            if (paymentStatusElement) paymentStatusElement.innerText = "Error";
+          }
+        }
       });
     </script>
     <script>
@@ -372,7 +358,7 @@
         });
       });
     </script>
-   <script>
+    <script>
       const sidebar = document.getElementById("sidebar");
       const toggleBtn = document.getElementById("sidebarCollapse");
       const sidebarItems = document.querySelectorAll("#sidebar ul li a"); // all links inside li

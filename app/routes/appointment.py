@@ -24,15 +24,14 @@ def add_appointment():
 
     result = add_appointment_service(data)
 
-    # print("appo", result)  # appointment_id
-    print("appo", data)  # payment_status
-
     service = find_service(data.get('service_id'))
-    print("service", service)
+    # print("service", service)
 
     if data.get('payment_method') == "cash":
         data = {"user_id": data.get('user_id'), "service_id": data.get(
             'service_id'), "appointment_id": result.data[0].get('id'), "amount": service[0].get('price'), "payment_method": 'cash', "payment_status": 'pending'}
+    elif data.get('payment_method') == "online":
+        return redirect(url_for("payment_bp.show_makePayment", appointment_id=result.data[0].get('id')))
 
     payement_result = add_payment_service(data, result.data[0].get('id'))
 
