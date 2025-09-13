@@ -21,7 +21,7 @@ def create_app():
     app = Flask(__name__, static_folder="../static")
     app.config.from_object(Config)
     app.secret_key = os.getenv("SECRET_KEY")
-    stripe.api_key = os.getenv("stripe_api_key")
+    stripe.api_key = os.getenv("STRIPE_API_KEY")
 
     # Enable CORS
     CORS(app, supports_credentials=True)
