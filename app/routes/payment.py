@@ -8,8 +8,6 @@ from app.services.appointment import add_appointment_service
 from app.utils.helpers import admin_info_cookie, user_info_cookie
 from app.utils.token_auth import user_token_required
 
-stripe.api_key = 'sk_test_51S6AdA8WAdI13hhpqQQu9oEK3vJ5NwxeUW9Je79nNZhVcqdiEGyOFWM4ijqNFRMDHqh7NNS1WBl2gLTlYYW9hwTA00TFdzbGtM'
-
 payment_bp = Blueprint("payment_bp", __name__)
 
 LOCAL_DOMAIN = "http://127.0.0.1:8000/payment"
