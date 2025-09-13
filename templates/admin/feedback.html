@@ -103,11 +103,11 @@
                       href="{{ url_for('payment_bp.find_user', user_id=feedback.user_id) }}"
                       style="
                         pointer-events: none;
-                        color: #666;
+                        color: #000000;
                         text-decoration: none;
                       "
                     >
-                      Loading...
+                      > Loading...
                     </a>
                   </h4>
                   <div class="rating">
@@ -120,11 +120,11 @@
                     href="{{ url_for('appointment_bp.find_service', service_id=feedback.service_id) }}"
                     style="
                       pointer-events: none;
-                      color: #666;
+                      color: #343333;
                       text-decoration: none;
                     "
                   >
-                    Loading...
+                    > Loading...
                   </a>
                 </p>
                 <p class="feedback-text">{{feedback.comment}}</p>
@@ -141,69 +141,49 @@
     </div>
 
     <script>
-      window.addEventListener("DOMContentLoaded", async function () {
-        // --- User data find and fill ---
-        const userLinks = document.querySelectorAll(".user-auto-link");
-        for (const link of userLinks) {
-          try {
-            const res = await fetch(link.href);
-            const userdata = await res.json();
-            if (userdata[0]?.firstname && userdata[0]?.lastname) {
-              link.textContent =
-                "Customer Name: " +
-                userdata[0].firstname +
-                " " +
-                userdata[0].lastname;
-            } else {
-              link.textContent = "Customer Name: Unknown User";
-            }
-          } catch (error) {
-            console.error("Error fetching user data:", error);
-            link.textContent = "Customer Name: Error Loading";
-          }
-        }
+      window.addEventListener("DOMContentLoaded", function () {
+        // User data find and fill
+        document.querySelectorAll(".user-auto-link").forEach((link) => {
+          fetch(link.href)
+            .then((res) => res.json())
+            .then((userdata) => {
+              // Fill the <a> text with user first + last name
+              if (userdata[0]["firstname"] && userdata[0]["lastname"]) {
+                link.textContent =
+                  "Customer: " +
+                  userdata[0]["firstname"] +
+                  " " +
+                  userdata[0]["lastname"];
+              } else {
+                link.textContent = "Customer: " + "Unknown User";
+              }
+            });
+        });
 
-        // --- Service data find and fill ---
-        const serviceLinks = document.querySelectorAll(".service-auto-link");
-        for (const link of serviceLinks) {
-          try {
-            const res = await fetch(link.href);
-            const servicedata = await res.json();
-            if (servicedata[0]?.name) {
-              link.textContent = "Service: " + servicedata[0].name;
-            } else {
-              link.textContent = "Service: Unknown Service";
-            }
-          } catch (error) {
-            console.error("Error fetching service data:", error);
-            link.textContent = "Error Loading Service";
-          }
-        }
+        // Service data find and fill
+        document.querySelectorAll(".service-auto-link").forEach((link) => {
+          fetch(link.href)
+            .then((res) => res.json())
+            .then((servicedata) => {
+              if (servicedata[0]["name"]) {
+                link.textContent = "Service: " + servicedata[0]["name"];
+              } else {
+                link.textContent = "Service: " + "Unknown Service";
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching service data:", error);
+              link.textContent = "Error Loading Service";
+            });
+        });
       });
     </script>
     <script>
-      const sidebar = document.getElementById("sidebar");
-      const toggleBtn = document.getElementById("sidebarCollapse");
-      const sidebarItems = document.querySelectorAll("#sidebar ul li a"); // all links inside li
-
-      // Toggle sidebar on button click
-      toggleBtn.addEventListener("click", function (e) {
-        e.stopPropagation(); // Prevent event bubbling
-        sidebar.classList.toggle("active");
-      });
-
-      // Close sidebar if clicked outside
-      document.addEventListener("click", function (e) {
-        console.log("click");
-        sidebar.classList.add("active");
-      });
-
-      // Close sidebar when clicking on a menu item
-      sidebarItems.forEach((item) => {
-        item.addEventListener("click", function () {
-          sidebar.classList.remove("active");
+      document
+        .getElementById("sidebarCollapse")
+        .addEventListener("click", function () {
+          document.getElementById("sidebar").classList.toggle("active");
         });
-      });
     </script>
   </body>
 </html>

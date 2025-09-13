@@ -25,10 +25,6 @@
     />
   </head>
   <body>
-    <div class="notification notification-success" id="loginNotification">
-      <span>Login successful!</span>
-      <button onclick="this.parentElement.remove()">&times;</button>
-    </div>
     <!-- User Dashboard (Hidden by default) -->
     <div id="userDashboard" class="dashboard-container">
       <div class="dashboard-content">
@@ -42,12 +38,17 @@
           <div class="p-3">
             <h2>
               <a href="/user" class="logo"
-                >User Dashboard <span>Welcome, {{user_name}}!</span>
+                >Dashboard <span>Welcome, {{user_name}}!</span>
               </a>
             </h2>
             <ul class="list-unstyled components mb-5">
-              <li class="active">
+              <li>
                 <a href="{{ url_for('user_bp.show_user_dashboard') }}"
+                  ><i class="fas fa-chart-bar mr-3"></i> Overview</a
+                >
+              </li>
+              <li class="active">
+                <a href="{{ url_for('user_bp.show_services') }}"
                   ><i class="fas fa-list"></i> View Services</a
                 >
               </li>
@@ -59,6 +60,11 @@
               <li>
                 <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
                   ><i class="fas fa-calendar"></i> My Appointments</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
+                  ><i class="fas fa-wallet mr-3"></i> Payments</a
                 >
               </li>
               <li>

@@ -2,6 +2,8 @@ from app.utils.supabase_client import supabase
 
 
 def add_appointment_store(data):
+    # print("user_id", data.get("user_id"))
+    print("data", data)
     result = supabase.table("Appointment").insert({
         "user_id": data.get("user_id"),
         "service_id": data.get("service_id"),

@@ -1,3 +1,4 @@
+import datetime as dt
 from flask import (
     jsonify, request, Blueprint, redirect, url_for, render_template,
     make_response, json
@@ -8,6 +9,7 @@ from app.utils.token_auth import user_token_required
 from app.stores.service import get_service_store
 from app.stores.appointment import find_user_byID
 from app.utils.helpers import user_info_cookie
+from app.utils.supabase_client import supabase
 
 user_bp = Blueprint("user_bp", __name__, template_folder="../../templates")
 
@@ -75,12 +77,6 @@ def user_login():
     return resp
 
 
-# # ---------- LOGOUT ----------
-# @user_bp.route("/logout", methods=["GET"])
-# def user_logout():
-#     """Logs out the admin by clearing session and redirecting to main page."""
-#     return render_template("main.html")
-
 @user_bp.route("/logout")
 def user_logout():
     resp = make_response(redirect(url_for("user_bp.show_user_login")))
@@ -120,10 +116,10 @@ def show_user_login():
 
 
 # ---------- DASHBOARD ----------
-@user_bp.route("/", methods=["GET"])
+@user_bp.route("/services", methods=["GET"])
 @user_token_required
-def show_user_dashboard():
-    user_name = user_info_cookie('username')
+def show_services():
+    user_name = user_info_cookie("firstname")
 
     result = get_service_store()
     services = result.data
@@ -131,14 +127,84 @@ def show_user_dashboard():
     return render_template("user/dashboard.html", user_name=user_name, services=services)
 
 
+# ---------- DASHBOARD ----------
+@user_bp.route("/", methods=["GET"])
+@user_token_required
+def show_user_dashboard():
+    # ✅ Fetch Admin Info
+    user_name = user_info_cookie("username")
+
+    response = supabase.table("Admin").select("*").limit(1).execute()
+    admin_data = response.data[0] if response.data else {}
+    current_day = dt.datetime.now().strftime("%A")
+
+    # ✅ Fetch Recent Appointments (limit 3 latest)
+    appointments_response = (
+        supabase.table("Appointment")
+        .select("id, appointment_date, appointment_time, status, service_id, user_id, Service(name, price)")
+        .order("appointment_date", desc=True)
+        .limit(3)
+        .execute()
+    )
+
+    recent_appointments = []
+    if appointments_response.data:
+        for appt in appointments_response.data:
+            recent_appointments.append({
+                "id": appt["id"],
+                "appointment_date": appt["appointment_date"],
+                "appointment_time": appt.get("appointment_time"),
+                "status": appt.get("status", "pending"),
+                "name": appt.get("Service", {}).get("name", "N/A"),
+                "price": appt.get("Service", {}).get("price")
+            })
+
+    # ✅ Fetch Popular Services (just taking top 4 for now)
+    services_response = supabase.table(
+        "Service").select("*").limit(4).execute()
+    popular_services = services_response.data if services_response.data else []
+
+    # ✅ Fetch Schedule (Days + Slots)
+    schedule_response = supabase.table("Schedule_days").select(
+        "id, day_of_week, is_open, Schedule_time_slot(id, start_time, end_time)"
+    ).execute()
+
+    schedule_data = []
+    if schedule_response.data:
+        for day in schedule_response.data:
+            schedule_data.append({
+                "id": day["id"],
+                "day_of_week": day["day_of_week"],
+                "is_open": day["is_open"],
+                "slots": [
+                    {
+                        "id": slot["id"],
+                        "start_time": dt.datetime.strptime(slot["start_time"], "%H:%M:%S").strftime("%I:%M %p"),
+                        "end_time": dt.datetime.strptime(slot["end_time"], "%H:%M:%S").strftime("%I:%M %p")
+                    }
+                    for slot in day.get("Schedule_time_slot", [])
+                ]
+            })
+
+    return render_template(
+        "user/aboutAdmin.html",
+        admin=admin_data,
+        user_name=user_name,
+        recent_appointments=recent_appointments,
+        popular_services=popular_services,
+        schedule_data=schedule_data,
+        current_day=current_day,
+    )
+
+
 # ---------- PROFILE ----------
 @user_bp.route("/profile", methods=["GET"])
 @user_token_required
 def show_user_profile():
-    user_name = user_info_cookie('username')
-    user_id = user_info_cookie('id')
+    user_name = user_info_cookie("firstname")
+    user_id = user_info_cookie("id")
 
     user = find_user_byID(user_id).data
-    # print("user", user[0])
+    print("user", user[0])
 
     return render_template("user/userProfile.html", user_name=user_name, user=user[0])

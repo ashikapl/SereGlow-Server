@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="5" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../../static/css/main.css" />
@@ -27,81 +28,81 @@
   <body>
     <!-- Admin Dashboard (Hidden by default) -->
     <div id="adminDashboard" class="dashboard-container">
-      <nav id="sidebar" class="active">
-        <div class="custom-menu">
-          <button type="button" id="sidebarCollapse" class="toggleBtn">
-            <i class="fa fa-bars"></i>
-            <span class="sr-only">Toggle Menu</span>
-          </button>
-        </div>
-        <div class="p-3">
-          <h2>
-            <a href="/admin" class="logo"
-              >Admin Dashboard <span>Welcome, {{admin_name}}!</span>
-            </a>
-          </h2>
-          <ul class="list-unstyled components mb-5">
-            <li>
-              <a href="/admin/"
-                ><i class="fas fa-chart-bar mr-3"></i> Overview</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('service_bp.get_services') }}">
-                <i class="fas fa-list mr-3"></i> Manage Services
-              </a>
-            </li>
-            <li>
-              <a href="{{ url_for('appointment_bp.show_appointment') }}"
-                ><i class="fas fa-calendar mr-3"></i> Appointments</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('payment_bp.show_payment') }}"
-                ><i class="fas fa-wallet mr-3"></i> Payments</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('schedule_bp.show_schedule') }}"
-                ><i class="fas fa-clock mr-3"></i> Shop Schedule</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('feedback_bp.show_feedback') }}"
-                ><i class="fas fa-comments mr-3"></i> Feedback</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('admin_bp.show_admin_profile') }}"
-                ><i class="fas fa-user mr-3"></i> Profile</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('admin_bp.admin_logout') }}"
-                ><i class="fas fa-sign-out mr-3"></i> Logout</a
-              >
-            </li>
-          </ul>
-        </div>
-      </nav>
       <div class="dashboard-content">
+        <nav id="sidebar" class="active">
+          <div class="custom-menu">
+            <button type="button" id="sidebarCollapse" class="toggleBtn">
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+          </div>
+          <div class="p-3">
+            <h2>
+              <a href="/admin" class="logo"
+                >Admin Dashboard <span>Welcome, {{admin_name}}!</span>
+              </a>
+            </h2>
+            <ul class="list-unstyled components mb-5">
+              <li>
+                <a href="/admin/"
+                  ><i class="fas fa-chart-bar mr-3"></i> Overview</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('service_bp.get_services') }}">
+                  <i class="fas fa-list mr-3"></i> Manage Services
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('appointment_bp.show_appointment') }}"
+                  ><i class="fas fa-calendar mr-3"></i> Appointments</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('payment_bp.show_payment') }}"
+                  ><i class="fas fa-wallet mr-3"></i> Payments</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('schedule_bp.show_schedule') }}"
+                  ><i class="fas fa-clock mr-3"></i> Shop Schedule</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('feedback_bp.show_feedback') }}"
+                  ><i class="fas fa-comments mr-3"></i> Feedback</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('admin_bp.show_admin_profile') }}"
+                  ><i class="fas fa-user mr-3"></i> Profile</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('admin_bp.admin_logout') }}"
+                  ><i class="fas fa-sign-out mr-3"></i> Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+
         <div class="dashboard-main">
           <!-- Admin Profile Section -->
           <div id="adminProfileSection" class="dashboard-section">
-            <h2>Update Profile</h2>
+            <h2>Admin Profile</h2>
             <form
-              action="{{url_for('admin_bp.update_admin', id=admin['id'])}}"
-              method="POST"
               id="adminProfileForm"
               class="form-grid"
+              method="POST"
+              action="{{ url_for('admin_bp.update_admin_profile') }}"
             >
               <div class="form-group">
                 <label>First Name</label>
                 <input
                   type="text"
-                  id="adminFirstName"
                   name="firstname"
-                  value="{{admin['firstname']}}"
+                  value="{{ admin['firstname'] }}"
                   required
                 />
               </div>
@@ -109,9 +110,8 @@
                 <label>Last Name</label>
                 <input
                   type="text"
-                  id="adminLastName"
                   name="lastname"
-                  value="{{admin['lastname']}}"
+                  value="{{ admin['lastname'] }}"
                   required
                 />
               </div>
@@ -119,9 +119,8 @@
                 <label>Email</label>
                 <input
                   type="email"
-                  id="adminEmail"
                   name="email"
-                  value="{{admin['email']}}"
+                  value="{{ admin['email'] }}"
                   required
                 />
               </div>
@@ -129,16 +128,15 @@
                 <label>Phone Number</label>
                 <input
                   type="tel"
-                  id="adminPhone"
                   name="phone"
-                  value="{{admin['phone']}}"
+                  value="{{ admin['phone'] }}"
                   required
                 />
               </div>
               <div class="form-group full-width">
                 <label>Salon Address</label>
-                <textarea id="adminAddress" name="address" required>
-{{admin['address']}}</textarea
+                <textarea name="address" required>
+{{ admin['address'] }}</textarea
                 >
               </div>
               <button type="submit" class="btn btn-primary">
@@ -151,28 +149,11 @@
     </div>
 
     <script>
-      const sidebar = document.getElementById("sidebar");
-      const toggleBtn = document.getElementById("sidebarCollapse");
-      const sidebarItems = document.querySelectorAll("#sidebar ul li a"); // all links inside li
-
-      // Toggle sidebar on button click
-      toggleBtn.addEventListener("click", function (e) {
-        e.stopPropagation(); // Prevent event bubbling
-        sidebar.classList.toggle("active");
-      });
-
-      // Close sidebar if clicked outside
-      document.addEventListener("click", function (e) {
-        console.log("click");
-        sidebar.classList.add("active");
-      });
-
-      // Close sidebar when clicking on a menu item
-      sidebarItems.forEach((item) => {
-        item.addEventListener("click", function () {
-          sidebar.classList.remove("active");
+      document
+        .getElementById("sidebarCollapse")
+        .addEventListener("click", function () {
+          document.getElementById("sidebar").classList.toggle("active");
         });
-      });
     </script>
   </body>
 </html>

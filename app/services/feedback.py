@@ -19,9 +19,9 @@ def add_feedback_service(data, service_id):
         return {"error": error_message}, 500
 
 
-def get_feedback_service(service_id):
+def get_feedback_service(service_id, user_id):
     try:
-        result = get_feedback_store(service_id)
+        result = get_feedback_store(service_id, user_id)
 
         if result:
             return result

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="../static/css/main.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    <!-- User Dashboard (Hidden by default) -->
+    <div id="userDashboard" class="dashboard-container">
+      <div class="dashboard-content">
+        <nav id="sidebar" class="active">
+          <div class="custom-menu">
+            <button type="button" id="sidebarCollapse" class="toggleBtn">
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+          </div>
+          <div class="p-3">
+            <h2>
+              <a href="/user" class="logo"
+                >User Dashboard <span>Welcome, {{user_name}}!</span>
+              </a>
+            </h2>
+            <ul class="list-unstyled components mb-5">
+              <li>
+                <a href="{{ url_for('user_bp.show_user_dashboard') }}"
+                  ><i class="fas fa-list"></i> View Services</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('appointment_bp.show_bookAppointment') }}"
+                  ><i class="fas fa-calendar-plus"></i> Book Appointment</a
+                >
+              </li>
+              <li class="active">
+                <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
+                  ><i class="fas fa-calendar"></i> My Appointments</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('user_bp.show_user_profile') }}"
+                  ><i class="fas fa-user"></i> Profile</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('user_bp.user_logout') }}"
+                  ><i class="fas fa-sign-out mr-3"></i> Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="dashboard-main">
+          <!-- User Appointments Section -->
+          <div
+            id="userAppointmentsSection"
+            class="dashboard-section"
+            style="display: block"
+          >
+            <h2>My Appointments</h2>
+            <div id="userAppointmentsList" class="appointments-list">
+              {% for appointment in appointments %}
+              <div class="appointment-card">
+                <div class="appointment-header">
+                  <h4>
+                    <a
+                      class="service-auto-link"
+                      href="{{ url_for('appointment_bp.find_service', service_id=appointment.service_id) }}"
+                      style="pointer-events: none; color: #666"
+                    >
+                      Loading...
+                    </a>
+                  </h4>
+                  <span class="status status-${appointment.status}"
+                    >{{ appointment.status }}</span
+                  >
+                </div>
+                <div class="appointment-details">
+                  <p><strong>Date:</strong> {{appointment.appointment_date}}</p>
+                  <p><strong>Time:</strong> {{appointment.appointment_time}}</p>
+                  <p>
+                    <strong>Price:</strong>
+                    <span id="ser_price_{{appointment.service_id}}"></span>
+                  </p>
+                  <p>
+                    <strong>Payment:</strong>
+                    <a
+                      class="payment-auto-link"
+                      href="{{ url_for('payment_bp.find_payment', appointment_id=appointment.id) }}"
+                      style="pointer-events: none; color: #666"
+                    >
+                      Payment Loading...
+                    </a>
+                  </p>
+                  <p><strong>Notes:</strong> ${appointment.notes}</p>
+                </div>
+                <div class="appointment-actions">
+                  {% if appointment.status == "pending" %}
+                  <a class="btn btn-sm btn-danger"> Cancel </a>
+                  {% elif appointment.status == "confirmed" %}
+                  <a class="btn btn-sm btn-danger"> Cancel </a>
+                  {% else %}
+                  <span class="text-muted">No actions available</span>
+                  {% endif %}
+                  <a
+                    class="btn btn-sm btn-primary"
+                    href="{{ url_for('feedback_bp.show_add_feedback', service_id=appointment.service_id) }}"
+                  >
+                    Feedback
+                  </a>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // -------- Service Data --------
+        const serviceLinks = document.querySelectorAll(".service-auto-link");
+
+        for (const link of serviceLinks) {
+          try {
+            const res = await fetch(link.href);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const servicedata = await res.json();
+
+            // Extract ID safely
+            const url = new URL(link.href, window.location.origin);
+            const parts = url.pathname.split("/");
+            const serviceId = parts.filter(Boolean).pop();
+            console.log("ser id ", serviceId);
+            const servicePrice = document.getElementById(
+              `ser_price_${serviceId}`
+            );
+
+            // Handle array OR object
+            let service = Array.isArray(servicedata)
+              ? servicedata[0]
+              : servicedata;
+
+            console.log("Service response:", service); // debug
+
+            if (service && service.name) {
+              link.textContent = service.name;
+              if (servicePrice) {
+                servicePrice.innerText =
+                  service.price ||
+                  service.service_price ||
+                  service.amount ||
+                  "N/A";
+              }
+            } else {
+              link.textContent = "Service Not Found";
+            }
+          } catch (err) {
+            console.error("Service fetch error:", err, "for link:", link.href);
+            link.textContent = "Error Loading Service";
+          }
+        }
+
+        // -------- Payment Data --------
+        const paymentLinks = document.querySelectorAll(".payment-auto-link");
+
+        for (const link of paymentLinks) {
+          try {
+            const res = await fetch(link.href);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const paymentdata = await res.json();
+
+            const url = new URL(link.href, window.location.origin);
+            const appointmentId = url.searchParams.get("appointment_id");
+
+            let paymentInfo = null;
+            if (Array.isArray(paymentdata)) {
+              paymentInfo = paymentdata.find(
+                (p) => String(p.appointment_id) === String(appointmentId)
+              );
+            }
+
+            if (paymentInfo) {
+              link.textContent =
+                paymentInfo.payment_method || "Unknown Payment";
+            } else {
+              link.textContent = "No Payment Found";
+            }
+          } catch (err) {
+            console.error("Payment fetch error:", err, "for link:", link.href);
+            link.textContent = "Payment Error";
+          }
+        }
+      });
+    </script>
+    <script>
+      document
+        .getElementById("sidebarCollapse")
+        .addEventListener("click", function () {
+          document.getElementById("sidebar").classList.toggle("active");
+        });
+    </script>
+  </body>
+</html>

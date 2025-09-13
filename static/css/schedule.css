@@ -6,7 +6,7 @@
 }
 
 .content-header h2 {
-  color: #2d3748;
+  color: #000000;
   font-size: 1.75rem;
 }
 
@@ -79,7 +79,7 @@
 
 .day-name {
   font-weight: 600;
-  color: #2d3748;
+  color: #343333;
   min-width: 100px;
 }
 
@@ -120,11 +120,11 @@
   border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(26px);
 }
 
@@ -206,6 +206,10 @@ input:checked + .slider:before {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
   .time-slots-container {
     margin-left: 0;
   }
@@ -261,6 +265,11 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 425px) {
+  body {
+    padding-top: 0;
+    padding: 2px;
+  }
+
   .content-header h2 {
     font-size: 1.3rem;
   }

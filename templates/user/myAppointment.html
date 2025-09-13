@@ -25,7 +25,7 @@
     />
   </head>
   <body>
-    <!-- User Dashboard (Hidden by default) -->
+    <!-- User Dashboard -->
     <div id="userDashboard" class="dashboard-container">
       <div class="dashboard-content">
         <nav id="sidebar" class="active">
@@ -38,12 +38,17 @@
           <div class="p-3">
             <h2>
               <a href="/user" class="logo"
-                >User Dashboard <span>Welcome, {{user_name}}!</span>
-              </a>
+                >User Dashboard <span>Welcome, {{ user_name }}!</span></a
+              >
             </h2>
             <ul class="list-unstyled components mb-5">
               <li>
                 <a href="{{ url_for('user_bp.show_user_dashboard') }}"
+                  ><i class="fas fa-chart-bar mr-3"></i> Overview</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('user_bp.show_services') }}"
                   ><i class="fas fa-list"></i> View Services</a
                 >
               </li>
@@ -55,6 +60,11 @@
               <li class="active">
                 <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
                   ><i class="fas fa-calendar"></i> My Appointments</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
+                  ><i class="fas fa-wallet mr-3"></i> Payments</a
                 >
               </li>
               <li>
@@ -73,66 +83,80 @@
 
         <div class="dashboard-main">
           <!-- User Appointments Section -->
-          <div
-            id="userAppointmentsSection"
-            class="dashboard-section"
-            style="display: block"
-          >
-            <h2>My Appointments</h2>
-            <div id="userAppointmentsList" class="appointments-list">
-              {% for appointment in appointments %}
-              <div class="appointment-card">
-                <div class="appointment-header">
-                  <h4>
-                    <a
-                      class="service-auto-link"
-                      href="{{ url_for('appointment_bp.find_service', service_id=appointment.service_id) }}"
-                      style="pointer-events: none; color: #666"
-                    >
-                      Loading...
-                    </a>
-                  </h4>
-                  <span class="status status-${appointment.status}"
-                    >{{ appointment.status }}</span
-                  >
-                </div>
-                <div class="appointment-details">
-                  <p><strong>Date:</strong> {{appointment.appointment_date}}</p>
-                  <p><strong>Time:</strong> {{appointment.appointment_time}}</p>
-                  <p>
-                    <strong>Price:</strong>
-                    <span id="ser_price_{{appointment.service_id}}"></span>
-                  </p>
-                  <p>
-                    <strong>Payment:</strong>
-                    <a
-                      class="payment-auto-link"
-                      href="{{ url_for('payment_bp.find_payment', appointment_id=appointment.id) }}"
-                      style="pointer-events: none; color: #666"
-                    >
-                      Payment Loading...
-                    </a>
-                  </p>
-                  <p><strong>Notes:</strong> ${appointment.notes}</p>
-                </div>
-                <div class="appointment-actions">
-                  {% if appointment.status == "pending" %}
-                  <a class="btn btn-sm btn-danger"> Cancel </a>
-                  {% elif appointment.status == "confirmed" %}
-                  <a class="btn btn-sm btn-danger"> Cancel </a>
-                  {% else %}
-                  <span class="text-muted">No actions available</span>
-                  {% endif %}
+          <div id="userAppointmentsList" class="appointments-list">
+            {% if appointments and appointments|length > 0 %} {% for appointment
+            in appointments %}
+            <div class="appointment-card">
+              <div class="appointment-header">
+                <h4>
                   <a
-                    class="btn btn-sm btn-primary"
-                    href="{{ url_for('feedback_bp.show_add_feedback', service_id=appointment.service_id) }}"
+                    class="service-auto-link"
+                    href="{{ url_for('appointment_bp.find_service', service_id=appointment.service_id) }}"
+                    style="
+                      pointer-events: none;
+                      color: #000000;
+                      text-decoration: none;
+                    "
                   >
-                    Feedback
+                    Loading...
                   </a>
-                </div>
+                </h4>
+                <span class="status status-{{ appointment.status | lower }}">
+                  {{ appointment.status }}
+                </span>
               </div>
-              {% endfor %}
+              <div class="appointment-details">
+                <p><strong>Date:</strong> {{ appointment.appointment_date }}</p>
+                <p><strong>Time:</strong> {{ appointment.appointment_time }}</p>
+                <p>
+                  <strong>Price:</strong>
+                  <span id="ser_price_{{ appointment.service_id }}"
+                    >Loading...</span
+                  >
+                </p>
+                <p>
+                  <strong>Payment:</strong>
+                  <a
+                    class="payment-auto-link"
+                    href="{{ url_for('payment_bp.find_payment', appointment_id=appointment.id) }}"
+                    style="
+                      pointer-events: none;
+                      color: #000000;
+                      text-decoration: none;
+                    "
+                  >
+                    Loading...
+                  </a>
+                </p>
+                <p><strong>Notes:</strong> {{ appointment.notes }}</p>
+              </div>
+              <div class="appointment-actions">
+                {% if appointment.status == "pending" %}
+                <a class="btn btn-sm btn-danger"> Cancel </a>
+                {% elif appointment.status == "confirmed" %}
+                <a class="btn btn-sm btn-danger"> Cancel </a>
+                {% else %}
+                <span class="text-muted">No actions available</span>
+                {% endif %}
+                <a
+                  class="btn btn-sm btn-primary"
+                  href="{{ url_for('feedback_bp.show_add_feedback', service_id=appointment.service_id) }}"
+                >
+                  Feedback
+                </a>
+              </div>
             </div>
+            {% endfor %} {% else %}
+            <div class="no-appointments">
+              <h4>No Appointments Found</h4>
+              <p>
+                You do not have any appointments yet.
+                <a href="{{ url_for('appointment_bp.show_bookAppointment') }}">
+                  Book one now </a
+                >.
+              </p>
+            </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -140,25 +164,26 @@
 
     <script>
       window.addEventListener("DOMContentLoaded", function () {
-        // Service data find and fill
+        // Service data fetch
         document.querySelectorAll(".service-auto-link").forEach((link) => {
           fetch(link.href)
             .then((res) => res.json())
             .then((servicedata) => {
               const url = new URL(link.href, window.location.origin);
-              const parts = url.pathname.split("/");
-              const serviceId = parts[parts.length - 1];
-
+              const serviceId = url.pathname.split("/").pop();
               const servicePrice = document.getElementById(
                 `ser_price_${serviceId}`
               );
 
-              if (servicedata[0]["name"]) {
-                link.textContent = servicedata[0]["name"];
-                console.log(servicedata[0]["price"]);
-                servicePrice.innerText = servicedata[0]["price"];
+              const service = Array.isArray(servicedata)
+                ? servicedata[0]
+                : servicedata;
+              if (service && service.name) {
+                link.textContent = service.name;
+                servicePrice.innerText = service.price ?? "N/A";
               } else {
                 link.textContent = "Unknown Service";
+                servicePrice.innerText = "N/A";
               }
             })
             .catch((error) => {
@@ -167,38 +192,35 @@
             });
         });
 
-        // Payment data find and fill
+        // Payment data fetch
         document.querySelectorAll(".payment-auto-link").forEach((link) => {
           fetch(link.href)
             .then((res) => res.json())
             .then((paymentdata) => {
-              // console.log("Payment data received:", paymentdata);
-
-              // Extract appointment ID from URL
               const url = new URL(link.href, window.location.origin);
               const appointmentId = url.searchParams.get("appointment_id");
-              // console.log("Processing appointment ID:", appointmentId);
 
-              // Find payment record for this appointment_id
-              const paymentInfo = paymentdata.find(
+              const paymentArray = Array.isArray(paymentdata)
+                ? paymentdata
+                : [];
+              const paymentInfo = paymentArray.find(
                 (p) => p.appointment_id == appointmentId
               );
 
               if (paymentInfo) {
-                // Update payment link text
-                link.textContent = `${paymentInfo.payment_method}`;
+                link.textContent = paymentInfo.payment_method;
               } else {
                 link.textContent = "No Payment Found";
               }
             })
             .catch((error) => {
-              // console.error("Error fetching payment data:", error);
+              console.error("Error fetching payment data:", error);
               link.textContent = "Payment Error";
             });
         });
       });
-    </script>
-    <script>
+
+      // Sidebar toggle
       document
         .getElementById("sidebarCollapse")
         .addEventListener("click", function () {

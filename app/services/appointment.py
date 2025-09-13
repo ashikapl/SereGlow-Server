@@ -6,8 +6,10 @@ def add_appointment_service(data):
     try:
         result = add_appointment_store(data)
 
-        if result:
+        if isinstance(result, tuple):  # error case
             return result
+
+        return result
 
     except Exception as e:
         error_message = str(e)

@@ -18,14 +18,29 @@ def add_feedback_store(data, service_id):
         return {"error": "Failed to create feedback, service_id and data.get('service_id') not match ."}, 400
 
 
-def get_feedback_store(service_id):
-    result = supabase.table("Feedback").select(
-        "*").eq("service_id", service_id).execute()
+# def get_feedback_store(service_id, user_id):
+#     result = supabase.table("Feedback").select(
+#         "*").eq("service_id", service_id, "user_id", user_id).execute()
+
+#     if result.data and len(result.data) > 0:
+#         return result
+#     else:
+#         return {"error": f"No feedback found for service_id {service_id}."}, 404
+
+
+def get_feedback_store(service_id, user_id):
+    result = (
+        supabase.table("Feedback")
+        .select("*")
+        .eq("service_id", service_id)
+        # .eq("user_id", user_id)
+        .execute()
+    )
 
     if result.data and len(result.data) > 0:
         return result
     else:
-        return {"error": f"No feedback found for service_id {service_id}."}, 404
+        return {"error": f"No feedback found for service_id {service_id} and user_id {user_id}."}, 404
 
 
 def update_feedback_store(data, service_id, feedback_id):

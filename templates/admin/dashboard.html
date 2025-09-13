@@ -32,65 +32,65 @@
     </div>
     <!-- Admin Dashboard (Hidden by default) -->
     <div id="adminDashboard" class="dashboard-container">
-      <nav id="sidebar" class="active">
-        <div class="custom-menu">
-          <button type="button" id="sidebarCollapse" class="toggleBtn">
-            <i class="fa fa-bars"></i>
-            <span class="sr-only">Toggle Menu</span>
-          </button>
-        </div>
-        <div class="p-3">
-          <h2>
-            <a href="/admin" class="logo"
-              >Admin Dashboard <span>Welcome, {{admin_name}}!</span>
-            </a>
-          </h2>
-          <ul class="list-unstyled components mb-5">
-            <li class="active">
-              <a href="/admin/"
-                ><i class="fas fa-chart-bar mr-3"></i> Overview</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('service_bp.get_services') }}">
-                <i class="fas fa-list mr-3"></i> Manage Services
-              </a>
-            </li>
-            <li>
-              <a href="{{ url_for('appointment_bp.show_appointment') }}"
-                ><i class="fas fa-calendar mr-3"></i> Appointments</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('payment_bp.show_payment') }}"
-                ><i class="fas fa-wallet mr-3"></i> Payments</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('schedule_bp.show_schedule') }}"
-                ><i class="fas fa-clock mr-3"></i> Shop Schedule</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('feedback_bp.show_feedback') }}"
-                ><i class="fas fa-comments mr-3"></i> Feedback</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('admin_bp.show_admin_profile') }}"
-                ><i class="fas fa-user mr-3"></i> Profile</a
-              >
-            </li>
-            <li>
-              <a href="{{ url_for('admin_bp.admin_logout') }}"
-                ><i class="fas fa-sign-out mr-3"></i> Logout</a
-              >
-            </li>
-          </ul>
-        </div>
-      </nav>
-
       <div class="dashboard-content">
+        <nav id="sidebar" class="active">
+          <div class="custom-menu">
+            <button type="button" id="sidebarCollapse" class="toggleBtn">
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+          </div>
+          <div class="p-3">
+            <h2>
+              <a href="/admin" class="logo"
+                >Admin Dashboard <span>Welcome, {{admin_name}}!</span>
+              </a>
+            </h2>
+            <ul class="list-unstyled components mb-5">
+              <li class="active">
+                <a href="/admin/"
+                  ><i class="fas fa-chart-bar mr-3"></i> Overview</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('service_bp.get_services') }}">
+                  <i class="fas fa-list mr-3"></i> Manage Services
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('appointment_bp.show_appointment') }}"
+                  ><i class="fas fa-calendar mr-3"></i> Appointments</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('payment_bp.show_payment') }}"
+                  ><i class="fas fa-wallet mr-3"></i> Payments</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('schedule_bp.show_schedule') }}"
+                  ><i class="fas fa-clock mr-3"></i> Shop Schedule</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('feedback_bp.show_feedback') }}"
+                  ><i class="fas fa-comments mr-3"></i> Feedback</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('admin_bp.show_admin_profile') }}"
+                  ><i class="fas fa-user mr-3"></i> Profile</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('admin_bp.admin_logout') }}"
+                  ><i class="fas fa-sign-out mr-3"></i> Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+
         <div class="dashboard-main" id="main">
           <!-- Overview Section -->
           <div id="adminOverviewSection" class="dashboard-section">
@@ -161,28 +161,11 @@
       }, 4000);
     </script>
     <script>
-      const sidebar = document.getElementById("sidebar");
-      const toggleBtn = document.getElementById("sidebarCollapse");
-      const sidebarItems = document.querySelectorAll("#sidebar ul li a"); // all links inside li
-
-      // Toggle sidebar on button click
-      toggleBtn.addEventListener("click", function (e) {
-        e.stopPropagation(); // Prevent event bubbling
-        sidebar.classList.toggle("active");
-      });
-
-      // Close sidebar if clicked outside
-      document.addEventListener("click", function (e) {
-        console.log("click");
-        sidebar.classList.add("active");
-      });
-
-      // Close sidebar when clicking on a menu item
-      sidebarItems.forEach((item) => {
-        item.addEventListener("click", function () {
-          sidebar.classList.add("active");
+      document
+        .getElementById("sidebarCollapse")
+        .addEventListener("click", function () {
+          document.getElementById("sidebar").classList.toggle("active");
         });
-      });
     </script>
   </body>
 </html>

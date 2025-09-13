@@ -2,18 +2,20 @@ from flask import (
     jsonify, request, Blueprint, redirect, url_for, render_template,
     make_response, json, flash, session
 )
-from app.services.admin import admin_signup_service, admin_login_service, update_admin_service
+from app.services.admin import admin_signup_service, admin_login_service
 from app.utils.user_validator import generate_token
 from app.utils.token_auth import admin_token_required
 from app.utils.helpers import total_count, average_rating, admin_info_cookie
 from app.stores.admin import find_admin_byID
+from app.utils.supabase_client import supabase
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
 admin = None
 
-
 # ---------- SIGNUP (POST) ----------
+
+
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
     if request.is_json:
@@ -59,7 +61,7 @@ def admin_login():
     admin_info = data_dict.get('admin', {})
     # Convert list to JSON string
     admin_info_str = json.dumps(admin_info)
-    # print("ad", admin)
+    print("Admin info cookie:", admin_info)
 
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(
@@ -78,6 +80,13 @@ def admin_login():
     )
     return resp
 
+
+# ---------- LOGOUT ----------
+# @admin_bp.route("/logout", methods=["GET"])
+# def admin_logout():
+#     resp = make_response(render_template("main.html"))
+#     resp.delete_cookie("authToken", samesite="Strict")
+#     return resp
 
 # ---------- LOGOUT ----------
 @admin_bp.route("/logout")
@@ -104,40 +113,6 @@ def admin_logout():
     return resp
 
 
-# ---------- UPDATE (POST) ----------
-@admin_bp.route("/update/<int:id>", methods=["POST"])
-def update_admin(id):
-    if request.is_json:
-        data = request.get_json()
-    else:
-        data = request.form.to_dict()
-
-    result = update_admin_service(data, id)
-
-    # print(result)  # <-- Already a list of dicts
-
-    # If result is already a list/dict, no need for json.loads
-    if isinstance(result, tuple) and "error" in result[0]:
-        return jsonify({"message": "Update Failed!", "error": result[0]["error"]}), 401
-
-    # Extract admin info
-    admin_info = result[0] if isinstance(
-        result, list) and len(result) > 0 else {}
-
-    # Convert dict to JSON string for cookie
-    admin_info_str = json.dumps(admin_info)
-
-    resp = make_response(redirect(url_for("admin_bp.show_admin_profile")))
-    resp.set_cookie(
-        "Admin_Info",
-        admin_info_str,
-        httponly=True,
-        secure=False,   # change to True for HTTPS
-        samesite="Strict"
-    )
-    return resp
-
-
 # ---------- SIGNUP (GET) ----------
 @admin_bp.route("/signup", methods=["GET"])
 def show_admin_signup():
@@ -160,14 +135,55 @@ def show_admin_dashboard():
     service = total_count("Service")
     user = total_count("User")
     rating = average_rating("Feedback")
-    admin_name = admin_info_cookie('firstname')
+    admin_name = admin_info_cookie("firstname")
 
-    return render_template("admin/dashboard.html",
-                           total_appointment=appointment,
-                           total_services=service,
-                           total_users=user,
-                           avg_rating=rating,
-                           admin_name=admin_name)
+    return render_template(
+        "admin/dashboard.html",
+        total_appointment=appointment,
+        total_services=service,
+        total_users=user,
+        avg_rating=rating,
+        admin_name=admin_name
+    )
+
+
+# ---------------------------
+# Update profile
+# ---------------------------
+@admin_bp.route('/profile/update', methods=['POST'])
+@admin_token_required
+def update_admin_profile():
+    admin_id = admin_info_cookie('id')
+    if not admin_id:
+        flash("Admin not found. Please log in again.", "danger")
+        return redirect(url_for("admin_bp.admin_logout"))
+
+    firstname = request.form.get('firstname')
+    lastname = request.form.get('lastname')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    address = request.form.get('address')
+
+    response = supabase.table("admin").update({
+        "firstname": firstname,
+        "lastname": lastname,
+        "email": email,
+        "phone": phone,
+        "address": address
+    }).eq("id", admin_id).execute()
+
+    if response.data:
+        flash("Profile updated successfully!", "success")
+    else:
+        flash("Error updating profile!", "danger")
+
+    return redirect(url_for("admin_bp.show_admin_profile"))
+
+
+# @admin_bp.route("/", methods=["GET"])
+# @admin_token_required
+# def show_admin_services():
+#     return render_template("admin/service.html")
 
 
 # ---------- PROFILE ----------
@@ -191,6 +207,6 @@ def show_update_profile():
 
     admin = find_admin_byID(admin_id).data
 
-    print(admin[0])
+    # print(admin[0])
 
     return render_template("admin/updateProfile.html", admin_name=admin_name, admin=admin[0])

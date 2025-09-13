@@ -9,11 +9,17 @@ from app.routes.feedback import feedback_bp
 from app.routes.appointment import appointment_bp
 from app.routes.main import main_bp
 from app.routes.schedule import schedule_bp
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 
 def create_app():
     app = Flask(__name__, static_folder="../static")
     app.config.from_object(Config)
+    app.secret_key = os.getenv("SECRET_KEY")
 
     # Enable CORS
     CORS(app, supports_credentials=True)

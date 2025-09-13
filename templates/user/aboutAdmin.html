@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="../../static/css/main.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    <!-- Login Notification -->
+    <div class="notification notification-success" id="loginNotification">
+      <span>Login successful!</span>
+      <button onclick="this.parentElement.remove()">&times;</button>
+    </div>
+
+    <!-- User Dashboard -->
+    <div id="userDashboard" class="dashboard-container">
+      <div class="dashboard-content d-flex">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="active">
+          <div class="custom-menu">
+            <button type="button" id="sidebarCollapse" class="toggleBtn">
+              <i class="fa fa-bars"></i>
+              <span class="sr-only">Toggle Menu</span>
+            </button>
+          </div>
+          <div class="p-3">
+            <h2>
+              <a href="/user" class="logo">
+                Dashboard <span>Welcome, {{user_name}}!</span>
+              </a>
+            </h2>
+            <ul class="list-unstyled components mb-5">
+              <li class="active">
+                <a href="{{ url_for('user_bp.show_user_dashboard') }}">
+                  <i class="fas fa-chart-bar mr-3"></i> Overview
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('user_bp.show_services') }}">
+                  <i class="fas fa-list"></i> View Services
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('appointment_bp.show_bookAppointment') }}">
+                  <i class="fas fa-calendar-plus"></i> Book Appointment
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('appointment_bp.show_myAppointment') }}">
+                  <i class="fas fa-calendar"></i> My Appointments
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
+                  ><i class="fas fa-wallet mr-3"></i> Payments</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('user_bp.show_user_profile') }}">
+                  <i class="fas fa-user"></i> Profile
+                </a>
+              </li>
+              <li>
+                <a
+                  href="{{ url_for('user_bp.user_logout') }}"
+                  onclick="logout()"
+                >
+                  <i class="fas fa-sign-out mr-3"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="py-4 px-5 w-100">
+          <h3 class="mb-4">Overview</h3>
+
+          <!-- Stats Cards Row -->
+          <!-- <div class="row mb-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card text-center p-3 shadow-sm overview-stat-card">
+                <i class="fas fa-calendar-check fa-2x text-primary mb-2"></i>
+                <h5>Total Appointments</h5>
+                <p class="fw-bold">{{ total_appointments }}</p>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card text-center p-3 shadow-sm overview-stat-card">
+                <i class="fas fa-list fa-2x text-success mb-2"></i>
+                <h5>Services Booked</h5>
+                <p class="fw-bold">{{ services_booked }}</p>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card text-center p-3 shadow-sm overview-stat-card">
+                <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                <h5>Upcoming</h5>
+                <p class="fw-bold">{{ upcoming_appointments }}</p>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="card text-center p-3 shadow-sm overview-stat-card">
+                <i class="fas fa-star fa-2x text-info mb-2"></i>
+                <h5>Rating</h5>
+                <p class="fw-bold">4.8/5</p>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- Shop Timing Section -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card shadow-sm overview-section-card">
+                <div
+                  class="card-header overview-section-header d-flex justify-content-between align-items-center"
+                >
+                  <h5 class="mb-0">
+                    <i class="fas fa-clock me-2"></i> Shop Timing
+                  </h5>
+
+                  {# 🔹 Show dynamic badge for TODAY #} {% set today_schedule =
+                  schedule_data | selectattr("day_of_week", "equalto",
+                  current_day) | first %} {% if today_schedule and
+                  today_schedule.is_open and today_schedule.slots %}
+                  <div class="shop-status-badge shop-open">
+                    <i class="fas fa-check-circle"></i> Currently Open
+                  </div>
+                  {% else %}
+                  <div class="shop-status-badge shop-closed">
+                    <i class="fas fa-times-circle"></i> Currently Closed
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="card-body">
+                  <div class="timing-overview-grid">
+                    {% set day_names =
+                    ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+                    %} {% for day_name in day_names %} {% set day_schedule =
+                    schedule_data | selectattr("day_of_week", "equalto",
+                    day_name) | first %}
+
+                    <div
+                      class="timing-day-card {% if day_name.lower() == current_day.lower() %} today {% endif %} {% if not day_schedule or not day_schedule.is_open %} closed {% endif %}"
+                    >
+                      <h6>{{ day_name }}</h6>
+
+                      {% if not day_schedule or not day_schedule.is_open %}
+                      <p>Closed</p>
+                      {% elif day_schedule.slots %} {% for slot in
+                      day_schedule.slots %}
+                      <p>{{ slot.start_time }} - {{ slot.end_time }}</p>
+                      {% endfor %} {% else %}
+                      <p>No schedule set</p>
+                      {% endif %}
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Info & Portfolio Section -->
+          <div class="row mb-4">
+            <div class="col-lg-6 mb-3">
+              <div class="card shadow-sm overview-section-card h-100">
+                <div class="card-header overview-section-header">
+                  <h5 class="mb-0">
+                    <i class="fas fa-user-shield me-2"></i>About Our Salon
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <div class="admin-info-overview">
+                    <div class="admin-avatar-overview">
+                      <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="admin-details-overview">
+                      <h5>{{ admin.firstname }} {{ admin.lastname }}</h5>
+                      <p>
+                        <i class="fas fa-briefcase me-1"></i> {{ admin.role or
+                        "Owner" }}
+                      </p>
+                      <p>
+                        <i class="fas fa-graduation-cap me-1"></i> {{
+                        admin.experience }}+ Years Experience
+                      </p>
+                      <p>
+                        <i class="fas fa-award me-1"></i> Certified Specialist
+                      </p>
+                      <p>
+                        <i class="fas fa-envelope me-1"></i> {{ admin.email }}
+                      </p>
+                      <p><i class="fas fa-phone me-1"></i> {{ admin.phone }}</p>
+                      <div class="admin-badges-overview">
+                        {% if admin.specialization %} {% for spec in
+                        admin.specialization.split(",") %}
+                        <span class="badge bg-primary">{{ spec.strip() }}</span>
+                        {% endfor %} {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6 mb-3">
+              <div class="card shadow-sm overview-section-card h-100">
+                <div class="card-header overview-section-header">
+                  <h5 class="mb-0">
+                    <i class="fas fa-images me-2"></i>Our Expertise
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <div class="portfolio-overview-grid">
+                    <div class="portfolio-overview-item">
+                      <i class="fas fa-cut"></i>
+                      <span>Hair Cutting</span>
+                    </div>
+                    <div class="portfolio-overview-item">
+                      <i class="fas fa-palette"></i>
+                      <span>Hair Coloring</span>
+                    </div>
+                    <div class="portfolio-overview-item">
+                      <i class="fas fa-spa"></i>
+                      <span>Hair Treatment</span>
+                    </div>
+                    <div class="portfolio-overview-item">
+                      <i class="fas fa-magic"></i>
+                      <span>Hair Styling</span>
+                    </div>
+                    <div class="portfolio-overview-item">
+                      <i class="fas fa-leaf"></i>
+                      <span>Organic Care</span>
+                    </div>
+                    <div class="portfolio-overview-item">
+                      <i class="fas fa-ring"></i>
+                      <span>Bridal Services</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Appointments and Services Row -->
+          <div class="row">
+            <div class="col-lg-8 mb-3">
+              <div class="card shadow-sm overview-section-card">
+                <div class="card-header overview-section-header">
+                  <h5 class="mb-0">
+                    <i class="fas fa-calendar me-2"></i>Recent Appointments
+                  </h5>
+                  <a
+                    href="{{ url_for('appointment_bp.show_myAppointment') }}"
+                    class="btn btn-sm btn-outline-light"
+                    >View All</a
+                  >
+                </div>
+                <div class="card-body">
+                  {% if recent_appointments %} {% for appt in
+                  recent_appointments %}
+                  <div class="appointment-overview-card">
+                    <div class="appointment-overview-header">
+                      <h6>{{ appt.name }}</h6>
+                      <span
+                        class="status-overview status-{{ appt.status | lower }}"
+                      >
+                        {{ appt.status }}
+                      </span>
+                    </div>
+                    <div class="appointment-overview-details">
+                      <p>
+                        <i class="fas fa-calendar me-1"></i>
+                        {{ appt.appointment_date }} | {{ appt.appointment_time
+                        }}
+                      </p>
+                      {% if appt.price %}
+                      <p>
+                        <i class="fas fa-indian-rupee-sign me-1"></i> {{
+                        appt.price }}
+                      </p>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% endfor %} {% else %}
+                  <p>No recent appointments found.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 mb-3">
+              <div class="card shadow-sm overview-section-card">
+                <div class="card-header overview-section-header">
+                  <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>Popular Services
+                  </h5>
+                </div>
+                <div class="card-body">
+                  {% if popular_services %} {% for service in popular_services
+                  %}
+                  <div class="service-overview-item">
+                    <div class="service-overview-info">
+                      <h6>{{ service.name }}</h6>
+                      <small>{{ service.duration }} min</small>
+                    </div>
+                    <div class="service-overview-price">
+                      <i class="fas fa-indian-rupee-sign me-1"></i>{{
+                      service.price }}
+                    </div>
+                  </div>
+                  {% endfor %} {% else %}
+                  <p>No services available right now.</p>
+                  {% endif %}
+
+                  <div class="text-center mt-3">
+                    <a
+                      href="{{ url_for('user_bp.show_services') }}"
+                      class="btn btn-primary btn-sm"
+                      >View All Services</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      // Logout Sync Across Tabs
+      window.addEventListener("storage", function (event) {
+        if (event.key === "logout") {
+          window.location.href = "/user/login";
+        }
+      });
+      function logout() {
+        localStorage.setItem("logout", Date.now());
+      }
+
+      // Login Notification Animation
+      const notif = document.getElementById("loginNotification");
+      setTimeout(() => {
+        if (notif) {
+          notif.style.opacity = "0";
+          notif.style.transform = "translateX(100%)";
+          notif.style.transition = "all 0.5s ease";
+        }
+      }, 2000);
+      setTimeout(() => {
+        if (notif) {
+          notif.remove();
+        }
+      }, 4000);
+
+      // Sidebar Toggle
+      document
+        .getElementById("sidebarCollapse")
+        .addEventListener("click", function () {
+          document.getElementById("sidebar").classList.toggle("active");
+        });
+
+      // Shop Status Update
+      function updateShopStatus() {
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+        const statusElement = document.getElementById("shopStatus");
+
+        // Check if it's Sunday (0) or if it's outside business hours
+        if (currentDay === 0 || currentHour < 9 || currentHour >= 20) {
+          statusElement.className = "shop-status-badge shop-closed";
+          statusElement.innerHTML =
+            '<i class="fas fa-times-circle"></i> Currently Closed';
+        } else {
+          statusElement.className = "shop-status-badge shop-open";
+          statusElement.innerHTML =
+            '<i class="fas fa-check-circle"></i> Currently Open';
+        }
+
+        // Highlight current day
+        const days = document.querySelectorAll(".timing-day-card");
+        days.forEach((day, index) => {
+          day.classList.remove("today");
+          if (index === (currentDay === 0 ? 6 : currentDay - 1)) {
+            day.classList.add("today");
+          }
+        });
+      }
+
+      // Update shop status on page load
+      updateShopStatus();
+
+      // Update every minute
+      setInterval(updateShopStatus, 60000);
+    </script>
+    <script>
+      // Enhanced Shop Status Update with Dynamic Schedule
+      function updateShopStatus() {
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        const currentTime = currentHour * 60 + currentMinute; // Convert to minutes for easier comparison
+
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const currentDay = days[now.getDay() === 0 ? 6 : now.getDay() - 1]; // Adjust for Sunday
+        const statusElement = document.getElementById("shopStatus");
+
+        // Get today's schedule from the backend data
+        const todaySchedule = scheduleData.find(day => day.day_of_week === currentDay);
+
+        let isOpen = false;
+
+        if (todaySchedule && todaySchedule.is_open && todaySchedule.slots.length > 0) {
+          // Check if current time falls within any of the time slots
+          for (const slot of todaySchedule.slots) {
+            const startTimeParts = slot.start_time.split(':');
+            const endTimeParts = slot.end_time.split(':');
+
+            const startTime = parseInt(startTimeParts[0]) * 60 + parseInt(startTimeParts[1]);
+            const endTime = parseInt(endTimeParts[0]) * 60 + parseInt(endTimeParts[1]);
+
+            if (currentTime >= startTime && currentTime < endTime) {
+              isOpen = true;
+              break;
+            }
+          }
+        }
+
+        // Update status display
+        if (isOpen) {
+          statusElement.className = "shop-status-badge shop-open";
+          statusElement.innerHTML = '<i class="fas fa-check-circle"></i> Currently Open';
+        } else {
+          statusElement.className = "shop-status-badge shop-closed";
+          statusElement.innerHTML = '<i class="fas fa-times-circle"></i> Currently Closed';
+        }
+
+        // Highlight current day
+        const dayCards = document.querySelectorAll(".timing-day-card");
+        dayCards.forEach((card, index) => {
+          card.classList.remove("today");
+          const dayIndex = now.getDay() === 0 ? 6 : now.getDay() - 1; // Convert Sunday from 0 to 6
+          if (index === dayIndex) {
+            card.classList.add("today");
+          }
+        });
+      }
+
+      // Initialize schedule data from backend
+      const scheduleData = {{ schedule_data | tojson }};
+
+      // Update shop status on page load and every minute
+      updateShopStatus();
+      setInterval(updateShopStatus, 60000);
+    </script>
+  </body>
+</html>

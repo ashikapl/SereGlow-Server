@@ -1,10 +1,10 @@
 from flask import (jsonify, request, Blueprint,
                    render_template, json,
-                   redirect, url_for)
+                   redirect, url_for, session)
 from app.services.appointment import (add_appointment_service, get_appointment_service,
                                       update_appointment_service, delete_appointment_service)
 from app.utils.supabase_client import supabase
-from app.utils.token_auth import admin_token_required
+from app.utils.token_auth import admin_token_required, user_token_required
 from app.stores.service import get_service_store
 from app.stores.appointment import find_user_byID, get_appointment_byUserID
 from app.stores.service import get_service_byId
@@ -17,23 +17,29 @@ appointment_bp = Blueprint("appointment_bp", __name__)
 # ---------------- ADD APPOINTMENT ----------------
 @appointment_bp.route("/", methods=["POST"])
 def add_appointment():
+    global appointment_data
     if request.is_json:
         data = request.get_json()
     else:
         data = request.form.to_dict()
 
-    result = add_appointment_service(data)
-
     service = find_service(data.get('service_id'))
     # print("service", service)
 
-    if data.get('payment_method') == "cash":
-        data = {"user_id": data.get('user_id'), "service_id": data.get(
-            'service_id'), "appointment_id": result.data[0].get('id'), "amount": service[0].get('price'), "payment_method": 'cash', "payment_status": 'pending'}
-    elif data.get('payment_method') == "online":
-        return redirect(url_for("payment_bp.show_makePayment", appointment_id=result.data[0].get('id')))
+    # store in session
+    print("appointment_data", data)
+    session["appointment_data"] = data
 
-    payement_result = add_payment_service(data, result.data[0].get('id'))
+    if data.get('payment_method') == "cash":
+        print("cash")
+        result = add_appointment_service(data)
+        payment_data = {"user_id": data.get('user_id'), "service_id": data.get(
+            'service_id'), "appointment_id": result.data[0].get('id'), "amount": service[0].get('price'), "payment_method": 'cash', "payment_status": 'pending'}
+        payment_result = add_payment_service(
+            payment_data, result.data[0].get('id'))
+    elif data.get('payment_method') == "online":
+        print("online")
+        return redirect(url_for("payment_bp.show_checkout", service_id=service[0].get('id')))
 
     if isinstance(result, tuple):
         return result
@@ -72,38 +78,16 @@ def update_appointment(service_id, id):
     return jsonify({"message": "Update successful!"}), 200
 
 
-# ---------------- UPDATE APPOINTMENT STATUS ----------------
-@appointment_bp.route("/update_status/<int:id>", methods=["POST"])
-def update_status(id):
-    if request.is_json:
-        data = request.get_json()
-    else:
-        data = request.form.to_dict()
-
-    new_status = data.get("status")
-
-    try:
-        response = supabase.table("Appointment").update(
-            {"status": new_status}
-        ).eq("id", id).execute()
-
-        if response.data:
-            return jsonify({"success": True, "message": "Status updated"})
-        else:
-            return jsonify({"success": False, "message": "No appointment found"})
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)})
-
-
 # ---------------- DELETE APPOINTMENT ----------------
-@appointment_bp.route("/<int:service_id>/<int:id>", methods=["DELETE"])
+@appointment_bp.route("/delete/<int:service_id>/<int:id>", methods=["GET", "DELETE"])
 def delete_appointment(service_id, id):
     result = delete_appointment_service(service_id, id)
 
     if isinstance(result, tuple):
         return jsonify(result[0]), result[1]
 
-    return jsonify({"message": "Delete successful!"}), 200
+    # return jsonify({"message": "Delete successful!"}), 200
+    return redirect(url_for("appointment_bp.show_myAppointment"))
 
 
 # ---------------- SHOW APPOINTMENT (Admin) ----------------
@@ -134,13 +118,20 @@ def show_bookAppointment():
 
 # ---------------- SHOW MY APPOINTMENT (User) ----------------
 @appointment_bp.route("/myappointment", methods=["GET"])
+@user_token_required
 def show_myAppointment():
     user_name = user_info_cookie('username')
     user_id = user_info_cookie('id')
+    print("user_id", user_id)
 
     result = get_appointment_byUserID(user_id)
 
-    appointments = result.data
+    # Handle tuple (error case)
+    if isinstance(result, tuple):
+        # Instead of returning JSON, render page with empty list
+        appointments = []
+    else:
+        appointments = result.data if result.data else []
 
     return render_template("user/myAppointment.html",
                            user_name=user_name,
@@ -161,3 +152,30 @@ def find_service(service_id):
     result = get_service_byId(service_id)
 
     return result.data
+
+
+# ---------------- UPDATE APPOINTMENT STATUS ----------------
+@appointment_bp.route("/update_status/<int:id>", methods=["POST"])
+def update_status(id):
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
+
+    new_status = data.get("status")
+
+    print("data", data)
+
+    try:
+        response = supabase.table("Appointment").update(
+            {"status": new_status}
+        ).eq("id", id).execute()
+
+        print("res", response)
+
+        if response.data:
+            return jsonify({"success": True, "message": "Status updated"})
+        else:
+            return jsonify({"success": False, "message": "No appointment found"})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)})

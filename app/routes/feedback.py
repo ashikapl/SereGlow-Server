@@ -1,3 +1,4 @@
+from flask import render_template
 from flask import (
     Blueprint, request, jsonify, render_template,
     redirect, url_for
@@ -28,14 +29,36 @@ def add_feedback(service_id):
     return redirect(url_for("appointment_bp.show_myAppointment"))
 
 
+# # ---------------- GET FEEDBACK ----------------
+# @feedback_bp.route("/<int:service_id>", methods=["GET"])
+# def get_feedback(service_id):
+#     """Fetch feedback for a specific service."""
+#     result = get_feedback_service(service_id)
+#     print("res", result)
+#     if isinstance(result, tuple):
+#         return result
+#     # return jsonify(result.data)
+#     return redirect("admin/feedback.html", service_id=service_id), 200
+
+
 # ---------------- GET FEEDBACK ----------------
 @feedback_bp.route("/<int:service_id>", methods=["GET"])
 def get_feedback(service_id):
     """Fetch feedback for a specific service."""
-    result = get_feedback_service(service_id)
-    if isinstance(result, tuple):
+    user_id = user_info_cookie('id')
+    # fetch feedback by service_id
+    result = get_feedback_service(service_id, user_id)
+
+    if isinstance(result, tuple):  # error case
         return result
-    return jsonify(result.data)
+
+    feedbacks = result.data if hasattr(result, "data") else result
+
+    # Render HTML page and pass data to Jinja
+    return render_template("admin/feedback.html",
+                           user_id=user_id,
+                           service_id=service_id,
+                           feedbacks=feedbacks)
 
 
 # ---------------- UPDATE FEEDBACK ----------------

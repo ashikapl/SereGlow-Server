@@ -1,3 +1,5 @@
+from flask import request
+import json
 import re
 import random
 from app.utils.supabase_client import supabase
@@ -69,14 +71,36 @@ def admin_info(id):
 def admin_info_cookie(variableName):
     admin_info = request.cookies.get("Admin_Info")
     if admin_info:
-        _admin = json.loads(admin_info)[variableName]
+        return json.loads(admin_info)[variableName]
 
-    return _admin
+    return None
 
 
 def user_info_cookie(variableName):
     user_info = request.cookies.get("User_Info")
+    print("user info", user_info)
     if user_info:
-        _user = json.loads(user_info)[variableName]
+        return json.loads(user_info)[variableName]
 
-    return _user
+    return None
+
+
+# def admin_info_cookie(variableName):
+#     admin_info = request.cookies.get("Admin_Info")
+#     if admin_info:
+#         try:
+#             return json.loads(admin_info).get(variableName)
+#         except Exception:
+#             return None
+#     return None
+
+
+# def user_info_cookie(variableName):
+#     user_info = request.cookies.get("User_Info")
+#     print("user info", user_info)
+#     if user_info:
+#         try:
+#             return json.loads(user_info).get(variableName)
+#         except Exception:
+#             return None
+#     return None
