@@ -125,7 +125,9 @@ def show_payment_success():
         payment_data, result.data[0].get('id'))
 
     # return render_template("user/payment_success.html")
-    return redirect(url_for("appointment_bp.show_myAppointment"))
+    return redirect(url_for("payment_bp.show_booking_summary", service_name=service[0].get('name'), service_price=service[0].get('price'), appointment_date=appointment_data.get(
+        'appointment_date'), appointment_time=appointment_data.get(
+        'appointment_time')))
 
 
 # ---------------- Show Payment Cancle----------------
@@ -133,6 +135,24 @@ def show_payment_success():
 @user_token_required
 def show_payment_cancle():
     return render_template("user/payment_cancle.html")
+
+
+# ---------------- Show Booking Summary----------------
+@payment_bp.route("/bookingSummary", methods=["GET"])
+@user_token_required
+def show_booking_summary():
+    service_name = request.args.get("service_name")
+    service_price = request.args.get("service_price")
+    appointment_date = request.args.get("appointment_date")
+    appointment_time = request.args.get("appointment_time")
+
+    return render_template(
+        "user/booking_summary.html",
+        service_name=service_name,
+        service_price=service_price,
+        appointment_date=appointment_date,
+        appointment_time=appointment_time
+    )
 
 
 # ---------------- Find Payment ----------------

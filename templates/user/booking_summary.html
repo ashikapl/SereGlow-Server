@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parlor Checkout</title>
+    <link rel="stylesheet" href="../../static/css/checkout.css" />
+  </head>
+  <body>
+    <div class="checkout-container">
+      <!-- Back Button -->
+      <button class="back-button" onclick="goToMyAppointment()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+
+      <h1>Your Booking</h1>
+      <div class="section service-summary">
+        <h2>Summary</h2>
+        <div class="item">
+          <span>{{ service_name }}:</span>
+          <span>{{ service_price }}</span>
+        </div>
+        <div class="item">
+          <span>Date:</span>
+          <span>{{ appointment_date }}</span>
+        </div>
+        <div class="item">
+          <span>Time:</span>
+          <span>{{ appointment_time }}</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function goToMyAppointment() {
+        window.location.href =
+          "{{ url_for('appointment_bp.show_myAppointment') }}";
+      }
+    </script>
+  </body>
+</html>
