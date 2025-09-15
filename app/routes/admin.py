@@ -13,9 +13,8 @@ admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
 
 admin = None
 
+
 # ---------- SIGNUP (POST) ----------
-
-
 @admin_bp.route('/register', methods=['POST'])
 def admin_signUp():
     if request.is_json:
@@ -80,13 +79,6 @@ def admin_login():
     )
     return resp
 
-
-# ---------- LOGOUT ----------
-# @admin_bp.route("/logout", methods=["GET"])
-# def admin_logout():
-#     resp = make_response(render_template("main.html"))
-#     resp.delete_cookie("authToken", samesite="Strict")
-#     return resp
 
 # ---------- LOGOUT ----------
 @admin_bp.route("/logout")
@@ -178,12 +170,6 @@ def update_admin_profile():
         flash("Error updating profile!", "danger")
 
     return redirect(url_for("admin_bp.show_admin_profile"))
-
-
-# @admin_bp.route("/", methods=["GET"])
-# @admin_token_required
-# def show_admin_services():
-#     return render_template("admin/service.html")
 
 
 # ---------- PROFILE ----------

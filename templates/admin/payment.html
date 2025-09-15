@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Payment</title>
+    <title>Admin Appointment</title>
     <link rel="stylesheet" href="../static/css/main.css" />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -24,6 +24,7 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
   </head>
+
   <body>
     <!-- Admin Dashboard (Hidden by default) -->
     <div id="adminDashboard" class="dashboard-container">
@@ -58,7 +59,7 @@
                 >
               </li>
               <li class="active">
-                <a href="{{ url_for('payment_bp.show_payment') }}"
+                <a href="{{ url_for('payment_bp.get_admin_payment') }}"
                   ><i class="fas fa-wallet mr-3"></i> Payments</a
                 >
               </li>
@@ -89,6 +90,7 @@
         <div class="dashboard-main">
           <!-- Appointments Management -->
           <div id="adminPaymentsSection" class="dashboard-section">
+            <!-- Filter Dropdown -->
             <div class="content-header">
               <h2>Payments</h2>
               <div class="header-buttons">
@@ -96,84 +98,66 @@
                   <select id="paymentFilter">
                     <option value="all">All Payments</option>
                     <option value="paid">Paid</option>
-                    <option value="unpaid">Unpaid</option>
+                    <option value="pending">Pending</option>
+                    <option value="failed">Failed</option>
                   </select>
                 </div>
               </div>
             </div>
 
-            <div id="adminPaymentsSection" class="payments-list">
+            <div id="adminPaymentsList" class="payments-list">
               {% for payment in payments %}
               <div class="payment-card">
                 <div class="payment-header">
                   <h4 id="user_data">
                     <a
-                      class="user-auto-link"
-                      href="{{ url_for('payment_bp.find_user', user_id=payment.user_id) }}"
                       style="
                         pointer-events: none;
                         color: #000000;
                         text-decoration: none;
                       "
                     >
-                      Loading...
+                      Customer: {{ payment.user_name }}
                     </a>
                   </h4>
-                  <span class="status status-${payment.status}"
-                    >{{ payment.status }}</span
-                  >
+                  <span class="status status-{{ payment.payment_status }}">
+                    {{ payment.payment_status|capitalize }}
+                  </span>
                 </div>
                 <div class="payment-details">
                   <p id="service_data">
                     <strong>Service:</strong>
                     <a
-                      class="service-auto-link"
-                      href="{{ url_for('payment_bp.find_service', service_id=payment.service_id) }}"
                       style="
                         pointer-events: none;
                         color: #000000;
                         text-decoration: none;
                       "
                     >
-                      Loading...
+                      {{ payment.service_name }}
                     </a>
                   </p>
                   <p><strong>Amount:</strong> ₹{{payment.amount}}</p>
-                  <!-- <p><strong>Date:</strong> {{payment.appointment_date}}</p> -->
                   <p>
                     <strong>Payment Method:</strong>
-                    <span id="paymentMethod">{{payment.payment_method}}</span>
+                    <span>{{ payment.payment_method|capitalize }}</span>
                   </p>
-                  <p>
-                    <strong>Payment Status:</strong>
-                    <span id="paymentStatus">{{payment.payment_status}}</span>
-                  </p>
-                  <!-- ${ appointment.notes ? `
-                  <p><strong>Notes:</strong> ${appointment.notes}</p>
-                  ` : "" } -->
                 </div>
                 <div class="payment-actions">
-                  <!-- <a
-                    href="#"
-                    class="btn btn-sm btn-primary"
-                    style="margin-right: 500px"
-                  >
-                    Payment Details 
-                  </a> -->
                   {% if payment.payment_method == "cash" %} {% if
                   payment.payment_status == "pending" %}
                   <button
                     class="btn btn-sm btn-success"
-                    onclick="updatePaymentStatus({ payment.id }, 'confirmed')"
+                    onclick="updatePaymentStatus({{ payment.id }}, 'paid')"
                   >
-                    Paid
+                    Mark as Paid
                   </button>
                   {% elif payment.payment_status == "failed" %}
                   <button
-                    class="btn btn-sm btn-primary"
-                    onclick="updatePaymentStatus({{ payment.id }}, 'completed')"
+                    class="btn btn-sm btn-warning"
+                    onclick="updatePaymentStatus({{ payment.id }}, 'pending')"
                   >
-                    unpaid
+                    Retry
                   </button>
                   {% endif %} {% endif %}
                 </div>
@@ -186,104 +170,108 @@
     </div>
 
     <script>
-      const paymentMethod = document.getElementById("paymentMethod");
-      const paymentStatus = document.getElementById("paymentStatus");
+      // const paymentMethod = document.getElementById("paymentMethod");
+      // const paymentStatus = document.getElementById("paymentStatus");
 
-      window.addEventListener("DOMContentLoaded", function () {
-        // User data find and fill
-        document.querySelectorAll(".user-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((userdata) => {
-              // Fill the <a> text with user first + last name
-              if (userdata[0]["firstname"] && userdata[0]["lastname"]) {
-                link.textContent =
-                  "Customer Name: " +
-                  userdata[0]["firstname"] +
-                  " " +
-                  userdata[0]["lastname"];
-              } else {
-                link.textContent = "Customer Name: " + "Unknown User";
-              }
-            });
-        });
+      // window.addEventListener("DOMContentLoaded", function () {
+      // User data find and fill
+      // document.querySelectorAll(".user-auto-link").forEach((link) => {
+      //   fetch(link.href)
+      //     .then((res) => res.json())
+      //     .then((userdata) => {
+      //       // Fill the <a> text with user first + last name
+      //       if (userdata[0]["firstname"] && userdata[0]["lastname"]) {
+      //         link.textContent =
+      //           "Customer: " +
+      //           userdata[0]["firstname"] +
+      //           " " +
+      //           userdata[0]["lastname"];
+      //       } else {
+      //         link.textContent = "Customer: " + "Unknown User";
+      //       }
+      //     });
+      // });
 
-        // Service data find and fill
-        document.querySelectorAll(".service-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((servicedata) => {
-              if (servicedata[0]["name"]) {
-                link.textContent = servicedata[0]["name"];
-              } else {
-                link.textContent = "Unknown Service";
-              }
-            });
-        });
+      // Service data find and fill
+      // document.querySelectorAll(".service-auto-link").forEach((link) => {
+      //   fetch(link.href)
+      //     .then((res) => res.json())
+      //     .then((servicedata) => {
+      //       if (servicedata[0]["name"]) {
+      //         link.textContent = servicedata[0]["name"];
+      //       } else {
+      //         link.textContent = "Unknown Service";
+      //       }
+      //     });
+      // });
 
-        // Payment data find and fill
-        document.querySelectorAll(".payment-auto-link").forEach((link) => {
-          fetch(link.href)
-            .then((res) => res.json())
-            .then((paymentdata) => {
-              if (
-                paymentdata[0] &&
-                paymentdata[0]["payment_method"] &&
-                paymentdata[0]["payment_status"]
-              ) {
-                paymentMethod.innerText = paymentdata[0]["payment_method"];
-                paymentStatus.innerText = paymentdata[0]["payment_status"];
-              } else {
-                link.textContent = "Unknown Service";
-              }
-            });
-        });
-      });
+      // Payment data find and fill
+      //   document.querySelectorAll(".payment-auto-link").forEach((link) => {
+      //     fetch(link.href)
+      //       .then((res) => res.json())
+      //       .then((paymentdata) => {
+      //         if (
+      //           paymentdata[0] &&
+      //           paymentdata[0]["payment_method"] &&
+      //           paymentdata[0]["payment_status"]
+      //         ) {
+      //           paymentMethod.innerText = paymentdata[0]["payment_method"];
+      //           paymentStatus.innerText = paymentdata[0]["payment_status"];
+      //         } else {
+      //           link.textContent = "Unknown Service";
+      //         }
+      //       });
+      //   });
+      // });
     </script>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const filterSelect = document.getElementById("paymentFilter");
-        const appointmentCards = document.querySelectorAll(".payment-card");
+      document
+        .getElementById("sidebarCollapse")
+        .addEventListener("click", function () {
+          document.getElementById("sidebar").classList.toggle("active");
+        });
+    </script>
+    <script>
+      document
+        .getElementById("paymentFilter")
+        .addEventListener("change", function () {
+          const filter = this.value.toLowerCase();
+          const paymentCards = document.querySelectorAll(".payment-card");
 
-        filterSelect.addEventListener("change", function () {
-          const selectedFilter = this.value;
+          paymentCards.forEach((card) => {
+            const status = card
+              .querySelector(".status")
+              .textContent.trim()
+              .toLowerCase();
 
-          appointmentCards.forEach((card) => {
-            const statusEl = card.querySelector("#paymentStatus");
-            const status = statusEl ? statusEl.textContent.toLowerCase() : "";
-
-            if (selectedFilter === "all" || status === selectedFilter) {
-              card.style.display = "block"; // show
+            if (filter === "all" || status === filter) {
+              card.style.display = "block";
             } else {
-              card.style.display = "none"; // hide
+              card.style.display = "none";
             }
           });
         });
-      });
     </script>
     <script>
-      const sidebar = document.getElementById("sidebar");
-      const toggleBtn = document.getElementById("sidebarCollapse");
-      const sidebarItems = document.querySelectorAll("#sidebar ul li a"); // all links inside li
-
-      // Toggle sidebar on button click
-      toggleBtn.addEventListener("click", function (e) {
-        e.stopPropagation(); // Prevent event bubbling
-        sidebar.classList.toggle("active");
-      });
-
-      // Close sidebar if clicked outside
-      document.addEventListener("click", function (e) {
-        console.log("click");
-        sidebar.classList.add("active");
-      });
-
-      // Close sidebar when clicking on a menu item
-      sidebarItems.forEach((item) => {
-        item.addEventListener("click", function () {
-          sidebar.classList.remove("active");
-        });
-      });
+      function updatePaymentStatus(paymentId, status) {
+        fetch(`/payment/update_status/${paymentId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: status }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.message) {
+              alert("Payment status updated successfully!");
+              location.reload(); // reload to reflect changes in Admin page
+            } else {
+              alert("Error updating payment status");
+            }
+          })
+          .catch((err) => console.error(err));
+      }
     </script>
   </body>
 </html>

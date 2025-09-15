@@ -64,9 +64,9 @@
                 >
               </li>
               <li>
-                <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
-                  ><i class="fas fa-wallet mr-3"></i> Payments</a
-                >
+                <a href="{{ url_for('payment_bp.get_user_payment') }}">
+                  <i class="fas fa-wallet"></i> Payments
+                </a>
               </li>
               <li>
                 <a href="{{ url_for('user_bp.show_user_profile') }}"

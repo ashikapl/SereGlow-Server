@@ -1,12 +1,12 @@
 from flask import (jsonify, request, Blueprint,
-                   render_template, json, redirect, url_for, session)
+                   render_template, redirect, url_for, session)
 import stripe
-from app.services.payment import add_payment_service, get_payment_service, update_payment_service, delete_payment_service
+from app.services.payment import add_payment_service, get_payment_service, get_user_payment_service, update_payment_status_service, delete_payment_service
 from app.stores.service import get_service_byId
 from app.stores.payment import find_user_byID
 from app.services.appointment import add_appointment_service
 from app.utils.helpers import admin_info_cookie, user_info_cookie
-from app.utils.token_auth import user_token_required
+from app.utils.token_auth import user_token_required, admin_token_required
 
 payment_bp = Blueprint("payment_bp", __name__)
 
@@ -27,32 +27,73 @@ def add_payment(appointment_id):
     return jsonify(result.data), 201
 
 
-# ---------------- Get Payment ----------------
-@payment_bp.route("/", methods=["GET"])
-def get_payment():
+# ---------------- Get Admin Payment ----------------
+@payment_bp.route("/admin", methods=["GET"])
+@admin_token_required
+def get_admin_payment():
     result = get_payment_service()
 
-    if isinstance(result, tuple):
+    if isinstance(result, tuple):  # error handling
         return result
 
-    admin_name = admin_info_cookie('firstname')
+    payments = result.data
+    admin_name = admin_info_cookie("firstname")
+
+    # Add service names and user names to each payment
+    for payment in payments:
+        # Service name
+        service_data = get_service_byId(payment["service_id"])
+        payment["service_name"] = service_data.data[0]["name"] if service_data.data else "Unknown Service"
+
+        # User name
+        user_data = find_user_byID(payment["user_id"])
+        if isinstance(user_data, tuple) or not user_data.data:
+            payment["user_name"] = "Unknown User"
+        else:
+            u = user_data.data[0]
+            payment["user_name"] = f"{u['firstname']} {u['lastname']}"
+
+    return render_template("admin/payment.html", payments=payments, admin_name=admin_name)
+
+
+# ---------------- Get User Payment ----------------
+@payment_bp.route("/user", methods=["GET"])
+@user_token_required
+def get_user_payment():
+    user_id = user_info_cookie("id")
+    result = get_user_payment_service(user_id)
+
+    if isinstance(result, tuple):  # Error handling
+        return result
+
     payments = result.data
 
-    # return jsonify(result.data), 201
-    return render_template("admin/payment.html", admin_name=admin_name, payments=payments)
+    # Add service names to each payment
+    for payment in payments:
+        service_data = get_service_byId(payment["service_id"])
+        payment["service_name"] = service_data.data[0]["name"] if service_data.data else "Unknown Service"
+
+    username = user_info_cookie("username")
+    return render_template("user/payment.html", payments=payments, username=username)
 
 
-# ---------------- Update Payment ----------------
-@payment_bp.route("/<int:appointment_id>/<int:id>", methods=["PUT"])
-def update_payment(appointment_id, id):
+# ---------------- Update Payment Status ----------------
+@payment_bp.route("/update_status/<int:payment_id>", methods=["POST"])
+@admin_token_required
+def update_payment_status(payment_id):
     data = request.get_json()
+    new_status = data.get("status")
 
-    result = update_payment_service(data, appointment_id, id)
+    if not new_status:
+        return jsonify({"error": "Status is required"}), 400
 
-    if isinstance(result, tuple):
+    result = update_payment_status_service(
+        payment_id, {"payment_status": new_status})
+
+    if isinstance(result, tuple):  # error case
         return result
 
-    return jsonify({"message": "Update successful!"}), 200
+    return jsonify({"message": "Status updated successfully"}), 200
 
 
 # ---------------- Delete Payment ----------------
@@ -93,7 +134,7 @@ def create_checkout_session():
 # ---------------- SHOW Payment ----------------
 @payment_bp.route('/', methods=['GET'])
 def show_payment():
-    admin_name = admin_info_cookie('fisrtname')
+    admin_name = admin_info_cookie('firstname')
 
     return render_template("admin/payment.html", admin_name=admin_name)
 
@@ -102,7 +143,7 @@ def show_payment():
 @payment_bp.route("/checkout/<int:service_id>", methods=["GET"])
 @user_token_required
 def show_checkout(service_id):
-    service = find_service(service_id)
+    service = find_service_route(service_id)
 
     return render_template("user/checkout.html", service_name=service[0].get('name'), service_price=service[0].get('price'))
 
@@ -112,11 +153,10 @@ def show_checkout(service_id):
 @user_token_required
 def show_payment_success():
     appointment_data = session.get("appointment_data")
-    print("appointment_data", appointment_data)
 
     result = add_appointment_service(appointment_data)
 
-    service = find_service(appointment_data.get('service_id'))
+    service = find_service_route(appointment_data.get('service_id'))
 
     payment_data = {"user_id": appointment_data.get('user_id'), "service_id": appointment_data.get(
         'service_id'), "appointment_id": result.data[0].get('id'), "amount": service[0].get('price'), "payment_method": 'online', "payment_status": 'paid'}
@@ -133,8 +173,8 @@ def show_payment_success():
 # ---------------- Show Payment Cancle----------------
 @payment_bp.route("/cancle", methods=["GET"])
 @user_token_required
-def show_payment_cancle():
-    return render_template("user/payment_cancle.html")
+def show_payment_cancel():
+    return render_template("user/payment_cancel.html")
 
 
 # ---------------- Show Booking Summary----------------
@@ -156,24 +196,21 @@ def show_booking_summary():
 
 
 # ---------------- Find Payment ----------------
-@payment_bp.route("/paymentFind>", methods=["GET"])
+@payment_bp.route("/paymentFind", methods=["GET"])
 def find_payment():
     result = get_payment_service()
+    return jsonify(result.data if not isinstance(result, tuple) else [])
 
-    return result.data
 
-
-# ---------------- Find User ----------------
+# ---------------- Find User By user_id ----------------
 @payment_bp.route("/userFind/<int:user_id>", methods=["GET"])
 def find_user(user_id):
     result = find_user_byID(user_id)
+    return jsonify(result.data if not isinstance(result, tuple) else [])
 
-    return result.data
 
-
-# ---------------- Find Service ----------------
+# ---------------- Find Service By service_id ----------------
 @payment_bp.route("/serviceFind/<int:service_id>", methods=["GET"])
-def find_service(service_id):
+def find_service_route(service_id):
     result = get_service_byId(service_id)
-
-    return result.data
+    return jsonify(result.data if not isinstance(result, tuple) else [])

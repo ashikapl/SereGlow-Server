@@ -10,12 +10,14 @@ from app.stores.appointment import find_user_byID, get_appointment_byUserID
 from app.stores.service import get_service_byId
 from app.utils.helpers import admin_info_cookie, user_info_cookie
 from app.services.payment import add_payment_service
+from app.stores.payment import get_payment_byUserID
 
 appointment_bp = Blueprint("appointment_bp", __name__)
 
 
 # ---------------- ADD APPOINTMENT ----------------
 @appointment_bp.route("/", methods=["POST"])
+@user_token_required
 def add_appointment():
     global appointment_data
     if request.is_json:
@@ -23,11 +25,9 @@ def add_appointment():
     else:
         data = request.form.to_dict()
 
-    service = find_service(data.get('service_id'))
-    # print("service", service)
+    service = find_service_route(data.get('service_id'))
 
     # store in session
-    print("appointment_data", data)
     session["appointment_data"] = data
 
     if data.get('payment_method') == "cash":
@@ -90,6 +90,29 @@ def delete_appointment(service_id, id):
     return redirect(url_for("appointment_bp.show_myAppointment"))
 
 
+# ---------------- UPDATE APPOINTMENT STATUS ----------------
+@appointment_bp.route("/update_status/<int:id>", methods=["POST"])
+def update_status(id):
+    if request.is_json:
+        data = request.get_json()
+    else:
+        data = request.form.to_dict()
+
+    new_status = data.get("status")
+
+    try:
+        response = supabase.table("Appointment").update(
+            {"status": new_status}
+        ).eq("id", id).execute()
+
+        if response.data:
+            return jsonify({"success": True, "message": "Status updated"})
+        else:
+            return jsonify({"success": False, "message": "No appointment found"})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)})
+
+
 # ---------------- SHOW APPOINTMENT (Admin) ----------------
 @appointment_bp.route('/', methods=['GET'])
 @admin_token_required
@@ -122,60 +145,34 @@ def show_bookAppointment():
 def show_myAppointment():
     user_name = user_info_cookie('username')
     user_id = user_info_cookie('id')
-    print("user_id", user_id)
 
     result = get_appointment_byUserID(user_id)
+    payment_result = get_payment_byUserID(user_id)
 
     # Handle tuple (error case)
     if isinstance(result, tuple):
         # Instead of returning JSON, render page with empty list
         appointments = []
+        payments = []
     else:
         appointments = result.data if result.data else []
+        payments = payment_result.data if payment_result.data else []
 
     return render_template("user/myAppointment.html",
                            user_name=user_name,
-                           appointments=appointments)
+                           appointments=appointments,
+                           payments=payments)
 
 
 # ---------------- FIND USER BY ID ----------------
 @appointment_bp.route("/userFind/<int:user_id>", methods=["GET"])
 def find_user(user_id):
     result = find_user_byID(user_id)
+    return jsonify(result.data if not isinstance(result, tuple) else [])
 
-    return result.data
 
-
-# ---------------- FIND SERVICE BY ID ----------------
+# ---------------- Find Service By service_id ----------------
 @appointment_bp.route("/serviceFind/<int:service_id>", methods=["GET"])
-def find_service(service_id):
+def find_service_route(service_id):
     result = get_service_byId(service_id)
-
-    return result.data
-
-
-# ---------------- UPDATE APPOINTMENT STATUS ----------------
-@appointment_bp.route("/update_status/<int:id>", methods=["POST"])
-def update_status(id):
-    if request.is_json:
-        data = request.get_json()
-    else:
-        data = request.form.to_dict()
-
-    new_status = data.get("status")
-
-    print("data", data)
-
-    try:
-        response = supabase.table("Appointment").update(
-            {"status": new_status}
-        ).eq("id", id).execute()
-
-        print("res", response)
-
-        if response.data:
-            return jsonify({"success": True, "message": "Status updated"})
-        else:
-            return jsonify({"success": False, "message": "No appointment found"})
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)})
+    return jsonify(result.data if not isinstance(result, tuple) else [])

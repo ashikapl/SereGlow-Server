@@ -8,18 +8,6 @@ from flask import request, json
 existing_usernames = []
 
 
-def is_valid_email(email):
-    # Simple email regex
-    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-    return re.match(pattern, email) is not None
-
-
-def is_strong_password(password):
-    # At least one lowercase, one uppercase, one digit, one special char, min 8 chars
-    pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
-    return re.match(pattern, password) is not None
-
-
 def generate_username(first_name, last_name):
     counter = random.randint(1, 9)
     username = f"{first_name.lower()}_{counter}{last_name.lower()[:3]}"
@@ -57,16 +45,18 @@ def average_rating(table_name):
         return -1  # Indicate an error
 
 
-def admin_info(id):
-    try:
-        response = supabase.table("Admin").select(
-            "*", count="exact").eq("id", id).execute()
-        # print("res", response)
-        return response.data[0]
-    except Exception as e:
-        print(f"Error getting count for table Admin: {e}")
-        return -1  # Indicate an error
+# def admin_info(id):
+#     try:
+#         response = supabase.table("Admin").select(
+#             "*", count="exact").eq("id", id).execute()
+#         # print("res", response)
+#         return response.data[0]
+#     except Exception as e:
+#         print(f"Error getting count for table Admin: {e}")
+#         return -1  # Indicate an error
 
+
+# Get Cookies
 
 def admin_info_cookie(variableName):
     admin_info = request.cookies.get("Admin_Info")
@@ -83,24 +73,3 @@ def user_info_cookie(variableName):
         return json.loads(user_info)[variableName]
 
     return None
-
-
-# def admin_info_cookie(variableName):
-#     admin_info = request.cookies.get("Admin_Info")
-#     if admin_info:
-#         try:
-#             return json.loads(admin_info).get(variableName)
-#         except Exception:
-#             return None
-#     return None
-
-
-# def user_info_cookie(variableName):
-#     user_info = request.cookies.get("User_Info")
-#     print("user info", user_info)
-#     if user_info:
-#         try:
-#             return json.loads(user_info).get(variableName)
-#         except Exception:
-#             return None
-#     return None

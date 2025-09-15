@@ -9,8 +9,9 @@ from app.utils.helpers import admin_info_cookie
 service_bp = Blueprint("service_bp", __name__)
 
 
+# ---------------- Add Service ----------------
 @service_bp.route('/', methods=['POST'])
-# @token_required
+@admin_token_required
 def add_service():
     if request.is_json:
         data = request.get_json()
@@ -26,8 +27,9 @@ def add_service():
     return redirect(url_for("service_bp.get_services"))
 
 
+# ---------------- Get Service ----------------
 @service_bp.route('/', methods=['GET'])
-# @admin_token_required
+@admin_token_required
 def get_services():
     result = get_service_services()
 
@@ -41,8 +43,9 @@ def get_services():
     return render_template("admin/service.html", admin_name=admin_name, services=services)
 
 
+# ---------------- Update Service ----------------
 @service_bp.route('/<int:service_id>', methods=['POST', "PUT"])
-# @token_required
+@admin_token_required
 def update_service(service_id):
     if request.is_json:
         data = request.get_json()
@@ -58,8 +61,9 @@ def update_service(service_id):
     return redirect(url_for("service_bp.get_services"))
 
 
+# ---------------- Delete Service ----------------
 @service_bp.route('/delete/<int:service_id>', methods=['GET', 'DELETE'])
-# @token_required
+@admin_token_required
 def delete_service(service_id):
     result = delete_service_services(service_id)
 
@@ -70,14 +74,16 @@ def delete_service(service_id):
     return redirect(url_for("service_bp.get_services"))
 
 
+# ---------------- Show Add Service ----------------
 @service_bp.route('/add', methods=['GET'])
-# @admin_token_required
+@admin_token_required
 def show_add_service():
     return render_template("admin/addService.html")
 
 
+# ---------------- Show Update Service ----------------
 @service_bp.route('/update', methods=['GET'])
-# @token_required
+@admin_token_required
 def show_update_service():
     service_id = request.args.get("service_id", type=int)
     service = get_service_byId(service_id)

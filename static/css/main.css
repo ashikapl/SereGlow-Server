@@ -874,13 +874,29 @@ a[data-toggle="collapse"] {
   justify-content: space-between;
 }
 
-/* Filters */
+.appointments-filters {
+  display: flex;
+  justify-content: flex-end;
+  /* pushes select to right */
+  margin-bottom: 1rem;
+}
+
 .appointments-filters select {
-  padding: 8px 16px;
+  padding: 8px 14px;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
+  background: #fff;
+  cursor: pointer;
 }
+
+/* Filters */
+/* .appointments-filters select {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+} */
 
 /* Container */
 .no-appointments {
@@ -966,8 +982,8 @@ a[data-toggle="collapse"] {
 }
 
 .status-paid {
-  background: #fff3cd;
-  color: #856404;
+  background: #198754c7;
+  color: #fff;
 }
 
 .status-unpaid {

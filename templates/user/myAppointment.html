@@ -12,8 +12,6 @@
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
-      crossorigin="anonymous"
     />
     <link
       href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
@@ -37,45 +35,45 @@
           </div>
           <div class="p-3">
             <h2>
-              <a href="/user" class="logo"
-                >User Dashboard <span>Welcome, {{ user_name }}!</span></a
-              >
+              <a href="/user" class="logo">
+                User Dashboard <span>Welcome, {{ user_name }}!</span>
+              </a>
             </h2>
             <ul class="list-unstyled components mb-5">
               <li>
-                <a href="{{ url_for('user_bp.show_user_dashboard') }}"
-                  ><i class="fas fa-chart-bar mr-3"></i> Overview</a
-                >
+                <a href="{{ url_for('user_bp.show_user_dashboard') }}">
+                  <i class="fas fa-chart-bar mr-3"></i> Overview
+                </a>
               </li>
               <li>
-                <a href="{{ url_for('user_bp.show_services') }}"
-                  ><i class="fas fa-list"></i> View Services</a
-                >
+                <a href="{{ url_for('user_bp.show_services') }}">
+                  <i class="fas fa-list"></i> View Services
+                </a>
               </li>
               <li>
-                <a href="{{ url_for('appointment_bp.show_bookAppointment') }}"
-                  ><i class="fas fa-calendar-plus"></i> Book Appointment</a
-                >
+                <a href="{{ url_for('appointment_bp.show_bookAppointment') }}">
+                  <i class="fas fa-calendar-plus"></i> Book Appointment
+                </a>
               </li>
               <li class="active">
-                <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
-                  ><i class="fas fa-calendar"></i> My Appointments</a
-                >
+                <a href="{{ url_for('appointment_bp.show_myAppointment') }}">
+                  <i class="fas fa-calendar"></i> My Appointments
+                </a>
               </li>
               <li>
-                <a href="{{ url_for('appointment_bp.show_myAppointment') }}"
-                  ><i class="fas fa-wallet mr-3"></i> Payments</a
-                >
+                <a href="{{ url_for('payment_bp.get_user_payment') }}">
+                  <i class="fas fa-wallet"></i> Payments
+                </a>
               </li>
               <li>
-                <a href="{{ url_for('user_bp.show_user_profile') }}"
-                  ><i class="fas fa-user"></i> Profile</a
-                >
+                <a href="{{ url_for('user_bp.show_user_profile') }}">
+                  <i class="fas fa-user"></i> Profile
+                </a>
               </li>
               <li>
-                <a href="{{ url_for('user_bp.user_logout') }}"
-                  ><i class="fas fa-sign-out mr-3"></i> Logout</a
-                >
+                <a href="{{ url_for('user_bp.user_logout') }}">
+                  <i class="fas fa-sign-out mr-3"></i> Logout
+                </a>
               </li>
             </ul>
           </div>
@@ -83,80 +81,103 @@
 
         <div class="dashboard-main">
           <!-- User Appointments Section -->
-          <div id="userAppointmentsList" class="appointments-list">
-            {% if appointments and appointments|length > 0 %} {% for appointment
-            in appointments %}
-            <div class="appointment-card">
-              <div class="appointment-header">
-                <h4>
-                  <a
-                    class="service-auto-link"
-                    href="{{ url_for('appointment_bp.find_service', service_id=appointment.service_id) }}"
-                    style="
-                      pointer-events: none;
-                      color: #000000;
-                      text-decoration: none;
-                    "
-                  >
-                    Loading...
-                  </a>
-                </h4>
-                <span class="status status-{{ appointment.status | lower }}">
-                  {{ appointment.status }}
-                </span>
-              </div>
-              <div class="appointment-details">
-                <p><strong>Date:</strong> {{ appointment.appointment_date }}</p>
-                <p><strong>Time:</strong> {{ appointment.appointment_time }}</p>
-                <p>
-                  <strong>Price:</strong>
-                  <span id="ser_price_{{ appointment.service_id }}"
-                    >Loading...</span
-                  >
-                </p>
-                <p>
-                  <strong>Payment:</strong>
-                  <a
-                    class="payment-auto-link"
-                    href="{{ url_for('payment_bp.find_payment', appointment_id=appointment.id) }}"
-                    style="
-                      pointer-events: none;
-                      color: #000000;
-                      text-decoration: none;
-                    "
-                  >
-                    Loading...
-                  </a>
-                </p>
-                <p><strong>Notes:</strong> {{ appointment.notes }}</p>
-              </div>
-              <div class="appointment-actions">
-                {% if appointment.status == "pending" %}
-                <a class="btn btn-sm btn-danger"> Cancel </a>
-                {% elif appointment.status == "confirmed" %}
-                <a class="btn btn-sm btn-danger"> Cancel </a>
-                {% else %}
-                <span class="text-muted">No actions available</span>
-                {% endif %}
-                <a
-                  class="btn btn-sm btn-primary"
-                  href="{{ url_for('feedback_bp.show_add_feedback', service_id=appointment.service_id) }}"
-                >
-                  Feedback
-                </a>
+          <div id="userAppointmentsList" class="dashboard-section">
+            <div class="content-header">
+              <h2>My Appointments</h2>
+              <div class="header-buttons">
+                <div class="appointments-filters">
+                  <select id="appointmentFilter">
+                    <option value="all">All Appointments</option>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
               </div>
             </div>
-            {% endfor %} {% else %}
-            <div class="no-appointments">
-              <h4>No Appointments Found</h4>
-              <p>
-                You do not have any appointments yet.
-                <a href="{{ url_for('appointment_bp.show_bookAppointment') }}">
-                  Book one now </a
-                >.
-              </p>
+
+            <div id="adminAppointmentsList" class="appointments-list">
+              {% if appointments and appointments|length > 0 %} {% for
+              appointment in appointments %}
+              <div class="appointment-card">
+                <div class="appointment-header">
+                  <h4>
+                    <a
+                      class="service-auto-link"
+                      href="{{ url_for('appointment_bp.find_service_route', service_id=appointment.service_id) }}"
+                      data-service-id="{{ appointment.service_id }}"
+                      style="
+                        pointer-events: none;
+                        color: #000000;
+                        text-decoration: none;
+                      "
+                    >
+                      Loading...
+                    </a>
+                  </h4>
+                  <span class="status status-{{appointment.status}}"
+                    >{{ appointment.status }}</span
+                  >
+                </div>
+                <div class="appointment-details">
+                  <p>
+                    <strong>Date:</strong> {{ appointment.appointment_date }}
+                  </p>
+                  <p>
+                    <strong>Time:</strong> {{ appointment.appointment_time }}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> ₹<span
+                      class="service-price"
+                      data-service-id="{{appointment.service_id}}"
+                      style="font-size: 1rem; color: #343333; font-weight: 400"
+                    >
+                      Loading...
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Payment Status:</strong>
+                    {% for payment in payments %} {% if payment.appointment_id
+                    == appointment.id %}
+                    <span class="payment-status">
+                      {{ payment.payment_status }}
+                    </span>
+                    {% endif %} {% endfor %}
+                  </p>
+                  <p><strong>Notes:</strong> {{ appointment.notes }}</p>
+                  <!-- <p><strong>Notes:</strong> {{ appointment.notes }}</p> -->
+                </div>
+                <div class="appointment-actions">
+                  {% if appointment.status == "pending" %}
+                  <a class="btn btn-sm btn-danger"> Cancel </a>
+                  {% elif appointment.status == "confirmed" %}
+                  <a class="btn btn-sm btn-danger"> Cancel </a>
+                  {% else %}
+                  <span class="text-muted">No actions available</span>
+                  {% endif %}
+                  <a
+                    class="btn btn-sm btn-primary"
+                    href="{{ url_for('feedback_bp.show_add_feedback', service_id=appointment.service_id) }}"
+                  >
+                    Feedback
+                  </a>
+                </div>
+              </div>
+              {% endfor %} {% else %}
+              <div class="no-appointments">
+                <h4>No Appointments Found</h4>
+                <p>
+                  You do not have any appointments yet.
+                  <a
+                    href="{{ url_for('appointment_bp.show_bookAppointment') }}"
+                  >
+                    Book one now </a
+                  >.
+                </p>
+              </div>
+              {% endif %}
             </div>
-            {% endif %}
           </div>
         </div>
       </div>
@@ -169,21 +190,27 @@
           fetch(link.href)
             .then((res) => res.json())
             .then((servicedata) => {
-              const url = new URL(link.href, window.location.origin);
-              const serviceId = url.pathname.split("/").pop();
-              const servicePrice = document.getElementById(
-                `ser_price_${serviceId}`
-              );
-
               const service = Array.isArray(servicedata)
                 ? servicedata[0]
                 : servicedata;
+              const serviceId = link.dataset.serviceId;
+
+              const servicePriceElements = document.querySelectorAll(
+                `.service-price[data-service-id="${serviceId}"]`
+              );
+
               if (service && service.name) {
                 link.textContent = service.name;
-                servicePrice.innerText = service.price ?? "N/A";
+                servicePriceElements.forEach((el) => {
+                  el.innerText = service.price ?? "N/A";
+                  el.style.color = "#343333"; // keep price black
+                });
               } else {
                 link.textContent = "Unknown Service";
-                servicePrice.innerText = "N/A";
+                servicePriceElements.forEach((el) => {
+                  el.innerText = "N/A";
+                  el.style.color = "#6c757d"; // muted gray if not found
+                });
               }
             })
             .catch((error) => {
@@ -191,41 +218,58 @@
               link.textContent = "Error Loading Service";
             });
         });
-
+        // Payment data fetch
         // Payment data fetch
         document.querySelectorAll(".payment-auto-link").forEach((link) => {
           fetch(link.href)
-            .then((res) => res.json())
-            .then((paymentdata) => {
-              const url = new URL(link.href, window.location.origin);
-              const appointmentId = url.searchParams.get("appointment_id");
-
-              const paymentArray = Array.isArray(paymentdata)
-                ? paymentdata
-                : [];
-              const paymentInfo = paymentArray.find(
-                (p) => p.appointment_id == appointmentId
-              );
-
-              if (paymentInfo) {
+            .then((res) => {
+              if (!res.ok) throw new Error("Network response was not ok");
+              return res.json();
+            })
+            .then((paymentInfo) => {
+              if (paymentInfo && paymentInfo.payment_method) {
                 link.textContent = paymentInfo.payment_method;
+                link.style.color = "#000";
               } else {
                 link.textContent = "No Payment Found";
+                link.style.color = "#6c757d";
               }
             })
             .catch((error) => {
               console.error("Error fetching payment data:", error);
               link.textContent = "Payment Error";
+              link.style.color = "#dc3545";
             });
         });
-      });
 
-      // Sidebar toggle
-      document
-        .getElementById("sidebarCollapse")
-        .addEventListener("click", function () {
-          document.getElementById("sidebar").classList.toggle("active");
+        // Sidebar toggle
+        document
+          .getElementById("sidebarCollapse")
+          .addEventListener("click", function () {
+            document.getElementById("sidebar").classList.toggle("active");
+          });
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterSelect = document.getElementById("appointmentFilter");
+        const appointmentCards = document.querySelectorAll(".appointment-card");
+
+        filterSelect.addEventListener("change", function () {
+          const selectedFilter = this.value;
+
+          appointmentCards.forEach((card) => {
+            const statusEl = card.querySelector(".status");
+            const status = statusEl ? statusEl.textContent.toLowerCase() : "";
+
+            if (selectedFilter === "all" || status === selectedFilter) {
+              card.style.display = "block"; // show
+            } else {
+              card.style.display = "none"; // hide
+            }
+          });
         });
+      });
     </script>
   </body>
 </html>

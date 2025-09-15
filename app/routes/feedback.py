@@ -29,18 +29,6 @@ def add_feedback(service_id):
     return redirect(url_for("appointment_bp.show_myAppointment"))
 
 
-# # ---------------- GET FEEDBACK ----------------
-# @feedback_bp.route("/<int:service_id>", methods=["GET"])
-# def get_feedback(service_id):
-#     """Fetch feedback for a specific service."""
-#     result = get_feedback_service(service_id)
-#     print("res", result)
-#     if isinstance(result, tuple):
-#         return result
-#     # return jsonify(result.data)
-#     return redirect("admin/feedback.html", service_id=service_id), 200
-
-
 # ---------------- GET FEEDBACK ----------------
 @feedback_bp.route("/<int:service_id>", methods=["GET"])
 def get_feedback(service_id):

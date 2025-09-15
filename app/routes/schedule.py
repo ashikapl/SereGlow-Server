@@ -1,20 +1,22 @@
 from flask import jsonify, request, Blueprint, render_template, json, redirect, url_for
 from app.services.schedule import add_schedule_service, get_schedule_service, update_schedule_service, delete_schedule_service
 from app.utils.helpers import admin_info_cookie
+from app.utils.token_auth import admin_token_required
+
 
 schedule_bp = Blueprint("schedule_bp", __name__)
 
 
+# ---------------- Add Schedule ----------------
 @schedule_bp.route("/<int:id>", methods=["POST"])
+@admin_token_required
 def add_schedule(id):
     if request.is_json:
         data = request.get_json()
     else:
         data = request.form.to_dict()
 
-    # print("Data", data)
     result = add_schedule_service(data, id)
-    # print("Result", result)
 
     if isinstance(result, tuple):
         return result
@@ -24,7 +26,9 @@ def add_schedule(id):
     return redirect(url_for("schedule_bp.show_schedule"))
 
 
+# ---------------- Get Schedule ----------------
 @schedule_bp.route("/", methods=["GET"])
+@admin_token_required
 def get_schedule():
     result = get_schedule_service()
 
@@ -47,7 +51,9 @@ def get_schedule():
     return schedule_data
 
 
+# ---------------- Update Schedule ----------------
 @schedule_bp.route("/<int:id>", methods=["PUT"])
+@admin_token_required
 def update_schedule(id):
     if request.is_json:
         data = request.get_json()
@@ -60,7 +66,9 @@ def update_schedule(id):
     return jsonify({"message": "Update successful!"}), 200
 
 
+# ---------------- Delete Schedule ----------------
 @schedule_bp.route("/<int:id>", methods=["DELETE"])
+@admin_token_required
 def delete_schedule(id):
     result = delete_schedule_service(id)
 
@@ -69,7 +77,9 @@ def delete_schedule(id):
     return jsonify({"message": "Delete successful!"}), 200
 
 
+# ---------------- Show Schedule ----------------
 @schedule_bp.route("/show", methods=["GET"])
+@admin_token_required
 def show_schedule():
     admin_name = admin_info_cookie('firstname')
     schedule_data = get_schedule()
