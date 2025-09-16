@@ -45,8 +45,6 @@ def delete_service_services(service_id):
     try:
         result = delete_service_store(service_id)
 
-        print(result)
-
         if result:
             return result
 

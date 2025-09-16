@@ -1,5 +1,5 @@
 from flask import (jsonify, request, Blueprint,
-                   render_template, json,
+                   render_template,
                    redirect, url_for, session)
 from app.services.appointment import (add_appointment_service, get_appointment_service,
                                       update_appointment_service, delete_appointment_service)

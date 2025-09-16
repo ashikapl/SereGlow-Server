@@ -205,6 +205,5 @@ def show_user_profile():
     user_id = user_info_cookie("id")
 
     user = find_user_byID(user_id).data
-    print("user", user[0])
 
     return render_template("user/userProfile.html", user_name=user_name, user=user[0])

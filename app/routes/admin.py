@@ -23,7 +23,6 @@ def admin_signUp():
         data = request.form.to_dict()
 
     result = admin_signup_service(data)
-    print("routers result: ", result)
 
     if isinstance(result, tuple):
         return result
@@ -60,7 +59,7 @@ def admin_login():
     admin_info = data_dict.get('admin', {})
     # Convert list to JSON string
     admin_info_str = json.dumps(admin_info)
-    print("Admin info cookie:", admin_info)
+    # print("Admin info cookie:", admin_info)
 
     resp = make_response(redirect(url_for("admin_bp.show_admin_dashboard")))
     resp.set_cookie(

@@ -2,8 +2,6 @@ from app.utils.supabase_client import supabase
 
 
 def add_feedback_store(data, service_id):
-    print("data", data)
-    print(service_id)
     if service_id == int(data.get("service_id")):
         result = supabase.table("Feedback").insert({
             "user_id": data.get("user_id"),
