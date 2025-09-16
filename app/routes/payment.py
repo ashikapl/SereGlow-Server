@@ -133,6 +133,7 @@ def create_checkout_session():
 
 # ---------------- SHOW Payment ----------------
 @payment_bp.route('/', methods=['GET'])
+@admin_token_required
 def show_payment():
     admin_name = admin_info_cookie('firstname')
 

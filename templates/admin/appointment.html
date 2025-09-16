@@ -59,7 +59,7 @@
                 >
               </li>
               <li>
-                <a href="{{ url_for('payment_bp.show_payment') }}"
+                <a href="{{ url_for('payment_bp.get_admin_payment') }}"
                   ><i class="fas fa-wallet mr-3"></i> Payments</a
                 >
               </li>
@@ -244,9 +244,9 @@
             const res = await fetch(link.href);
             const servicedata = await res.json();
             if (servicedata[0]?.name) {
-              link.textContent = "Service: " + servicedata[0].name;
+              link.textContent = servicedata[0].name;
             } else {
-              link.textContent = "Service: Unknown Service";
+              link.textContent = "Unknown Service";
             }
           } catch (error) {
             console.error("Error fetching service data:", error);

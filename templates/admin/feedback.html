@@ -58,7 +58,7 @@
                 >
               </li>
               <li>
-                <a href="{{ url_for('payment_bp.show_payment') }}"
+                <a href="{{ url_for('payment_bp.get_admin_payment') }}"
                   ><i class="fas fa-wallet mr-3"></i> Payments</a
                 >
               </li>
@@ -117,7 +117,7 @@
                 <p class="feedback-text">
                   <a
                     class="service-auto-link"
-                    href="{{ url_for('appointment_bp.find_service', service_id=feedback.service_id) }}"
+                    href="{{ url_for('appointment_bp.find_service_route', service_id=feedback.service_id) }}"
                     style="
                       pointer-events: none;
                       color: #343333;

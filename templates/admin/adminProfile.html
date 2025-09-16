@@ -59,7 +59,7 @@
                 >
               </li>
               <li>
-                <a href="{{ url_for('payment_bp.show_payment') }}"
+                <a href="{{ url_for('payment_bp.get_admin_payment') }}"
                   ><i class="fas fa-wallet mr-3"></i> Payments</a
                 >
               </li>
@@ -107,7 +107,7 @@
               <div class="profile-info">
                 <h2>{{admin['firstname']}} {{admin['lastname']}}</h2>
                 <div class="role">Admin</div>
-                <div class="location">{{admin['address']}}</div>
+                <!-- <div class="location">{{admin['address']}}</div> -->
               </div>
             </div>
 
@@ -148,25 +148,32 @@
             <div class="section">
               <div class="section-header">
                 <h3 class="section-title">Address</h3>
-                <a
-                  href="{{ url_for('admin_bp.show_update_profile') }}"
-                  class="btn btn-primary edit-btn"
-                >
+                <a href="#" class="btn btn-primary edit-btn">
                   Edit <i class="fas fa-edit"></i>
                 </a>
               </div>
               <div class="info-grid">
                 <div class="info-item">
-                  <div class="info-label">Country</div>
-                  <div class="info-value">United Kingdom</div>
+                  <div class="info-label">Address</div>
+                  <div class="info-value">Krishna vihar colony</div>
                 </div>
+              </div>
+              <div class="info-grid">
                 <div class="info-item">
                   <div class="info-label">City</div>
-                  <div class="info-value">Leeds, East London</div>
+                  <div class="info-value">Ratlam</div>
                 </div>
                 <div class="info-item">
-                  <div class="info-label">Postal Code</div>
-                  <div class="info-value">ERT 1254</div>
+                  <div class="info-label">State</div>
+                  <div class="info-value">Madhya Pradesh</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Country</div>
+                  <div class="info-value">India</div>
+                </div>
+                <div class="info-item">
+                  <div class="info-label">Pin Code</div>
+                  <div class="info-value">457001</div>
                 </div>
               </div>
             </div>
