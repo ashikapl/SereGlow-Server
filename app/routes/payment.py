@@ -7,10 +7,12 @@ from app.stores.payment import find_user_byID
 from app.services.appointment import add_appointment_service
 from app.utils.helpers import admin_info_cookie, user_info_cookie
 from app.utils.token_auth import user_token_required, admin_token_required
+import os
 
 payment_bp = Blueprint("payment_bp", __name__)
 
-LOCAL_DOMAIN = "http://127.0.0.1:8000/payment"
+
+LOCAL_DOMAIN = os.getenv("DOMAIN_URL", "http://127.0.0.1:8000") + "/payment"
 
 
 # ---------------- Add Payment (User) ----------------
@@ -112,17 +114,17 @@ def delete_payment(appointment_id, id):
 @user_token_required
 def create_checkout_session():
     try:
-
+        STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID")
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
-                    "price": 'price_1S6AfP8WAdI13hhpAk06INsV',
+                    "price": STRIPE_PRICE_ID,
                     "quantity": 1
                 }
             ],
             mode="subscription",
             success_url=LOCAL_DOMAIN + "/success",
-            cancel_url=LOCAL_DOMAIN + "/cancle"
+            cancel_url=LOCAL_DOMAIN + "/cancel"
         )
 
     except Exception as e:
@@ -141,12 +143,28 @@ def show_payment():
 
 
 # ---------------- SHOW Checkout (User) ----------------
+# @payment_bp.route("/checkout/<int:service_id>", methods=["GET"])
+# @user_token_required
+# def show_checkout(service_id):
+#     service = find_service_route(service_id)
+
+#     return render_template("user/checkout.html", service_name=service[0].get('name'), service_price=service[0].get('price'))
+
+
 @payment_bp.route("/checkout/<int:service_id>", methods=["GET"])
 @user_token_required
 def show_checkout(service_id):
-    service = find_service_route(service_id)
+    result = get_service_byId(service_id)
+    if not result:  # nothing found
+        return jsonify({"error": "Service not found"}), 404
 
-    return render_template("user/checkout.html", service_name=service[0].get('name'), service_price=service[0].get('price'))
+    if isinstance(result, tuple) or not result.data:
+        return jsonify({"error": "Service not found"}), 404
+
+    service = result.data[0]
+    return render_template("user/checkout.html",
+                           service_name=service.get('name'),
+                           service_price=service.get('price'))
 
 
 # ---------------- Show Payment Success ----------------
@@ -172,7 +190,7 @@ def show_payment_success():
 
 
 # ---------------- Show Payment Cancle----------------
-@payment_bp.route("/cancle", methods=["GET"])
+@payment_bp.route("/cancel", methods=["GET"])
 @user_token_required
 def show_payment_cancel():
     return render_template("user/payment_cancel.html")

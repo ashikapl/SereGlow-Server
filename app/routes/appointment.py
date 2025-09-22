@@ -146,8 +146,8 @@ def show_myAppointment():
     user_name = user_info_cookie('username')
     user_id = user_info_cookie('id')
 
-    result = get_appointment_byUserID(user_id)
-    payment_result = get_payment_byUserID(user_id)
+    result = get_appointment_byUserID(user_id) or []
+    payment_result = get_payment_byUserID(user_id) or []
 
     # Handle tuple (error case)
     if isinstance(result, tuple):

@@ -1,5 +1,14 @@
-flask
-flask_sqlalchemy
-supabase
-request
-dotenv
+# flask
+# flask_sqlalchemy
+# supabase
+# request
+# dotenv
+
+Flask
+Flask-SQLAlchemy
+supabase-py
+requests
+python-dotenv
+gunicorn
+flask-cors
+stripe

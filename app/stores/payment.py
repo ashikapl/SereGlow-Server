@@ -34,7 +34,7 @@ def get_user_payment_store(user_id):
 
     if result.data and len(result.data) > 0:
         return result
-    return None
+    return []
 
 
 def update_payment_status_store(payment_id, data):
@@ -56,15 +56,20 @@ def delete_payment_store(appointment_id, payment_id):
         return {"error": f"Payment with id {appointment_id} and payment_id {payment_id} not found or not delete."}, 404
 
 
+# def get_payment_byUserID(user_id):
+#     result = supabase.table("Payment").select(
+#         "*").eq("user_id", user_id).execute()
+
+#     if result.data and len(result.data) > 0:
+#         # print("result", result)
+#         return result
+#     else:
+#         return {"error": f"No appointments found!."}, 404
+
 def get_payment_byUserID(user_id):
     result = supabase.table("Payment").select(
         "*").eq("user_id", user_id).execute()
-
-    if result.data and len(result.data) > 0:
-        # print("result", result)
-        return result
-    else:
-        return {"error": f"No appointments found!."}, 404
+    return result.data or []   # always return a list
 
 
 def find_user_byID(user_id):
