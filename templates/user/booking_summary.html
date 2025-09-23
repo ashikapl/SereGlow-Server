@@ -8,31 +8,40 @@
   </head>
   <body>
     <div class="checkout-container">
-      <!-- Back Button -->
-      <button class="back-button" onclick="goToMyAppointment()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="24"
-          height="24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
+      <div class="content-header" style="margin: 0">
+        <!-- Back Button -->
+        <button class="back-button" onclick="goToMyAppointment()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <div style="margin: auto">
+          <h1>Your Booking</h1>
+        </div>
+      </div>
 
-      <h1>Your Booking</h1>
-      <div class="section service-summary">
-        <h2>Summary</h2>
+      <div
+        class="section service-summary"
+        style="margin: 0px 3rem; margin-bottom: 20px"
+      >
+        <div class="content-header">
+          <h2>Summary</h2>
+        </div>
         <div class="item">
           <span>{{ service_name }}:</span>
-          <span>{{ service_price }}</span>
+          <span>₹{{ service_price }}</span>
         </div>
         <div class="item">
           <span>Date:</span>

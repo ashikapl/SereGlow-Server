@@ -93,7 +93,9 @@
 
         <!-- Main Content -->
         <div class="py-4 px-5 w-100">
-          <h3 class="mb-4">Overview</h3>
+          <div class="content-header">
+            <h2>Overview</h2>
+          </div>
 
           <!-- Stats Cards Row -->
           <!-- <div class="row mb-4">
@@ -471,7 +473,8 @@
       }
 
       // Initialize schedule data from backend
-      const scheduleData = {{ schedule_data | tojson }};
+      // const scheduleData = {{ schedule_data | tojson }};
+      const scheduleData = {{ schedule_data | tojson | safe }};
 
       // Update shop status on page load and every minute
       updateShopStatus();

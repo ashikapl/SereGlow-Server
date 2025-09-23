@@ -68,7 +68,6 @@ def admin_info_cookie(variableName):
 
 def user_info_cookie(variableName):
     user_info = request.cookies.get("User_Info")
-    print("user info", user_info)
     if user_info:
         return json.loads(user_info)[variableName]
 

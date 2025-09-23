@@ -214,4 +214,4 @@ def find_user(user_id):
 @payment_bp.route("/serviceFind/<int:service_id>", methods=["GET"])
 def find_service_route(service_id):
     result = get_service_byId(service_id)
-    return jsonify(result.data if not isinstance(result, tuple) else [])
+    return result.data if not isinstance(result, tuple) else []
