@@ -26,6 +26,7 @@ def add_appointment():
         data = request.form.to_dict()
 
     service = find_service_route(data.get('service_id'))
+    print(service)
 
     # store in session
     session["appointment_data"] = data
@@ -146,8 +147,8 @@ def show_myAppointment():
     user_name = user_info_cookie('username')
     user_id = user_info_cookie('id')
 
-    result = get_appointment_byUserID(user_id) or []
-    payment_result = get_payment_byUserID(user_id) or []
+    result = get_appointment_byUserID(user_id)
+    payment_result = get_payment_byUserID(user_id)
 
     # Handle tuple (error case)
     if isinstance(result, tuple):
@@ -175,4 +176,5 @@ def find_user(user_id):
 @appointment_bp.route("/serviceFind/<int:service_id>", methods=["GET"])
 def find_service_route(service_id):
     result = get_service_byId(service_id)
-    return jsonify(result.data if not isinstance(result, tuple) else [])
+    print(result)
+    return result.data if not isinstance(result, tuple) else []

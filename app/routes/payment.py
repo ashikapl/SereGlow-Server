@@ -1,16 +1,15 @@
 from flask import (jsonify, request, Blueprint,
                    render_template, redirect, url_for, session)
 import stripe
+import os
 from app.services.payment import add_payment_service, get_payment_service, get_user_payment_service, update_payment_status_service, delete_payment_service
 from app.stores.service import get_service_byId
 from app.stores.payment import find_user_byID
 from app.services.appointment import add_appointment_service
 from app.utils.helpers import admin_info_cookie, user_info_cookie
 from app.utils.token_auth import user_token_required, admin_token_required
-import os
 
 payment_bp = Blueprint("payment_bp", __name__)
-
 
 LOCAL_DOMAIN = os.getenv("DOMAIN_URL", "http://127.0.0.1:8000") + "/payment"
 
@@ -143,28 +142,12 @@ def show_payment():
 
 
 # ---------------- SHOW Checkout (User) ----------------
-# @payment_bp.route("/checkout/<int:service_id>", methods=["GET"])
-# @user_token_required
-# def show_checkout(service_id):
-#     service = find_service_route(service_id)
-
-#     return render_template("user/checkout.html", service_name=service[0].get('name'), service_price=service[0].get('price'))
-
-
 @payment_bp.route("/checkout/<int:service_id>", methods=["GET"])
 @user_token_required
 def show_checkout(service_id):
-    result = get_service_byId(service_id)
-    if not result:  # nothing found
-        return jsonify({"error": "Service not found"}), 404
+    service = find_service_route(service_id)
 
-    if isinstance(result, tuple) or not result.data:
-        return jsonify({"error": "Service not found"}), 404
-
-    service = result.data[0]
-    return render_template("user/checkout.html",
-                           service_name=service.get('name'),
-                           service_price=service.get('price'))
+    return render_template("user/checkout.html", service_name=service[0].get('name'), service_price=service[0].get('price'))
 
 
 # ---------------- Show Payment Success ----------------
@@ -232,4 +215,4 @@ def find_user(user_id):
 @payment_bp.route("/serviceFind/<int:service_id>", methods=["GET"])
 def find_service_route(service_id):
     result = get_service_byId(service_id)
-    return jsonify(result.data if not isinstance(result, tuple) else [])
+    return result.data if not isinstance(result, tuple) else []
