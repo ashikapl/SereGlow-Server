@@ -3,7 +3,7 @@ from flask import jsonify, request, Blueprint, render_template, json, redirect, 
 from app.services.service import add_service_services, get_service_services, update_service_services, delete_service_services
 from app.utils.token_auth import admin_token_required
 from app.routes.admin import admin
-from app.stores.service import get_service_byId
+from app.stores.service import get_service_byId, get_service_store
 from app.utils.helpers import admin_info_cookie
 
 service_bp = Blueprint("service_bp", __name__)
@@ -89,3 +89,14 @@ def show_update_service():
     service = get_service_byId(service_id)
 
     return render_template("admin/updateService.html", service=service.data[0])
+
+
+# @service_bp.route("/services", methods=["GET"])
+# # @user_token_required
+# def show_all_services():
+#     # user_name = user_info_cookie("firstname")
+
+#     result = get_service_store()
+#     services = result.data
+
+#     return render_template("main.html", services=services)

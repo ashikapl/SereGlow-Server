@@ -18,7 +18,8 @@ def add_appointment_store(data):
 
 def get_appointment_store():
     result = supabase.table("Appointment").select(
-        "*").execute()
+        "id, user_id, service_id, appointment_date, appointment_time, status"
+    ).execute()
 
     if result.data and len(result.data) > 0:
         # print("result", result)

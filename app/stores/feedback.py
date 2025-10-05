@@ -66,6 +66,6 @@ def get_all_feedback_store():
         "*").execute()
 
     if result.data and len(result.data) > 0:
-        return result
+        return result.data
     else:
         return {"error": f"No feedback found."}, 404

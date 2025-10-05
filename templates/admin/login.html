@@ -12,11 +12,11 @@
     />
   </head>
   <body>
-    <!-- Login Notification -->
+    <!-- Login Notification
     <div class="notification notification-error" id="loginNotification">
       <span>Invalid credentials!</span>
       <button onclick="this.parentElement.remove()">&times;</button>
-    </div>
+    </div> -->
     <!-- Login Notification close -->
     <div id="adminModel" class="adminModel modal" style="display: block">
       <div class="modal-content">
@@ -25,7 +25,7 @@
             <form action="{{ url_for('admin_bp.admin_login') }}" method="POST">
               <h1>Sign in</h1>
               <a class="adminclose" href="/">&times;</a>
-              <div class="social-container">
+              <!-- <div class="social-container">
                 <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="social"
                   ><i class="fab fa-google-plus-g"></i
@@ -34,7 +34,7 @@
                   ><i class="fab fa-linkedin-in"></i
                 ></a>
               </div>
-              <span>or use your account</span>
+              <span>or use your account</span> -->
               <div class="form-group">
                 <input
                   type="email"
@@ -66,7 +66,16 @@
                 />
                 <i class="fa fa-eye" id="togglePassword"></i>
               </div>
-              <a href="#">Forgot your password?</a>
+              <!-- <a href="#">Forgot your password?</a> -->
+              <!-- Error message inside the form -->
+              {% if error %}
+              <div
+                id="errorMessage"
+                style="color: red; margin-top: 10px; padding: 8px"
+              >
+                {{ error }}
+              </div>
+              {% endif %}
               <button>Sign In</button>
             </form>
           </div>
@@ -103,7 +112,7 @@
       };
     </script>
     <script src="../static/js/main.js"></script>
-    <script>
+    <!-- <script>
       // Login Notification
       // Auto remove after 5 seconds (5000 ms)
       const notif = document.getElementById("loginNotification");
@@ -119,7 +128,7 @@
           notif.remove();
         }
       }, 4000);
-    </script>
+    </script> -->
     <script>
       const togglePassword = document.getElementById("togglePassword");
       const passwordInput = document.getElementById("password");
@@ -135,185 +144,3 @@
     </script>
   </body>
 </html>
-
-<!-- ######################################################3 -->
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Login</title>
-    <link rel="stylesheet" href="../../static/css/main.css" />
-    <link rel="stylesheet" href="../../static/css/login.css" />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    Login Notification
-    <div
-      class="notification notification-error"
-      id="loginNotification"
-      style="display: none"
-    >
-      <span>Invalid credentials!</span>
-      <button onclick="this.parentElement.remove()">&times;</button>
-    </div>
-
-    <div id="adminModel" class="adminModel">
-      <div class="container" id="container">
-        <div class="form-container sign-in-container">
-          <form action="#" method="POST" id="loginForm">
-            <a class="adminclose" href="/" title="Close">&times;</a>
-            <h1>Sign in</h1>
-            <div class="social-container">
-              <a href="#" class="social" title="Facebook"
-                ><i class="fab fa-facebook-f"></i
-              ></a>
-              <a href="#" class="social" title="Google"
-                ><i class="fab fa-google-plus-g"></i
-              ></a>
-              <a href="#" class="social" title="LinkedIn"
-                ><i class="fab fa-linkedin-in"></i
-              ></a>
-            </div>
-            <span>or use your account</span>
-            <div class="form-group">
-              <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="Email"
-                required
-                autocomplete="email"
-              />
-            </div>
-            <div class="form-group">
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Password"
-                required
-                autocomplete="current-password"
-              />
-              <i
-                class="fa fa-eye"
-                id="togglePassword"
-                title="Toggle password visibility"
-              ></i>
-            </div>
-            <a href="#">Forgot your password?</a>
-            <button type="submit">Sign In</button>
-          </form>
-        </div>
-        <div class="overlay-container">
-          <div class="overlay">
-            <div class="overlay-panel overlay-right">
-              <h1>Hello, Admin!</h1>
-              <p>Enter your personal details and start your journey with us</p>
-              <a href="#" class="ghost">Sign Up</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script>
-      // Initialize page
-      window.onload = function () {
-        const params = new URLSearchParams(window.location.search);
-        const email = params.get("email");
-        const password = params.get("password");
-
-        if (email) document.getElementById("email").value = email;
-        if (password) document.getElementById("password").value = password;
-
-        // Show notification if there's an error parameter
-        const error = params.get("error");
-        if (error) {
-          showNotification();
-        }
-      };
-
-      // Show notification function
-      function showNotification() {
-        const notif = document.getElementById("loginNotification");
-        if (notif) {
-          notif.style.display = "flex";
-
-          // Auto remove after 3 seconds
-          setTimeout(() => {
-            notif.style.opacity = "0";
-            notif.style.transform = "translateX(100%)";
-            notif.style.transition = "all 0.5s ease";
-          }, 3000);
-
-          setTimeout(() => {
-            notif.remove();
-          }, 3500);
-        }
-      }
-
-      // Password toggle functionality
-      const togglePassword = document.getElementById("togglePassword");
-      const passwordInput = document.getElementById("password");
-
-      togglePassword.addEventListener("click", function () {
-        const type = passwordInput.type === "password" ? "text" : "password";
-        passwordInput.type = type;
-
-        // Toggle eye / eye-slash icon
-        this.classList.toggle("fa-eye");
-        this.classList.toggle("fa-eye-slash");
-      });
-
-      // Form submission handling
-      const loginForm = document.getElementById("loginForm");
-      loginForm.addEventListener("submit", function (e) {
-        const submitBtn = this.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Signing in...";
-
-        // Re-enable button after 3 seconds (in case of error)
-        setTimeout(() => {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Sign In";
-        }, 3000);
-      });
-
-      // Add input validation feedback
-      const inputs = document.querySelectorAll("input[required]");
-      inputs.forEach((input) => {
-        input.addEventListener("blur", function () {
-          if (!this.validity.valid) {
-            this.style.borderColor = "#ff4757";
-          } else {
-            this.style.borderColor = "#667eea";
-          }
-        });
-
-        input.addEventListener("input", function () {
-          if (
-            this.style.borderColor === "rgb(255, 71, 87)" &&
-            this.validity.valid
-          ) {
-            this.style.borderColor = "#667eea";
-          }
-        });
-      });
-
-      // Keyboard navigation
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          const closeBtn = document.querySelector(".adminclose");
-          if (closeBtn) {
-            window.location.href = "/";
-          }
-        }
-      });
-    </script>
-  </body>
-</html> -->

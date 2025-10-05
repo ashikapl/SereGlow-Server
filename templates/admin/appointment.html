@@ -105,7 +105,8 @@
               </div>
             </div>
             <div id="adminAppointmentsList" class="appointments-list">
-              {% for appointment in appointments %}
+              {% if appointments and appointments|length > 0 %} {% for
+              appointment in appointments %}
               <div class="appointment-card">
                 <div class="appointment-header">
                   <h4 id="user_data">
@@ -141,7 +142,10 @@
                     </a>
                   </p>
                   <p><strong>Date:</strong> {{appointment.appointment_date}}</p>
-                  <p><strong>Time:</strong> {{appointment.appointment_time}}</p>
+                  <p>
+                    <strong>Time:</strong> {{ appointment.appointment_time }}
+                  </p>
+
                   <p>
                     <strong>Payment Method:</strong>
                     <span
@@ -207,7 +211,15 @@
                   </div>
                 </div>
               </div>
-              {% endfor %}
+              {% endfor %} {% else %}
+              <div
+                class="no-appointments-message"
+                style="text-align: center; padding: 20px"
+              >
+                <h4>No Appointments Found</h4>
+                <p>There are currently no appointments to display.</p>
+              </div>
+              {% endif %}
             </div>
           </div>
         </div>

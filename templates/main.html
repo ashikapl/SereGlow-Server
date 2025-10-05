@@ -140,7 +140,7 @@
               </div>
               <div class="n2po2ee">
                 <label for="site-nav-menu-2-toggle" class="nrl6nth">
-                  <a href="#contact" is_conv_type="Soft"
+                  <a href="#footer" is_conv_type="Soft"
                     ><span>Contact</span>
                   </a>
                 </label>
@@ -179,12 +179,7 @@
             Experience luxury beauty treatments with our professional stylists
           </p>
           <div class="hero-buttons">
-            <button
-              class="btn btn-primary"
-              onclick="scrollToSection('services')"
-            >
-              View Services
-            </button>
+            <a class="btn btn-primary" href="#services"> View Services </a>
             <a
               href="{{ url_for('user_bp.show_user_signup') }}"
               class="btn btn-outline"
@@ -198,9 +193,42 @@
       <!-- Services Section -->
       <section id="services" class="services-section">
         <div class="container">
-          <h2>Our Services</h2>
-          <div id="publicServicesList" class="services-grid">
-            <!-- Services will be loaded here -->
+          <h2 style="margin-top: 20px; margin-bottom: 20px; font-size: 2.5rem">
+            Our Services
+          </h2>
+          <div>
+            <div class="card-body">
+              <div class="portfolio-overview-grid">
+                <div>
+                  <div class="portfolio-overview-item">
+                    <i class="fas fa-cut" style="font-size: 2.5rem"></i>
+                    <span style="font-size: 1.5rem">Hair Cutting</span>
+                  </div>
+                  <div class="portfolio-overview-item">
+                    <i class="fas fa-palette" style="font-size: 2.5rem"></i>
+                    <span style="font-size: 1.5rem">Hair Coloring</span>
+                  </div>
+                  <div class="portfolio-overview-item">
+                    <i class="fas fa-spa" style="font-size: 2.5rem"></i>
+                    <span style="font-size: 1.5rem">Hair Treatment</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="portfolio-overview-item">
+                    <i class="fas fa-magic" style="font-size: 2.5rem"></i>
+                    <span style="font-size: 1.5rem">Hair Styling</span>
+                  </div>
+                  <div class="portfolio-overview-item">
+                    <i class="fas fa-leaf" style="font-size: 2.5rem"></i>
+                    <span style="font-size: 1.5rem">Organic Care</span>
+                  </div>
+                  <div class="portfolio-overview-item">
+                    <i class="fas fa-ring" style="font-size: 2.5rem"></i>
+                    <span style="font-size: 1.5rem">Bridal Services</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="service-note">
             <p>
@@ -216,34 +244,45 @@
         <div class="container">
           <div class="about-content">
             <div class="about-text">
-              <h2>About Glamour Salon</h2>
-              <p>
-                With over 10 years of experience in the beauty industry, Glamour
-                Salon has been providing exceptional hair and beauty services to
-                our valued customers. Our team of professional stylists and
-                beauticians are dedicated to making you look and feel your best.
+              <h2>About SereGlow</h2>
+              <p style="font-size: 1.5rem">
+                SereGlow Parlour offers professional beauty and wellness
+                services to make you look and feel your best. Our certified
+                staff use premium products and provide personalized care in a
+                relaxing environment. Open 6 days a week with flexible hours, we
+                make it easy to shine with confidence.
               </p>
               <div class="features">
                 <div class="feature">
-                  <i class="fas fa-award"></i>
-                  <h4>Professional Staff</h4>
+                  <div class="head">
+                    <i class="fas fa-award" style="font-size: 2.3rem"></i>
+                    <h3>Professional Staff</h3>
+                  </div>
                   <p>Certified and experienced beauticians</p>
                 </div>
                 <div class="feature">
-                  <i class="fas fa-spa"></i>
-                  <h4>Premium Products</h4>
+                  <div class="head">
+                    <i class="fas fa-spa"></i>
+                    <h3>Premium Products</h3>
+                  </div>
                   <p>Using only the finest beauty products</p>
                 </div>
                 <div class="feature">
-                  <i class="fas fa-clock"></i>
-                  <h4>Flexible Hours</h4>
+                  <div class="head">
+                    <i class="fas fa-clock"></i>
+                    <h3>Flexible Hours</h3>
+                  </div>
                   <p>Open 6 days a week for your convenience</p>
                 </div>
               </div>
             </div>
             <div class="about-image">
               <div class="image-placeholder">
-                <i class="fas fa-cut"></i>
+                <img
+                  src="../static/img/logo.png"
+                  alt=""
+                  style="width: 180px; margin-left: 20px; margin-bottom: 12px"
+                />
               </div>
             </div>
           </div>
@@ -251,12 +290,12 @@
       </section>
 
       <!-- Contact Section -->
-      <section id="contact" class="contact-section">
+      <!-- <section id="contact" class="contact-section">
         <div class="container">
           <h2>Contact Us</h2>
           <div class="contact-content">
             <div class="contact-info">
-              <div class="contact-item">
+              <div class="contact-item>"
                 <i class="fas fa-map-marker-alt"></i>
                 <div>
                   <h4>Address</h4>
@@ -293,11 +332,11 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" id="footer">
       <div class="container">
         <div class="footer-content">
           <div class="footer-section">
@@ -322,6 +361,27 @@
               <a href="#"><i class="fab fa-facebook"></i></a>
               <a href="#"><i class="fab fa-instagram"></i></a>
               <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+          </div>
+          <div class="footer-section">
+            <h4>Contact Us</h4>
+            <div class="contact-item">
+              <div>
+                <i class="fas fa-phone"></i>
+                <h5>Phone</h5>
+              </div>
+              <!-- <i class="fas fa-phone"></i> -->
+              <div>
+                <!-- <h5>Phone</h5> -->
+                <p id="salonPhone">(555) 123-4567</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <div>
+                <h5>Email</h5>
+                <p>info@glamoursalon.com</p>
+              </div>
             </div>
           </div>
         </div>

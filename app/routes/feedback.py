@@ -79,8 +79,13 @@ def delete_feedback(service_id, id):
 def show_feedback():
     """Admin view: list all feedback."""
     admin_name = admin_info_cookie("firstname")
-    feedbacks = get_all_feedback_store().data
+    feedbacks = get_all_feedback_store()
 
+    if not feedbacks:  # means it's empty or None
+        feedbacks = []   # make sure template gets an empty list
+
+
+    print("Feed", feedbacks)
     return render_template("admin/feedback.html",
                            admin_name=admin_name,
                            feedbacks=feedbacks)

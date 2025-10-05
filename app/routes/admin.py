@@ -9,7 +9,9 @@ from app.utils.helpers import total_count, average_rating, admin_info_cookie
 from app.stores.admin import find_admin_byID
 from app.utils.supabase_client import supabase
 
+
 admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
+
 
 admin = None
 
@@ -22,6 +24,13 @@ def admin_signUp():
     else:
         data = request.form.to_dict()
 
+    # ---- Step 1: Check if an admin already exists ----
+    existing_admin = supabase.table("Admin").select("*").limit(1).execute()
+    if existing_admin.data:
+        # If admin exists → block registration
+        return {"error": "Admin already exists. Only one admin account is allowed."}, 403
+
+    # ---- Step 2: If no admin, allow signup ----
     result = admin_signup_service(data)
 
     if isinstance(result, tuple):
@@ -43,20 +52,30 @@ def admin_login():
     else:
         data = request.form.to_dict()
 
-    result = admin_login_service(data)
+    result, status = admin_login_service(data)
 
-    data_dict = json.loads(result[0].data.decode('utf-8'))
+    # result is (Response, status)
+    # print(result)
+    # status = result
 
-    if isinstance(result, tuple) and "error" in data_dict:
-        return jsonify({"message": "Login Failed!", "error": data_dict["error"]}), 401
-        # return redirect(url_for("admin_bp.show_admin_login"))
+    # data_dict = json.loads(result[0].data.decode('utf-8'))
+
+    if status != 200 and "error" in result:
+        # Store error in session instead of passing directly
+        session['login_error'] = result["error"]
+        return redirect(url_for("admin_bp.show_admin_login",
+                                email=data.get("email", ""),
+                                password=data.get("password", "")))
+
+    # Clear any existing error from session on successful login
+    session.pop('login_error', None)
 
     # print("res", data_dict)
-    admin_id = data_dict.get('admin', {}).get('id')
+    admin_id = result.get('admin', {}).get("id")
 
     token = generate_token({"user_id": admin_id})
 
-    admin_info = data_dict.get('admin', {})
+    admin_info = result.get('admin', {})
     # Convert list to JSON string
     admin_info_str = json.dumps(admin_info)
     # print("Admin info cookie:", admin_info)
@@ -115,7 +134,10 @@ def show_admin_signup():
 def show_admin_login():
     email = request.args.get("email", "")
     password = request.args.get("password", "")
-    return render_template("admin/login.html", email=email, password=password)
+
+    error = session.pop('login_error', None)
+
+    return render_template("admin/login.html", email=email, password=password, error=error)
 
 
 # ---------- DASHBOARD ----------
