@@ -1,5 +1,8 @@
-flask
-flask_sqlalchemy
+Flask
+Flask-SQLAlchemy
 supabase
-request
-dotenv
+requests
+python-dotenv
+gunicorn
+flask-cors
+stripe

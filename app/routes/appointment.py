@@ -1,6 +1,7 @@
 from flask import (jsonify, request, Blueprint,
                    render_template,
                    redirect, url_for, session)
+from datetime import datetime
 from app.services.appointment import (add_appointment_service, get_appointment_service,
                                       update_appointment_service, delete_appointment_service)
 from app.utils.supabase_client import supabase
@@ -57,9 +58,17 @@ def get_appointment():
         return result
 
     admin_name = admin_info_cookie('firstname')
-    appointments = result.data
 
-    # return jsonify(result.data), 200
+    appointments = []
+    for row in result.data:
+        # Convert appointment_time to 12-hour format
+        time_str = row["appointment_time"]
+        # Parse the time (assuming DB stores it as 'HH:MM:SS')
+        formatted_time = datetime.strptime(
+            time_str, "%H:%M:%S").strftime("%I:%M %p")
+        row["appointment_time"] = formatted_time
+        appointments.append(row)
+
     return render_template("admin/appointment.html",
                            admin_name=admin_name,
                            appointments=appointments)
@@ -155,7 +164,16 @@ def show_myAppointment():
         appointments = []
         payments = []
     else:
-        appointments = result.data if result.data else []
+        # appointments = result.data if result.data else []
+        appointments = []
+        for row in result.data:
+            # Convert appointment_time to 12-hour format
+            time_str = row["appointment_time"]
+            # Parse the time (assuming DB stores it as 'HH:MM:SS')
+            formatted_time = datetime.strptime(
+                time_str, "%H:%M:%S").strftime("%I:%M %p")
+            row["appointment_time"] = formatted_time
+            appointments.append(row)
         payments = payment_result.data if payment_result.data else []
 
     return render_template("user/myAppointment.html",

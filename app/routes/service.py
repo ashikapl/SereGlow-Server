@@ -1,10 +1,9 @@
 from flask import jsonify, request, Blueprint, render_template, json, redirect, url_for
-# import requests
 from app.services.service import add_service_services, get_service_services, update_service_services, delete_service_services
 from app.utils.token_auth import admin_token_required
-from app.routes.admin import admin
 from app.stores.service import get_service_byId
-from app.utils.helpers import admin_info_cookie
+from app.utils.helpers import admin_info_cookie, stripeProductCreate
+
 
 service_bp = Blueprint("service_bp", __name__)
 
@@ -19,6 +18,9 @@ def add_service():
         data = request.form.to_dict()
 
     result = add_service_services(data)
+
+    product = stripeProductCreate(
+        name=result.data[0]['name'], description=result.data[0]['description'], price=result.data[0]['price'])
 
     if isinstance(result, tuple):
         return result

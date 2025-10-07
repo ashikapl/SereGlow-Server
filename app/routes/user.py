@@ -1,7 +1,7 @@
 import datetime as dt
 from flask import (
     jsonify, request, Blueprint, redirect, url_for, render_template,
-    make_response, json
+    make_response, json, session
 )
 from app.services.user import user_signup_service, user_login_service
 from app.utils.user_validator import generate_token
@@ -42,19 +42,21 @@ def user_login():
     else:
         data = request.form.to_dict()
 
-    result = user_login_service(data)
+    result, status = user_login_service(data)
 
-    data_dict = json.loads(result[0].data.decode('utf-8'))
+    # data_dict = json.loads(result[0].data.decode('utf-8'))
+    if status != 200 and "error" in result:
+        # Store error in session instead of passing directly
+        session['login_error'] = result["error"]
+        return redirect(url_for("admin_bp.show_admin_login",
+                                email=data.get("email", ""),
+                                password=data.get("password", "")))
 
-    if isinstance(result, tuple) and "error" in data_dict:
-        return jsonify({"message": "Login Failed!", "error": data_dict["error"]}), 401
-        # return redirect(url_for("user_bp.show_user_login"))
-
-    user_id = data_dict.get('user', {}).get('id')
+    user_id = result.get('user', {}).get('id')
 
     token = generate_token({"user_id": user_id})
 
-    user_info = data_dict.get('user', {})
+    user_info = result.get('user', {})
     # Convert list to JSON string
     user_info_str = json.dumps(user_info)
 
@@ -112,7 +114,10 @@ def show_user_signup():
 def show_user_login():
     email = request.args.get("email", "")
     password = request.args.get("password", "")
-    return render_template("user/login.html", email=email, password=password)
+
+    error = session.pop('login_error', None)
+
+    return render_template("user/login.html", email=email, password=password, error=error)
 
 
 # ---------- DASHBOARD ----------

@@ -1,16 +1,17 @@
 from flask import (jsonify, request, Blueprint,
                    render_template, redirect, url_for, session)
 import stripe
+import os
 from app.services.payment import add_payment_service, get_payment_service, get_user_payment_service, update_payment_status_service, delete_payment_service
 from app.stores.service import get_service_byId
 from app.stores.payment import find_user_byID
 from app.services.appointment import add_appointment_service
-from app.utils.helpers import admin_info_cookie, user_info_cookie
+from app.utils.helpers import admin_info_cookie, user_info_cookie, stripeProductPriceID
 from app.utils.token_auth import user_token_required, admin_token_required
 
 payment_bp = Blueprint("payment_bp", __name__)
 
-LOCAL_DOMAIN = "http://127.0.0.1:8000/payment"
+LOCAL_DOMAIN = os.getenv("DOMAIN_URL", "http://127.0.0.1:8000") + "/payment"
 
 
 # ---------------- Add Payment (User) ----------------
@@ -112,17 +113,21 @@ def delete_payment(appointment_id, id):
 @user_token_required
 def create_checkout_session():
     try:
+        service_name = request.form.get("service_name")
+        service_price = request.form.get("service_price")
 
+        STRIPE_PRICE_ID = stripeProductPriceID(service_name)
+        print("Id", STRIPE_PRICE_ID)
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
-                    "price": 'price_1S6AfP8WAdI13hhpAk06INsV',
+                    "price": STRIPE_PRICE_ID,
                     "quantity": 1
                 }
             ],
-            mode="subscription",
+            mode="payment",
             success_url=LOCAL_DOMAIN + "/success",
-            cancel_url=LOCAL_DOMAIN + "/cancle"
+            cancel_url=LOCAL_DOMAIN + "/cancel"
         )
 
     except Exception as e:
@@ -172,7 +177,7 @@ def show_payment_success():
 
 
 # ---------------- Show Payment Cancle----------------
-@payment_bp.route("/cancle", methods=["GET"])
+@payment_bp.route("/cancel", methods=["GET"])
 @user_token_required
 def show_payment_cancel():
     return render_template("user/payment_cancel.html")

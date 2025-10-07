@@ -12,11 +12,11 @@ class Config:
 
     # Supabase credentials
     SUPABASE_URL = os.getenv("SUPABASE_URL")
-    SUPABASE_KEY = os.getenv("SUPABASE_APIKEY")
+    SUPABASE_APIKEY = os.getenv("SUPABASE_APIKEY")
 
     # Supabase auth headers (optional)
     SUPABASE_HEADERS = {
-        "apikey": SUPABASE_KEY,
-        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "apikey": SUPABASE_APIKEY,
+        "Authorization": f"Bearer {SUPABASE_APIKEY}",
         "Content-Type": "application/json"
     }

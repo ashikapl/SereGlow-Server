@@ -4,10 +4,7 @@ import os
 app = create_app()
 
 if __name__ == "__main__":
-    # print("db :", os.getenv("SUPABASE_DB_URI"))
-    # with app.app_context():
-    #     print("Available routes:")
-    #     for rule in app.url_map.iter_rules():
-    #         print(rule)
-
-    app.run(host='0.0.0.0', debug=True, port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    # for local dev you can enable debug from env, but don't hardcode debug=True
+    debug = os.environ.get("FLASK_DEBUG", "0") == "1"
+    app.run(host="0.0.0.0", port=port, debug=debug)

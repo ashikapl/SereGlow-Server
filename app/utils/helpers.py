@@ -4,6 +4,7 @@ import re
 import random
 from app.utils.supabase_client import supabase
 from flask import request, json
+import stripe
 
 existing_usernames = []
 
@@ -72,3 +73,45 @@ def user_info_cookie(variableName):
         return json.loads(user_info)[variableName]
 
     return None
+
+
+def stripeProductCreate(name, description, price):
+    product = stripe.Product.create(
+        name=name,
+        description=description,
+    )
+    # print("Product created:", product.id)
+    original_price = int(price) * 100
+
+    price = stripe.Price.create(
+        product=product.id,
+        unit_amount=original_price,
+        currency="inr",
+    )
+    # print("One-time price created:", price.id)
+
+    return {"product": product.id, "price": price.id}
+
+
+def stripeProductPriceID(name):
+    products = stripe.Product.list(limit=10, expand=["data.default_price"])
+
+    for p in products.data:
+        if p.name == name:
+            # print(f"\nProduct: {p.name}")
+
+            if p.default_price:  # agar default price set hai
+                amount = p.default_price["unit_amount"] / 100
+                currency = p.default_price["currency"].upper()
+                # print(f"  Default Price: {amount} {currency}")
+            else:
+                # product ke saare prices fetch karo
+                prices = stripe.Price.list(product=p.id)
+                if prices.data:
+                    for price in prices.data:
+                        amount = price.unit_amount / 100
+                        currency = price.currency.upper()
+                        # print(f"  Price ID: {price.id} → {amount} {currency}")
+                        return price.id
+                else:
+                    print("  No price set for this product")
