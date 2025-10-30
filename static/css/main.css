@@ -19,8 +19,7 @@ a {
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px 20px;
-  /* height: 60vh; */
+  padding: 0 20px;
 }
 
 /* Buttons */
@@ -80,6 +79,11 @@ a {
   padding: 8px;
   border-radius: 50%;
   transition: background-color 0.3s ease;
+  width: 35px;
+  height: 35px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .btn-icon:hover {
@@ -245,18 +249,10 @@ a {
   gap: 1rem;
 }
 
-.feature .head{
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 142px;
-}
-
 .feature i {
-  width: 22px;
-  height: 20px;
   font-size: 2rem;
   color: #667eea;
+  min-width: 40px;
 }
 
 .feature h4 {
@@ -315,6 +311,10 @@ a {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
 }
 
 .contact-item i {
@@ -358,12 +358,6 @@ a {
 .footer-logo i {
   margin-right: 10px;
   font-size: 1.8rem;
-}
-
-.footer-section{
-  display: flex;
-  align-items: center;
-  flex-direction: column;
 }
 
 .footer-section h4 {
@@ -715,7 +709,6 @@ a[data-toggle="collapse"] {
 }
 
 /* sidebar */
-
 
 .dashboard-main {
   flex: 1;

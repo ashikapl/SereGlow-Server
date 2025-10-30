@@ -150,9 +150,19 @@
                 </div>
                 <div class="appointment-actions">
                   {% if appointment.status == "pending" %}
-                  <a class="btn btn-sm btn-danger"> Cancel </a>
+                  <button
+                    class="btn btn-sm btn-danger"
+                    onclick="updateAppointmentStatus({{ appointment.id }}, 'cancelled')"
+                  >
+                    Cancel
+                  </button>
                   {% elif appointment.status == "confirmed" %}
-                  <a class="btn btn-sm btn-danger"> Cancel </a>
+                  <button
+                    class="btn btn-sm btn-danger"
+                    onclick="updateAppointmentStatus({{ appointment.id }}, 'cancelled')"
+                  >
+                    Cancel
+                  </button>
                   {% else %}
                   <span class="text-muted">No actions available</span>
                   {% endif %}
@@ -249,6 +259,28 @@
             document.getElementById("sidebar").classList.toggle("active");
           });
       });
+    </script>
+    <script>
+      function updateAppointmentStatus(appointmentId, newStatus) {
+        fetch(`/appointment/update_status/${appointmentId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }), // 👈 must match what Flask expects
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("data", data);
+            if (data.success) {
+              alert("Appointment status updated successfully!");
+              location.reload();
+            } else {
+              alert("Failed to update status: " + data.message);
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {

@@ -45,7 +45,6 @@ def user_login():
     result, status = user_login_service(data)
 
     # data_dict = json.loads(result[0].data.decode('utf-8'))
-
     if status != 200 and "error" in result:
         # Store error in session instead of passing directly
         session['login_error'] = result["error"]

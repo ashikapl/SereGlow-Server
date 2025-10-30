@@ -7,6 +7,7 @@ from app.services.feedback import (
     add_feedback_service, get_feedback_service,
     update_feedback_service, delete_feedback_service
 )
+from app.utils.token_auth import admin_token_required, user_token_required
 from app.stores.feedback import get_all_feedback_store
 from app.utils.helpers import admin_info_cookie, user_info_cookie
 
@@ -31,6 +32,7 @@ def add_feedback(service_id):
 
 # ---------------- GET FEEDBACK ----------------
 @feedback_bp.route("/<int:service_id>", methods=["GET"])
+@admin_token_required
 def get_feedback(service_id):
     """Fetch feedback for a specific service."""
     user_id = user_info_cookie('id')
@@ -76,23 +78,22 @@ def delete_feedback(service_id, id):
 
 # ---------------- SHOW ALL FEEDBACK (Admin) ----------------
 @feedback_bp.route("/", methods=["GET"])
+@admin_token_required
 def show_feedback():
     """Admin view: list all feedback."""
     admin_name = admin_info_cookie("firstname")
     feedbacks = get_all_feedback_store()
 
-    if not feedbacks:  # means it's empty or None
-        feedbacks = []   # make sure template gets an empty list
-
-
-    print("Feed", feedbacks)
-    return render_template("admin/feedback.html",
-                           admin_name=admin_name,
-                           feedbacks=feedbacks)
+    return render_template(
+        "admin/feedback.html",
+        admin_name=admin_name,
+        feedbacks=feedbacks
+    )
 
 
 # ---------------- ADD FEEDBACK FORM (User) ----------------
 @feedback_bp.route("/add/<int:service_id>", methods=["GET"])
+@user_token_required
 def show_add_feedback(service_id):
     """User view: form to add feedback for a service."""
     user_name = user_info_cookie("username")

@@ -9,9 +9,7 @@ from app.utils.helpers import total_count, average_rating, admin_info_cookie
 from app.stores.admin import find_admin_byID
 from app.utils.supabase_client import supabase
 
-
 admin_bp = Blueprint("admin_bp", __name__, template_folder="../../templates")
-
 
 admin = None
 
@@ -54,10 +52,6 @@ def admin_login():
 
     result, status = admin_login_service(data)
 
-    # result is (Response, status)
-    # print(result)
-    # status = result
-
     # data_dict = json.loads(result[0].data.decode('utf-8'))
 
     if status != 200 and "error" in result:
@@ -70,8 +64,7 @@ def admin_login():
     # Clear any existing error from session on successful login
     session.pop('login_error', None)
 
-    # print("res", data_dict)
-    admin_id = result.get('admin', {}).get("id")
+    admin_id = result.get('admin', {}).get('id')
 
     token = generate_token({"user_id": admin_id})
 
@@ -160,9 +153,7 @@ def show_admin_dashboard():
     )
 
 
-# ---------------------------
-# Update profile
-# ---------------------------
+# --------- Update profile -----------
 @admin_bp.route('/profile/update', methods=['POST'])
 @admin_token_required
 def update_admin_profile():

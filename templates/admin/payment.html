@@ -105,8 +105,8 @@
             </div>
 
             <div id="adminPaymentsList" class="payments-list">
-              {% for payment in payments %} {% if payment.payment_status !=
-              'failed' %}
+              {% if payments and payments|length > 0 %} {% for payment in
+              payments %} {% if payment.payment_status != 'failed' %}
               <div class="payment-card">
                 <div class="payment-header">
                   <h4 id="user_data">
@@ -162,7 +162,13 @@
                   {% endif %} {% endif %}
                 </div>
               </div>
-              {% endif %} {% endfor %}
+              {% endif %} {% endfor %} {% else %}
+              <div>
+                <p style="font-size: 1.3rem; text-align: center">
+                  No Payments Available
+                </p>
+              </div>
+              {% endif %}
             </div>
           </div>
         </div>

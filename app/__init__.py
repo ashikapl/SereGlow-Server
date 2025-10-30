@@ -18,7 +18,6 @@ load_dotenv()
 
 
 def create_app():
-    # template_folder and static_folder point to root-level folders
     app = Flask(__name__, static_folder="../static",
                 template_folder="../templates")
     app.config.from_object(Config)

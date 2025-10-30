@@ -84,9 +84,12 @@
         <div class="dashboard-main">
           <!-- Services Section -->
           <div id="userServicesSection" class="dashboard-section">
-            <h2>Available Services</h2>
+            <div class="content-header">
+              <h2>Available Services</h2>
+            </div>
             <div id="userServicesList" class="services-grid">
-              {% for service in services %}
+              {% if services and services|length > 0 %} {% for service in
+              services %}
               <div class="service-card">
                 <div class="service-details">
                   <h3>{{service.name}}</h3>
@@ -103,7 +106,13 @@
                   </a>
                 </div>
               </div>
-              {% endfor %}
+              {% endfor %} {% else %}
+              <div>
+                <p style="font-size: 1.3rem; text-align: center">
+                  No Services Available
+                </p>
+              </div>
+              {% endif %}
             </div>
           </div>
 

@@ -27,9 +27,8 @@ def add_appointment():
         data = request.form.to_dict()
 
     service = find_service_route(data.get('service_id'))
-    print(service)
 
-    # store in session
+    # store appointment data in session
     session["appointment_data"] = data
 
     if data.get('payment_method') == "cash":
@@ -52,26 +51,25 @@ def add_appointment():
 
 # ---------------- GET APPOINTMENT ----------------
 @appointment_bp.route("/", methods=["GET"])
+@admin_token_required
 def get_appointment():
     result = get_appointment_service()
+    appointments = []
 
     if isinstance(result, tuple):
         return result
 
     admin_name = admin_info_cookie('firstname')
 
-    appointments = []
     for row in result.data:
         # Convert appointment_time to 12-hour format
         time_str = row["appointment_time"]
         # Parse the time (assuming DB stores it as 'HH:MM:SS')
-        formatted_time = datetime.strptime(time_str, "%H:%M:%S").strftime("%I:%M %p")
+        formatted_time = datetime.strptime(
+            time_str, "%H:%M:%S").strftime("%I:%M %p")
         row["appointment_time"] = formatted_time
         appointments.append(row)
 
-    # appointments = result.data
-
-    # return jsonify(result.data), 200
     return render_template("admin/appointment.html",
                            admin_name=admin_name,
                            appointments=appointments)
@@ -129,13 +127,32 @@ def update_status(id):
 @appointment_bp.route('/', methods=['GET'])
 @admin_token_required
 def show_appointment():
+    result = get_appointment_service()
+
+    appointments = []
+
+    if isinstance(result, tuple):
+        return result
+
     admin_name = admin_info_cookie('firstname')
 
-    return render_template("admin/appointment.html", admin_name=admin_name)
+    for row in result.data:
+        # Convert appointment_time to 12-hour format
+        time_str = row["appointment_time"]
+        # Parse the time (assuming DB stores it as 'HH:MM:SS')
+        formatted_time = datetime.strptime(
+            time_str, "%H:%M:%S").strftime("%I:%M %p")
+        row["appointment_time"] = formatted_time
+        appointments.append(row)
+
+    return render_template("admin/appointment.html",
+                           admin_name=admin_name,
+                           appointments=appointments)
 
 
 # ---------------- SHOW BOOK APPOINTMENT FROM (User) ----------------
 @appointment_bp.route("/booking", methods=["GET"])
+@user_token_required
 def show_bookAppointment():
     service_id = request.args.get("service_id", type=int)
     user_name = user_info_cookie('username')
@@ -173,7 +190,8 @@ def show_myAppointment():
             # Convert appointment_time to 12-hour format
             time_str = row["appointment_time"]
             # Parse the time (assuming DB stores it as 'HH:MM:SS')
-            formatted_time = datetime.strptime(time_str, "%H:%M:%S").strftime("%I:%M %p")
+            formatted_time = datetime.strptime(
+                time_str, "%H:%M:%S").strftime("%I:%M %p")
             row["appointment_time"] = formatted_time
             appointments.append(row)
         payments = payment_result.data if payment_result.data else []
@@ -195,6 +213,4 @@ def find_user(user_id):
 @appointment_bp.route("/serviceFind/<int:service_id>", methods=["GET"])
 def find_service_route(service_id):
     result = get_service_byId(service_id)
-    print(result)
     return result.data if not isinstance(result, tuple) else []
-
