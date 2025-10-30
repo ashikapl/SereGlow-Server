@@ -94,13 +94,14 @@
             </div>
 
             <div id="adminFeedbackList" class="feedback-list">
-              {% for feedback in feedbacks %}
+              {% if feedbacks and feedbacks|length > 0 %} {% for feedback in
+              feedbacks %}
               <div class="feedback-card">
                 <div class="feedback-header">
                   <h4>
                     <a
                       class="user-auto-link"
-                      href="{{ url_for('payment_bp.find_user', user_id=feedback.user_id) }}"
+                      href="{{ url_for('payment_bp.find_user', user_id=feedback['user_id']) }}"
                       style="
                         pointer-events: none;
                         color: #000000;
@@ -133,7 +134,13 @@
                   {{ date[2] }}-{{ date[1] }}-{{ date[0] }}
                 </span>
               </div>
-              {% endfor %}
+              {% endfor %} {% else %}
+              <div>
+                <p style="font-size: 1.3rem; text-align: center">
+                  No Feedbacks Available
+                </p>
+              </div>
+              {% endif %}
             </div>
           </div>
         </div>

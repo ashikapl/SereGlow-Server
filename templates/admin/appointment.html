@@ -105,7 +105,8 @@
               </div>
             </div>
             <div id="adminAppointmentsList" class="appointments-list">
-              {% for appointment in appointments %}
+              {% if appointments and appointments|length > 0 %} {% for
+              appointment in appointments %}
               <div class="appointment-card">
                 <div class="appointment-header">
                   <h4 id="user_data">
@@ -207,7 +208,13 @@
                   </div>
                 </div>
               </div>
-              {% endfor %}
+              {% endfor %} {% else %}
+              <div>
+                <p style="font-size: 1.3rem; text-align: center">
+                  No Appointments Available
+                </p>
+              </div>
+              {% endif %}
             </div>
           </div>
         </div>

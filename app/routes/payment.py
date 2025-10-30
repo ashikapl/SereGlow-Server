@@ -67,7 +67,10 @@ def get_user_payment():
     if isinstance(result, tuple):  # Error handling
         return result
 
-    payments = result.data
+    if result is None:
+        payments = []
+    else:
+        payments = result.data
 
     # Add service names to each payment
     for payment in payments:

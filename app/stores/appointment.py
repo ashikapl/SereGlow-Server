@@ -21,10 +21,11 @@ def get_appointment_store():
         "*").execute()
 
     if result.data and len(result.data) > 0:
-        # print("result", result)
         return result
     else:
-        return {"error": f"No appointments found!."}, 404
+        # return {"error": f"No appointments found!."}, 404
+        result.data = []   # Force empty list
+        return result
 
 
 def update_appointment_store(data, service_id, appointment_id):

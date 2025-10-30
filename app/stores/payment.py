@@ -25,7 +25,9 @@ def get_payment_store():
     if result.data and len(result.data) > 0:
         return result
     else:
-        return {"error": f"No payment found!."}, 404
+        # return {"error": f"No payment found!."}, 404
+        result.data = []   # Force empty list
+        return result
 
 
 def get_user_payment_store(user_id):

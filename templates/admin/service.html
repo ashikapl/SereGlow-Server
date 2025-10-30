@@ -106,7 +106,8 @@
             </div>
 
             <div id="adminServicesList" class="services-grid">
-              {% for service in services %}
+              {% if services and services|length > 0 %} {% for service in
+              services %}
               <div class="service-card">
                 <div class="service-header">
                   <h3>{{ service.name }}</h3>
@@ -135,7 +136,13 @@
                   >
                 </div>
               </div>
-              {% endfor %}
+              {% endfor %} {% else %}
+              <div>
+                <p style="font-size: 1.3rem; text-align: center">
+                  No Services Available
+                </p>
+              </div>
+              {% endif %}
             </div>
           </div>
         </div>

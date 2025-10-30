@@ -51,10 +51,10 @@ def delete_feedback_store(service_id, feedback_id):
 
 
 def get_all_feedback_store():
-    result = supabase.table("Feedback").select(
-        "*").execute()
+    result = supabase.table("Feedback").select("*").execute()
 
     if result.data and len(result.data) > 0:
-        return result
+        return result.data
     else:
-        return {"error": f"No feedback found."}, 404
+        # return {"error": f"No feedback found."}, 404
+        return []   # always return a list
