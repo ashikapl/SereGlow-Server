@@ -1,7 +1,7 @@
 import datetime as dt
 from flask import (
     jsonify, request, Blueprint, redirect, url_for, render_template,
-    make_response, json, session
+    make_response, json, flash, session
 )
 from app.services.user import user_signup_service, user_login_service
 from app.utils.user_validator import generate_token
@@ -120,7 +120,7 @@ def show_user_login():
     return render_template("user/login.html", email=email, password=password, error=error)
 
 
-# ---------- DASHBOARD ----------
+# ---------- Show Service ----------
 @user_bp.route("/services", methods=["GET"])
 @user_token_required
 def show_services():
@@ -132,7 +132,7 @@ def show_services():
     return render_template("user/dashboard.html", user_name=user_name, services=services)
 
 
-# ---------- DASHBOARD ----------
+# ---------- Show user dashboard ----------
 @user_bp.route("/", methods=["GET"])
 @user_token_required
 def show_user_dashboard():
@@ -202,6 +202,37 @@ def show_user_dashboard():
     )
 
 
+# --------- Update profile -----------
+@user_bp.route('/profile/update', methods=['POST'])
+@user_token_required
+def update_user_profile():
+    user_id = user_info_cookie('id')
+    if not user_id:
+        flash("User not found. Please log in again.", "danger")
+        return redirect(url_for("user_bp.user_logout"))
+
+    firstname = request.form.get('firstname')
+    lastname = request.form.get('lastname')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    address = request.form.get('address')
+
+    response = supabase.table("User").update({
+        "firstname": firstname,
+        "lastname": lastname,
+        "email": email,
+        "phone": phone,
+        "address": address
+    }).eq("id", user_id).execute()
+
+    if response.data:
+        flash("Profile updated successfully!", "success")
+    else:
+        flash("Error updating profile!", "danger")
+
+    return redirect(url_for("user_bp.show_user_profile"))
+
+
 # ---------- PROFILE ----------
 @user_bp.route("/profile", methods=["GET"])
 @user_token_required
@@ -212,3 +243,17 @@ def show_user_profile():
     user = find_user_byID(user_id).data
 
     return render_template("user/userProfile.html", user_name=user_name, user=user[0])
+
+
+# ---------- UPDATE PROFILE User ----------
+@user_bp.route("/profile/update", methods=["GET"])
+@user_token_required
+def show_update_profile():
+    user_name = user_info_cookie("firstname")
+    user_id = user_info_cookie("id")
+
+    user = find_user_byID(user_id).data
+
+    # print(user[0])
+
+    return render_template("user/updateProfile.html", user_name=user_name, user=user[0])

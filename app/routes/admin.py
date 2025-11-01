@@ -168,7 +168,7 @@ def update_admin_profile():
     phone = request.form.get('phone')
     address = request.form.get('address')
 
-    response = supabase.table("admin").update({
+    response = supabase.table("Admin").update({
         "firstname": firstname,
         "lastname": lastname,
         "email": email,
@@ -196,7 +196,7 @@ def show_admin_profile():
     return render_template("admin/adminProfile.html", admin_name=admin_name, admin=admin[0])
 
 
-# ---------- UPDATE PROFILE ----------
+# ---------- UPDATE PROFILE Admin ----------
 @admin_bp.route("/profile/update", methods=["GET"])
 @admin_token_required
 def show_update_profile():
